@@ -11,7 +11,6 @@ import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
-import java.util.Map;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -126,6 +125,19 @@ public class CropListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
+
+        // Farmland directly under a tracked crop: vanilla physics would pop the
+        // wheat above as untagged drops (a plain WHEAT_SEEDS item), so the player
+        // appears to randomly receive a vanilla seed instead of their custom one.
+        // Pre-empt that pop-off by removing our crop ourselves.
+        if (block.getType() == Material.FARMLAND) {
+            Block above = block.getRelative(BlockFace.UP);
+            if (above.getType() == Material.WHEAT) {
+                handleSupportLost(above, event.getPlayer());
+            }
+            return;
+        }
+
         if (block.getType() != Material.WHEAT) return;
 
         TrackedCrop tracked = plugin.getTrackedCrops().get(block.getLocation());
@@ -196,6 +208,29 @@ public class CropListener implements Listener {
                 .replace("{amount}", String.valueOf(amount))
                 .replace("{output}", humanize(chosen.item().name()));
         player.sendMessage(msg);
+    }
+
+    /**
+     * Player broke the farmland under a tracked crop. Untrack, replace the
+     * wheat with air so vanilla pop-off can't drop an untagged WHEAT_SEEDS,
+     * and return a tagged seed to the player (no harvest output, no XP — same
+     * outcome as breaking an immature crop).
+     */
+    private void handleSupportLost(Block wheatBlock, Player player) {
+        TrackedCrop tracked = plugin.getTrackedCrops().get(wheatBlock.getLocation());
+        if (tracked == null) return;
+
+        CropManager mgr = plugin.getCropManager();
+        CropType type = mgr.getCropType(tracked.cropId());
+
+        plugin.getNametagService().remove(wheatBlock.getLocation());
+        plugin.getTrackedCrops().untrack(wheatBlock.getLocation());
+        plugin.getCoreProtect().logBreak(player, wheatBlock.getLocation(), Material.WHEAT);
+        wheatBlock.setType(Material.AIR);
+
+        if (type != null && player.getGameMode() != GameMode.CREATIVE) {
+            deliver(player, wheatBlock.getLocation(), mgr.createSeed(type, 1), mgr.isDirectToInventory());
+        }
     }
 
     /**

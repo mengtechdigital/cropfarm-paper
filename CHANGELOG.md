@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here.
 
+## [1.9.3] — 2026-04-29
+
+### Fixed (BREAKING for crafting)
+- **Vanilla recipes that share an ingredient with a crop's `recipe-input` were silently broken.** Our shapeless 1-ingredient recipes were overriding vanilla counterparts — `1 GOLD_INGOT` produced 4 gold seeds instead of 9 gold nuggets, `1 BONE` produced bone seeds instead of bone meal, same for iron nuggets, copper nuggets, blaze powder, etc. The two recipes had identical input shape so MC just picked ours.
+- **New recipe shape: `[input][vanilla wheat seed]`** in a 1×2 horizontal arrangement. The wheat seed disambiguates from every vanilla single-input recipe; vanilla crafting works again. `ExactChoice` is used on the seed slot so players can't craft crop seeds from existing crop seeds (which are also `WHEAT_SEEDS` material with extra PDC).
+- **Cost change: each seed craft now requires +1 vanilla wheat seed** in addition to the configured `recipe-input`. Wheat seeds drop from grass and the vanilla wheat crop, so this is cheap.
+
 ## [1.9.2] — 2026-04-29
 
 ### Fixed

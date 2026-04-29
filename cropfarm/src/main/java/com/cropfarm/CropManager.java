@@ -5,7 +5,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -265,8 +266,17 @@ public class CropManager {
         cropTypes.put(id, cropType);
 
         NamespacedKey recipeKey = new NamespacedKey(plugin, "cropfarm_" + id);
-        ShapelessRecipe recipe = new ShapelessRecipe(recipeKey, createSeed(cropType, recipeYield));
-        recipe.addIngredient(recipeInput);
+        // Shaped 1-row recipe: [input][wheat_seed]. The vanilla wheat seed
+        // disambiguates from vanilla single-input recipes (e.g. 1 GOLD_INGOT
+        // → 9 GOLD_NUGGET, 1 BONE → 3 BONE_MEAL) which our old shapeless
+        // recipe was overriding. ExactChoice prevents our own custom seeds
+        // (which are also Material.WHEAT_SEEDS but with PDC tags) from
+        // satisfying the seed slot, so players can't craft crop seeds out
+        // of crop seeds.
+        ShapedRecipe recipe = new ShapedRecipe(recipeKey, createSeed(cropType, recipeYield));
+        recipe.shape("IS");
+        recipe.setIngredient('I', recipeInput);
+        recipe.setIngredient('S', new RecipeChoice.ExactChoice(new ItemStack(Material.WHEAT_SEEDS)));
         plugin.getServer().addRecipe(recipe);
     }
 

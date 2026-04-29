@@ -39,20 +39,27 @@ public class CropGrowthTask extends BukkitRunnable {
 
         for (Map.Entry<String, TrackedCrop> entry : tracked.snapshot()) {
             TrackedCrop t = entry.getValue();
-            CropType type = mgr.getCropType(t.cropId());
-            if (type == null) continue;
-
             Location loc = TrackedCrops.deserialize(entry.getKey());
             if (loc == null || loc.getWorld() == null) continue;
             if (!loc.getWorld().isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) continue;
 
+            CropType type = mgr.getCropType(t.cropId());
             Block block = loc.getBlock();
             if (block.getType() != Material.WHEAT) {
-                // Block was destroyed by something we didn't catch (explosion, /setblock).
+                // Block was destroyed by something we didn't intercept (explosion
+                // that bypassed our handler, world-edit, op /setblock, farmland-decay
+                // physics, etc.). Spawn a compensation seed at the location so the
+                // player isn't punished for losing their crop. If the crop type was
+                // removed from config, no seed — we don't know what to drop.
+                if (type != null) {
+                    Location dropLoc = loc.clone().add(0.5, 0.5, 0.5);
+                    loc.getWorld().dropItemNaturally(dropLoc, mgr.createSeed(type, 1));
+                }
                 tracked.untrack(loc);
                 nametags.remove(loc);
                 continue;
             }
+            if (type == null) continue; // tracked but unknown id — wait for player to break
 
             BlockData data = block.getBlockData();
             if (!(data instanceof Ageable ageable)) continue;

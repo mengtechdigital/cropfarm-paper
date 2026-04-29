@@ -66,6 +66,15 @@ settings:
   # Set false for the classic dropped-item behavior.
   direct-to-inventory: true
 
+  # If true (default), tracked crops are protected from non-player
+  # destruction — water flow, pistons, explosions, mob trampling,
+  # fire spread. The supporting farmland is also protected so the
+  # crop doesn't auto-detach. This stops automated water-flush /
+  # piston-harvest farms that would defeat the plugin's design.
+  # Set false to allow vanilla destruction (the player loses their
+  # crop but a seed is still spawned at the location for recovery).
+  protect-from-automation: true
+
   # ---- Floating nametag above each planted crop ----
   nametag-enabled: true
   nametag-show-progress: true            # show stage e.g. (3/7)

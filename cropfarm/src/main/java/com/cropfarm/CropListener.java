@@ -17,8 +17,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFertilizeEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockGrowEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -264,5 +272,104 @@ public class CropListener implements Listener {
     public void onChunkLoad(ChunkLoadEvent event) {
         plugin.getNametagService().reconcileChunk(
                 event.getChunk(), plugin.getTrackedCrops(), plugin.getCropManager());
+    }
+
+    // ---------------------------------------------------------------
+    // Protection from non-player destruction
+    //
+    // Player breaks go through onBreak above. Everything else (water,
+    // pistons, explosions, mob trampling, fire) would normally drop
+    // vanilla wheat + seeds because the wheat block has no idea it's
+    // a custom crop — only the seed item carries our PDC tag. Allowing
+    // this also enables automated water-flush farms which defeat the
+    // plugin's casual-no-redstone design.
+    //
+    // When protect-from-automation is on (default), we cancel these
+    // events for tracked crops AND for the farmland directly under
+    // them (so the crop doesn't auto-detach when its support fades).
+    // ---------------------------------------------------------------
+
+    @EventHandler(ignoreCancelled = true)
+    public void onWaterFlow(BlockFromToEvent event) {
+        if (!plugin.getCropManager().isProtectFromAutomation()) return;
+        if (isProtected(event.getToBlock())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPistonExtend(BlockPistonExtendEvent event) {
+        if (!plugin.getCropManager().isProtectFromAutomation()) return;
+        for (Block b : event.getBlocks()) {
+            if (isProtected(b)) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPistonRetract(BlockPistonRetractEvent event) {
+        if (!plugin.getCropManager().isProtectFromAutomation()) return;
+        for (Block b : event.getBlocks()) {
+            if (isProtected(b)) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityExplode(EntityExplodeEvent event) {
+        if (!plugin.getCropManager().isProtectFromAutomation()) return;
+        event.blockList().removeIf(this::isProtected);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockExplode(BlockExplodeEvent event) {
+        if (!plugin.getCropManager().isProtectFromAutomation()) return;
+        event.blockList().removeIf(this::isProtected);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityChangeBlock(EntityChangeBlockEvent event) {
+        if (!plugin.getCropManager().isProtectFromAutomation()) return;
+        if (isProtected(event.getBlock())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onBurn(BlockBurnEvent event) {
+        if (!plugin.getCropManager().isProtectFromAutomation()) return;
+        if (isProtected(event.getBlock())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onFade(BlockFadeEvent event) {
+        if (!plugin.getCropManager().isProtectFromAutomation()) return;
+        if (isProtected(event.getBlock())) {
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * True if the block is itself a tracked crop, OR is farmland directly
+     * supporting one (so we keep the crop's substrate intact too).
+     *
+     * BlockFromToEvent fires on every water-flow tick across every loaded
+     * chunk; the size() short-circuit avoids the per-call Location.toString
+     * hash on servers with no tracked crops yet.
+     */
+    private boolean isProtected(Block b) {
+        if (plugin.getTrackedCrops().size() == 0) return false;
+        if (plugin.getTrackedCrops().contains(b.getLocation())) return true;
+        if (b.getType() == Material.FARMLAND) {
+            Block above = b.getRelative(BlockFace.UP);
+            return plugin.getTrackedCrops().contains(above.getLocation());
+        }
+        return false;
     }
 }

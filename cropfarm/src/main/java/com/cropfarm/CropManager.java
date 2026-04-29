@@ -43,6 +43,7 @@ public class CropManager {
     private boolean returnSeedOnEarlyBreak;
     private boolean allowBonemeal;
     private boolean directToInventory;
+    private boolean protectFromAutomation;
     private boolean nametagEnabled;
     private boolean nametagShowProgress;
     private float nametagViewRangeMultiplier;
@@ -83,6 +84,7 @@ public class CropManager {
         returnSeedOnEarlyBreak = cfg.getBoolean("settings.return-seed-on-early-break", true);
         allowBonemeal          = cfg.getBoolean("settings.allow-bonemeal", false);
         directToInventory      = cfg.getBoolean("settings.direct-to-inventory", true);
+        protectFromAutomation  = cfg.getBoolean("settings.protect-from-automation", true);
 
         nametagEnabled         = cfg.getBoolean("settings.nametag-enabled", true);
         nametagShowProgress    = cfg.getBoolean("settings.nametag-show-progress", true);
@@ -277,6 +279,7 @@ public class CropManager {
     public boolean isReturnSeedOnEarlyBreak() { return returnSeedOnEarlyBreak; }
     public boolean isAllowBonemeal()          { return allowBonemeal; }
     public boolean isDirectToInventory()      { return directToInventory; }
+    public boolean isProtectFromAutomation()  { return protectFromAutomation; }
 
     public boolean isNametagEnabled()         { return nametagEnabled; }
     public boolean isNametagShowProgress()    { return nametagShowProgress; }

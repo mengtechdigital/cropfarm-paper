@@ -2,6 +2,22 @@
 
 All notable changes to this project are documented here.
 
+## [1.6.1] — 2026-04-29
+
+### Fixed
+- **Tracked crops are now protected from non-player destruction.** Previously, water flow / pistons / explosions / mob trampling / fire would destroy a tracked crop and let vanilla wheat loot drop instead of the custom output — both punishing the player AND enabling automated water-flush farms that defeated the plugin's "no autofarm" pitch. New `settings.protect-from-automation` (default true) cancels:
+  - water/lava flow into a tracked crop block (`BlockFromToEvent`)
+  - piston push / pull touching a tracked crop (`BlockPistonExtend/RetractEvent`)
+  - explosions hitting a tracked crop (`Entity/BlockExplodeEvent` — block is removed from blockList, surrounding terrain still goes)
+  - mob/entity-driven block changes — ravager trample, enderman, falling sand landing on the crop, etc. (`EntityChangeBlockEvent`)
+  - fire spreading into a crop (`BlockBurnEvent`)
+  - farmland fading to dirt under a tracked crop (`BlockFadeEvent`)
+
+  Set `protect-from-automation: false` to revert to vanilla destruction behavior.
+
+### Added
+- **Compensation seed on out-of-band destruction.** When a tracked crop's block disappears for any reason the protection didn't catch (op `/setblock`, world-edit, an exotic mod), the next growth-task tick now spawns one seed of that crop type at the location instead of silently un-tracking. Players never get nothing from a lost crop.
+
 ## [1.6.0] — 2026-04-29
 
 ### Changed

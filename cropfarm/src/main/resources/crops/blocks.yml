@@ -1,0 +1,363 @@
+# ============================================================
+#  CropFarm — block generators
+# ============================================================
+#  Replaces sand-duper TNT machines, cobble generators, ice farms,
+#  Nether trips, and the like. The "crop" still grows on farmland —
+#  the block just happens to be sand or obsidian rather than wheat.
+#
+#  Common-tier block crops have generous caps so casuals can stockpile
+#  for builds. Rare-tier blocks (blue_ice, obsidian, dripstone) are
+#  capped low to avoid trivialising lategame economies.
+# ============================================================
+
+crops:
+
+  # ---------- SURFACE (the "civil engineering" set) ----------
+
+  sand:
+    display-name: "§e✦ Sand Seed"
+    lore:
+      - "§7Replaces §eTNT-duper sand farms§7."
+    recipe-input: SAND
+    recipe-yield: 4
+    output: SAND
+    min-drops: 3
+    max-drops: 6
+    tier: common
+    grow-time-seconds: 120
+
+  gravel:
+    display-name: "§7✦ Gravel Seed"
+    lore:
+      - "§7Replaces §7gravel duper farms§7."
+      - "§7Flint for arrows comes free."
+    recipe-input: GRAVEL
+    recipe-yield: 4
+    output: GRAVEL
+    min-drops: 3
+    max-drops: 6
+    tier: common
+    grow-time-seconds: 120
+
+  clay:
+    display-name: "§b✦ Clay Seed"
+    lore:
+      - "§7Replaces §bshoreline clay digs§7."
+      - "§7Drops clay balls — craft to bricks."
+    recipe-input: CLAY
+    recipe-yield: 2
+    output: CLAY_BALL
+    min-drops: 4
+    max-drops: 6
+    tier: common
+    grow-time-seconds: 240
+
+  cobblestone:
+    display-name: "§7✦ Cobble Seed"
+    lore:
+      - "§7Replaces §7cobble generators§7."
+    recipe-input: COBBLESTONE
+    recipe-yield: 8
+    output: COBBLESTONE
+    min-drops: 4
+    max-drops: 8
+    tier: common
+    grow-time-seconds: 60
+
+  stone:
+    display-name: "§7✦ Stone Seed"
+    lore:
+      - "§7Smelt-free stone for builds."
+    recipe-input: STONE
+    recipe-yield: 4
+    output: STONE
+    min-drops: 3
+    max-drops: 6
+    tier: common
+    grow-time-seconds: 180
+
+  deepslate:
+    display-name: "§8✦ Deepslate Seed"
+    lore:
+      - "§7Skip the §8Y-0 mining§7 trips."
+    recipe-input: DEEPSLATE
+    recipe-yield: 4
+    output: DEEPSLATE
+    min-drops: 2
+    max-drops: 5
+    tier: common
+    grow-time-seconds: 240
+
+  dirt:
+    display-name: "§6✦ Dirt Seed"
+    lore:
+      - "§7Bulk dirt for landscaping."
+    recipe-input: DIRT
+    recipe-yield: 8
+    output: DIRT
+    min-drops: 4
+    max-drops: 8
+    tier: common
+    grow-time-seconds: 60
+
+  mud:
+    display-name: "§6✦ Mud Seed"
+    lore:
+      - "§7Replaces §6mangrove-swamp trips§7."
+    recipe-input: MUD
+    recipe-yield: 4
+    output: MUD
+    min-drops: 2
+    max-drops: 4
+    tier: mid
+
+  # ---------- STONE VARIANTS ----------
+
+  granite:
+    display-name: "§c✦ Granite Seed"
+    recipe-input: GRANITE
+    recipe-yield: 4
+    output: GRANITE
+    min-drops: 2
+    max-drops: 5
+    tier: common
+
+  diorite:
+    display-name: "§f✦ Diorite Seed"
+    recipe-input: DIORITE
+    recipe-yield: 4
+    output: DIORITE
+    min-drops: 2
+    max-drops: 5
+    tier: common
+
+  andesite:
+    display-name: "§7✦ Andesite Seed"
+    recipe-input: ANDESITE
+    recipe-yield: 4
+    output: ANDESITE
+    min-drops: 2
+    max-drops: 5
+    tier: common
+
+  tuff:
+    display-name: "§8✦ Tuff Seed"
+    recipe-input: TUFF
+    recipe-yield: 4
+    output: TUFF
+    min-drops: 2
+    max-drops: 5
+    tier: common
+
+  calcite:
+    display-name: "§f✦ Calcite Seed"
+    lore:
+      - "§7Replaces §famethyst-geode hunting§7."
+    recipe-input: CALCITE
+    recipe-yield: 2
+    output: CALCITE
+    min-drops: 1
+    max-drops: 3
+    tier: mid
+
+  # ---------- NETHER ----------
+
+  netherrack:
+    display-name: "§4✦ Netherrack Seed"
+    lore:
+      - "§7Skip the §4Nether trip§7."
+    recipe-input: NETHERRACK
+    recipe-yield: 4
+    output: NETHERRACK
+    min-drops: 3
+    max-drops: 6
+    tier: common
+    grow-time-seconds: 180
+
+  soul_sand:
+    display-name: "§8✦ Soul Sand Seed"
+    lore:
+      - "§7Foundation for water elevators."
+    recipe-input: SOUL_SAND
+    recipe-yield: 2
+    output: SOUL_SAND
+    min-drops: 2
+    max-drops: 3
+    tier: mid
+
+  soul_soil:
+    display-name: "§8✦ Soul Soil Seed"
+    lore:
+      - "§7For soul-fire torches and lanterns."
+    recipe-input: SOUL_SOIL
+    recipe-yield: 2
+    output: SOUL_SOIL
+    min-drops: 2
+    max-drops: 3
+    tier: mid
+
+  basalt:
+    display-name: "§8✦ Basalt Seed"
+    recipe-input: BASALT
+    recipe-yield: 4
+    output: BASALT
+    min-drops: 2
+    max-drops: 4
+    tier: mid
+
+  blackstone:
+    display-name: "§8✦ Blackstone Seed"
+    recipe-input: BLACKSTONE
+    recipe-yield: 4
+    output: BLACKSTONE
+    min-drops: 2
+    max-drops: 4
+    tier: mid
+
+  magma_block:
+    display-name: "§c✦ Magma Block Seed"
+    lore:
+      - "§7Bubble columns and decoration."
+    recipe-input: MAGMA_BLOCK
+    recipe-yield: 2
+    output: MAGMA_BLOCK
+    min-drops: 1
+    max-drops: 3
+    tier: mid
+
+  nether_wart:
+    display-name: "§4✦ Nether Wart Seed"
+    lore:
+      - "§7Skip the §4fortress raid§7 — brewing on tap."
+    recipe-input: NETHER_WART
+    recipe-yield: 4
+    output: NETHER_WART
+    min-drops: 3
+    max-drops: 6
+    tier: mid
+
+  # ---------- END ----------
+
+  end_stone:
+    display-name: "§e✦ End Stone Seed"
+    lore:
+      - "§7Replaces §eEnd trips§7 for End-stone bricks."
+    recipe-input: END_STONE
+    recipe-yield: 4
+    output: END_STONE
+    min-drops: 2
+    max-drops: 4
+    tier: mid
+
+  purpur_block:
+    display-name: "§5✦ Purpur Seed"
+    lore:
+      - "§7Skip the §5End-city loot§7 runs."
+    recipe-input: PURPUR_BLOCK
+    recipe-yield: 4
+    output: PURPUR_BLOCK
+    min-drops: 2
+    max-drops: 4
+    tier: mid
+
+  # ---------- COLD BIOME ----------
+
+  ice:
+    display-name: "§b✦ Ice Seed"
+    recipe-input: ICE
+    recipe-yield: 4
+    output: ICE
+    min-drops: 2
+    max-drops: 4
+    tier: mid
+
+  packed_ice:
+    display-name: "§b✦ Packed Ice Seed"
+    lore:
+      - "§7Boats on packed ice = max speed."
+    recipe-input: PACKED_ICE
+    recipe-yield: 2
+    output: PACKED_ICE
+    min-drops: 1
+    max-drops: 3
+    tier: mid
+
+  blue_ice:
+    display-name: "§b✦ Blue Ice Seed"
+    lore:
+      - "§7Fastest highway material in vanilla."
+    recipe-input: BLUE_ICE
+    recipe-yield: 1
+    output: BLUE_ICE
+    min-drops: 1
+    max-drops: 2
+    tier: rare
+
+  snow_block:
+    display-name: "§f✦ Snow Block Seed"
+    lore:
+      - "§7Replaces §fsnow-golem farms§7."
+    recipe-input: SNOW_BLOCK
+    recipe-yield: 4
+    output: SNOW_BLOCK
+    min-drops: 2
+    max-drops: 5
+    tier: common
+    grow-time-seconds: 180
+
+  # ---------- CAVE / RARE ----------
+
+  pointed_dripstone:
+    display-name: "§e✦ Dripstone Seed"
+    lore:
+      - "§7Replaces §edripstone-cave farms§7."
+    recipe-input: POINTED_DRIPSTONE
+    recipe-yield: 2
+    output: POINTED_DRIPSTONE
+    min-drops: 1
+    max-drops: 3
+    tier: mid
+
+  moss_block:
+    display-name: "§a✦ Moss Seed"
+    lore:
+      - "§7Bonemeal-spreader for terraforming."
+    recipe-input: MOSS_BLOCK
+    recipe-yield: 2
+    output: MOSS_BLOCK
+    min-drops: 1
+    max-drops: 3
+    tier: mid
+
+  glow_lichen:
+    display-name: "§a✦ Glow Lichen Seed"
+    lore:
+      - "§7Climbing + glow without redstone."
+    recipe-input: GLOW_LICHEN
+    recipe-yield: 2
+    output: GLOW_LICHEN
+    min-drops: 1
+    max-drops: 3
+    tier: mid
+
+  obsidian:
+    display-name: "§5✦ Obsidian Seed"
+    lore:
+      - "§7Replaces §5water+lava manual mining§7."
+    recipe-input: OBSIDIAN
+    recipe-yield: 1
+    output: OBSIDIAN
+    min-drops: 1
+    max-drops: 2
+    tier: rare
+
+  crying_obsidian:
+    display-name: "§5✦ Crying Obsidian Seed"
+    lore:
+      - "§7Replaces §5piglin bartering§7."
+    recipe-input: CRYING_OBSIDIAN
+    recipe-yield: 1
+    output: CRYING_OBSIDIAN
+    min-drops: 1
+    max-drops: 2
+    tier: rare

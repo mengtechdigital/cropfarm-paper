@@ -150,15 +150,15 @@ Output: `cropfarm/target/CropFarm.jar`.
 
 ### Resource pack
 
-The 25 original seed textures are generated procedurally from the vanilla `wheat_seeds.png` by a small Java tool. New 1.4.0 crops are not yet in the pack; they fall back to the vanilla wheat-seed icon (the `/cropfarm menu` shows their output material so they're still identifiable).
+All **170 crop seed textures** are procedurally generated from the vanilla `wheat_seeds.png` by a small Java tool — each crop gets a uniquely-tinted variant. Built for **Minecraft 1.21.4+** using the new item model definitions format (`assets/minecraft/items/wheat_seeds.json` with `minecraft:select` model). The plugin writes `custom_model_data.strings = [cropId]` on each seed item; the pack matches via `case: { "when": "<cropId>" }`.
 
 ```bash
 # from repo root — outputs go to build/
-java tools/GenerateTextures.java   # writes PNGs, model JSONs, pack.mcmeta, pack.png
+java tools/GenerateTextures.java   # writes PNGs, model JSONs, items/wheat_seeds.json, pack.mcmeta
 java tools/ZipResourcepack.java    # packs build/cropfarm-resourcepack/ into build/cropfarm-resourcepack.zip
 ```
 
-To change a crop's color, edit the `addCrop(...)` call in [`tools/GenerateTextures.java`](tools/GenerateTextures.java) and re-run. To add a brand-new crop, also add it to the relevant config file with a matching `custom-model-data` value.
+To change a crop's color, edit the `addCrop(...)` call in [`tools/GenerateTextures.java`](tools/GenerateTextures.java) and re-run. To add a brand-new crop, also add it to the relevant config file (the crop id is the `cases` `when` value the pack uses).
 
 ---
 

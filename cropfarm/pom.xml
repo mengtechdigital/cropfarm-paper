@@ -7,7 +7,7 @@
 
     <groupId>com.cropfarm</groupId>
     <artifactId>CropFarm</artifactId>
-    <version>1.8.0</version>
+    <version>1.9.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -31,7 +31,10 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.1-R0.1-SNAPSHOT</version>
+            <!-- 1.21.4 is the minimum that exposes the new
+                 CustomModelDataComponent API needed for the
+                 string-based item-model selector resource pack. -->
+            <version>1.21.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

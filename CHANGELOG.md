@@ -2,6 +2,21 @@
 
 All notable changes to this project are documented here.
 
+## [1.9.0] — 2026-04-29
+
+### Changed (BREAKING)
+- **Resource pack rewritten for Minecraft 1.21.4+**. Mojang killed the old `overrides` system inside `models/item/wheat_seeds.json` in 1.21.5; the previous pack silently stopped rendering custom seeds on any modern server. The new pack uses the **item model definitions** format (`assets/minecraft/items/wheat_seeds.json` with a `minecraft:select` model) which 1.21.4+ requires.
+- **Compile target raised to paper-api 1.21.4-R0.1-SNAPSHOT** so the plugin can call the new `setCustomModelDataComponent(...)` API. The plugin now writes `custom_model_data.strings = [cropId]` on every seed; the resource pack matches each id via `case: { "when": "<cropId>" }`. Servers on 1.21.0–1.21.3 are no longer supported.
+- **Old integer `custom-model-data` field in the YAML is now ignored at runtime** but kept in configs for documentation. The resource pack uses string-keyed selection only.
+
+### Added
+- **Texture coverage for all 170 crops** (was 25). The texture generator now ships hex tints for every bundled crop id so flowers, dyes, foods, mushrooms, frog lights, mace, nether_star — everything — gets a unique coloured wheat-seed icon in inventory. Pack zip is 121 KB (was 19 KB).
+- `pack.mcmeta` declares `pack_format: 55` plus `supported_formats: { 55, 999 }` so the same pack works on 1.21.5 through any future minor bump.
+
+### Notes
+- **Existing player inventories**: seed items in players' inventories from before 1.9.0 still have the old integer-only `custom_model_data`. The new pack ignores those, so they'll render as vanilla wheat seeds until re-crafted. The plugin's PDC tag still identifies them as crop seeds, so they plant correctly — only the icon is missing.
+- **Server upgrade path**: replace `plugins/CropFarm.jar`, restart. Re-distribute the new `cropfarm-resourcepack.zip` (regenerate via `java tools/GenerateTextures.java && java tools/ZipResourcepack.java`) and update `server.properties` `resource-pack-sha1` to the new hash.
+
 ## [1.8.0] — 2026-04-29
 
 ### Added

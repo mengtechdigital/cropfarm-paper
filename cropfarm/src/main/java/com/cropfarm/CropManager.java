@@ -292,9 +292,16 @@ public class CropManager {
                 meta.setLore(type.getLore());
             }
             meta.getPersistentDataContainer().set(CROP_TYPE_KEY, PersistentDataType.STRING, type.getId());
-            if (type.getCustomModelData() > 0) {
-                meta.setCustomModelData(type.getCustomModelData());
-            }
+
+            // 1.21.4+ resource pack hook: write the crop id into the
+            // custom_model_data string list. The pack's items/wheat_seeds.json
+            // selector reads strings[0] and matches against `when` cases to
+            // pick the per-crop texture/model.
+            org.bukkit.inventory.meta.components.CustomModelDataComponent cmd
+                    = meta.getCustomModelDataComponent();
+            cmd.setStrings(java.util.List.of(type.getId()));
+            meta.setCustomModelDataComponent(cmd);
+
             seed.setItemMeta(meta);
         }
         return seed;

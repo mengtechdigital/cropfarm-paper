@@ -1,0 +1,125 @@
+# ============================================================
+#  CropFarm — endgame
+# ============================================================
+#  The most aspirational items in vanilla — wither skulls (1.25%
+#  drop, gates the Wither boss), totems (raid completion), heart of
+#  the sea (one per buried treasure), enchanted golden apples
+#  (uncraftable since 1.13), shulker shells, tridents.
+#
+#  All epic-tier with deliberately tight per-player caps so this
+#  catalog doesn't trivialise the lategame economy. A casual player
+#  patient enough to wait an hour gets one totem rather than camping
+#  pillager raids for a weekend.
+# ============================================================
+
+crops:
+
+  wither_skeleton_skull:
+    display-name: "§8✦ Wither Skull Seed"
+    lore:
+      - "§7Replaces §8wither-skeleton soul-sand farms§7."
+      - "§7Three skulls = one Wither fight."
+    recipe-input: WITHER_SKELETON_SKULL
+    recipe-yield: 1
+    output: WITHER_SKELETON_SKULL
+    min-drops: 1
+    max-drops: 1
+    tier: epic
+    grow-time-seconds: 1800     # 30 min
+    max-per-player: 8           # ~2-3 Withers worth at one time
+
+  totem_of_undying:
+    display-name: "§e✦ Totem Seed"
+    lore:
+      - "§7Replaces §eraid grinding§7."
+      - "§7Skip the pillager AFK farm."
+    recipe-input: TOTEM_OF_UNDYING
+    recipe-yield: 1
+    output: TOTEM_OF_UNDYING
+    min-drops: 1
+    max-drops: 1
+    tier: epic
+    grow-time-seconds: 2400     # 40 min — totems should feel earned
+    max-per-player: 16
+
+  heart_of_the_sea:
+    display-name: "§b✦ Heart of the Sea Seed"
+    lore:
+      - "§7Replaces §bburied-treasure hunting§7."
+      - "§7One per conduit."
+    recipe-input: HEART_OF_THE_SEA
+    recipe-yield: 1
+    output: HEART_OF_THE_SEA
+    min-drops: 1
+    max-drops: 1
+    tier: epic
+    grow-time-seconds: 2400     # 40 min
+    max-per-player: 8
+
+  shulker_shell:
+    display-name: "§5✦ Shulker Shell Seed"
+    lore:
+      - "§7Replaces §5End-city shulker farms§7."
+      - "§7Two shells = one shulker box."
+    recipe-input: SHULKER_SHELL
+    recipe-yield: 1
+    output: SHULKER_SHELL
+    min-drops: 1
+    max-drops: 2
+    tier: epic
+    grow-time-seconds: 1500     # 25 min
+    max-per-player: 16
+
+  trident:
+    display-name: "§3✦ Trident Seed"
+    lore:
+      - "§7Replaces §3drowned-with-trident farms§7."
+      - "§7Drops a fresh, un-enchanted trident."
+    recipe-input: TRIDENT
+    recipe-yield: 1
+    output: TRIDENT
+    min-drops: 1
+    max-drops: 1
+    tier: epic
+    grow-time-seconds: 1800     # 30 min
+    max-per-player: 16
+
+  enchanted_golden_apple:
+    display-name: "§5✦ God Apple Seed"
+    lore:
+      - "§7Uncraftable since §51.13§7 — chest-only in vanilla."
+    recipe-input: ENCHANTED_GOLDEN_APPLE
+    recipe-yield: 1
+    output: ENCHANTED_GOLDEN_APPLE
+    min-drops: 1
+    max-drops: 1
+    tier: epic
+    grow-time-seconds: 2400     # 40 min — deliberately rare-feeling
+    max-per-player: 8
+
+  # ---------- Catalog companions ----------
+
+  prismarine_crystals:
+    display-name: "§b✦ Prismarine Crystal Seed"
+    lore:
+      - "§7Companion to §bprismarine_shard§7."
+      - "§7Sea lanterns and crafting only."
+    recipe-input: PRISMARINE_CRYSTALS
+    recipe-yield: 2
+    output: PRISMARINE_CRYSTALS
+    min-drops: 2
+    max-drops: 4
+    tier: rare
+
+  honey_bottle:
+    display-name: "§6✦ Honey Bottle Seed"
+    lore:
+      - "§7Companion to §6honeycomb§7."
+      - "§7Heals + cures poison."
+    recipe-input: HONEY_BOTTLE
+    recipe-yield: 1
+    output: HONEY_BOTTLE
+    min-drops: 1
+    max-drops: 2
+    tier: mid
+    grow-time-seconds: 480

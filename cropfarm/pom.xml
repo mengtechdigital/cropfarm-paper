@@ -7,7 +7,7 @@
 
     <groupId>com.cropfarm</groupId>
     <artifactId>CropFarm</artifactId>
-    <version>1.0.0</version>
+    <version>1.4.0</version>
     <packaging>jar</packaging>
 
     <properties>

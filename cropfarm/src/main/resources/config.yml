@@ -1,0 +1,456 @@
+# ============================================================
+#  CropFarm  —  config.yml
+# ============================================================
+#
+#  HOW CROPS WORK
+#  --------------
+#  1. Craft seeds using the recipe defined per crop below.
+#  2. Right-click farmland while holding seeds to plant.
+#  3. The crop grows on a TIMER (light/water don't matter).
+#     Bone meal is BLOCKED for balance.
+#  4. Break the crop when fully grown to receive the output
+#     plus one returned seed (so the cycle continues).
+#  5. Breaking early returns the seed — nothing is lost.
+#
+#  ADDING A NEW CROP
+#  -----------------
+#  Add a new entry under `crops:` with a unique lowercase id.
+#  Then run /cropfarmreload (or restart the server).
+#
+#  GROW TIMES
+#  ----------
+#  `grow-time-seconds` controls how long from age 0 → fully grown.
+#  Stages advance smoothly over that interval (8 stages: 0..7).
+#  Suggested ranges:
+#    common  : 120 – 240   (2–4 min)
+#    mid     : 300 – 480   (5–8 min)
+#    rare    : 600 – 900   (10–15 min)
+#    epic    : 1200 – 1800 (20–30 min)
+#
+#  COLOR CODES
+#  -----------
+#  §0 black  §1 dk blue §2 dk green §3 dk aqua §4 dk red §5 purple
+#  §6 gold   §7 gray    §8 dk gray  §9 blue    §a green  §b aqua
+#  §c red    §d pink    §e yellow   §f white   §l bold   §o italic
+#  §r reset
+# ============================================================
+
+settings:
+  # Show particles when planting and harvesting.
+  particles: true
+
+  # Play sounds when planting and harvesting.
+  sounds: true
+
+  # If a player breaks a crop that isn't fully grown,
+  # return the seed to them instead of losing it.
+  return-seed-on-early-break: true
+
+  # If false (default), bone meal does NOT advance these crops.
+  # Set true to allow vanilla bonemeal-rushing.
+  allow-bonemeal: false
+
+  # ---- Floating nametag above each planted crop ----
+  nametag-enabled: true
+  nametag-show-progress: true            # show stage e.g. (3/7)
+  nametag-view-range-blocks: 20          # how close before it appears (4–64)
+  nametag-text:        "{crop} §7§o({stage}/{max})"
+  nametag-text-ready:  "{crop} §a§l✓ Ready!"
+
+  # ---- Chat / action messages ----
+  plant-message:           "§a✦ {crop} §aplanted! Grow time will pass automatically..."
+  harvest-message:         "§b✦ Harvested §f{amount}x {output}§b!"
+  early-break-message:     "§e⚠ Not fully grown yet! §7({stage}/{max}) Seed returned."
+  bonemeal-blocked-message: "§c⚠ Magic seeds resist bone meal — they grow on their own time."
+
+
+# ============================================================
+#  CROP DEFINITIONS
+# ============================================================
+#
+#  Fields per crop:
+#    display-name       — Name shown on the seed item AND on the floating nametag.
+#    lore               — Tooltip lines on the seed item.
+#    recipe-input       — Material required to craft seeds.
+#    recipe-yield       — How many seeds the recipe produces (1–64).
+#    output             — Material dropped when harvested.
+#    min-drops, max-drops — Drop range when fully grown.
+#    custom-model-data  — For optional resource pack textures (0 = vanilla).
+#    grow-time-seconds  — Time from planting to fully grown.
+# ============================================================
+
+crops:
+
+  # ---------- ORES (mining-replacement crops) ----------
+
+  diamond:
+    display-name: "§b✦ Diamond Seed"
+    lore:
+      - "§7Plant on §6farmland §7to grow a"
+      - "§7sparkling §bdiamond crop§7."
+      - ""
+      - "§8Right-click farmland to plant."
+    recipe-input: DIAMOND
+    recipe-yield: 4
+    output: DIAMOND
+    min-drops: 1
+    max-drops: 3
+    custom-model-data: 1001
+    grow-time-seconds: 900   # 15 min — high-value
+
+  emerald:
+    display-name: "§2✦ Emerald Seed"
+    lore:
+      - "§7Plant on §6farmland §7to grow a"
+      - "§7lush §2emerald crop§7."
+    recipe-input: EMERALD
+    recipe-yield: 4
+    output: EMERALD
+    min-drops: 1
+    max-drops: 2
+    custom-model-data: 1002
+    grow-time-seconds: 900
+
+  gold:
+    display-name: "§6✦ Gold Seed"
+    lore:
+      - "§7Plant on §6farmland §7to grow a"
+      - "§7shimmering §6gold crop§7."
+    recipe-input: GOLD_INGOT
+    recipe-yield: 4
+    output: GOLD_INGOT
+    min-drops: 2
+    max-drops: 5
+    custom-model-data: 1003
+    grow-time-seconds: 480   # 8 min
+
+  iron:
+    display-name: "§7✦ Iron Seed"
+    lore:
+      - "§7Plant on §6farmland §7to grow a"
+      - "§7sturdy §7iron crop§7."
+    recipe-input: IRON_INGOT
+    recipe-yield: 4
+    output: IRON_INGOT
+    min-drops: 2
+    max-drops: 5
+    custom-model-data: 1004
+    grow-time-seconds: 360   # 6 min
+
+  coal:
+    display-name: "§8✦ Coal Seed"
+    lore:
+      - "§7Plant on §6farmland §7to grow"
+      - "§7a sooty §8coal crop§7."
+    recipe-input: COAL
+    recipe-yield: 4
+    output: COAL
+    min-drops: 3
+    max-drops: 6
+    custom-model-data: 1005
+    grow-time-seconds: 180   # 3 min — common
+
+  redstone:
+    display-name: "§c✦ Redstone Seed"
+    lore:
+      - "§7Plant on §6farmland §7to grow"
+      - "§7a glowing §credstone crop§7."
+    recipe-input: REDSTONE
+    recipe-yield: 4
+    output: REDSTONE
+    min-drops: 3
+    max-drops: 6
+    custom-model-data: 1006
+    grow-time-seconds: 360
+
+  lapis_lazuli:
+    display-name: "§9✦ Lapis Seed"
+    lore:
+      - "§7Plant on §6farmland §7to grow"
+      - "§7a vibrant §9lapis crop§7."
+    recipe-input: LAPIS_LAZULI
+    recipe-yield: 4
+    output: LAPIS_LAZULI
+    min-drops: 3
+    max-drops: 6
+    custom-model-data: 1007
+    grow-time-seconds: 300
+
+  nether_quartz:
+    display-name: "§f✦ Quartz Seed"
+    lore:
+      - "§7Plant on §6farmland §7to grow"
+      - "§7a smooth §fnether quartz crop§7."
+    recipe-input: QUARTZ
+    recipe-yield: 4
+    output: QUARTZ
+    min-drops: 2
+    max-drops: 5
+    custom-model-data: 1008
+    grow-time-seconds: 420
+
+  amethyst_shard:
+    display-name: "§5✦ Amethyst Seed"
+    lore:
+      - "§7Plant on §6farmland §7to grow"
+      - "§7a mystical §5amethyst shard§7."
+    recipe-input: AMETHYST_SHARD
+    recipe-yield: 4
+    output: AMETHYST_SHARD
+    min-drops: 2
+    max-drops: 5
+    custom-model-data: 1009
+    grow-time-seconds: 480
+
+  copper:
+    display-name: "§6✦ Copper Seed"
+    lore:
+      - "§7Plant on §6farmland §7to grow"
+      - "§7a tarnished §6copper crop§7."
+    recipe-input: COPPER_INGOT
+    recipe-yield: 4
+    output: COPPER_INGOT
+    min-drops: 3
+    max-drops: 6
+    custom-model-data: 1010
+    grow-time-seconds: 240
+
+  # ---------- MOB-FARM REPLACEMENTS ----------
+
+  xp_bottle:
+    display-name: "§a✦ Experience Seed"
+    lore:
+      - "§7Replaces §aXP grinders§7."
+      - "§7Drops §aBottles o' Enchanting§7."
+    recipe-input: EXPERIENCE_BOTTLE
+    recipe-yield: 2
+    output: EXPERIENCE_BOTTLE
+    min-drops: 1
+    max-drops: 2
+    custom-model-data: 1011
+    grow-time-seconds: 600
+
+  gunpowder:
+    display-name: "§8✦ Gunpowder Seed"
+    lore:
+      - "§7Replaces §ccreeper farms§7."
+    recipe-input: GUNPOWDER
+    recipe-yield: 4
+    output: GUNPOWDER
+    min-drops: 2
+    max-drops: 4
+    custom-model-data: 1012
+    grow-time-seconds: 420
+
+  blaze_rod:
+    display-name: "§6✦ Blaze Rod Seed"
+    lore:
+      - "§7Replaces §6blaze spawner farms§7."
+      - "§7Gates brewing — slow grow time."
+    recipe-input: BLAZE_ROD
+    recipe-yield: 2
+    output: BLAZE_ROD
+    min-drops: 1
+    max-drops: 2
+    custom-model-data: 1013
+    grow-time-seconds: 900
+
+  ender_pearl:
+    display-name: "§3✦ Ender Seed"
+    lore:
+      - "§7Replaces §5enderman farms§7."
+    recipe-input: ENDER_PEARL
+    recipe-yield: 2
+    output: ENDER_PEARL
+    min-drops: 1
+    max-drops: 2
+    custom-model-data: 1014
+    grow-time-seconds: 900
+
+  slime_ball:
+    display-name: "§a✦ Slime Seed"
+    lore:
+      - "§7Replaces §aslime-chunk farms§7."
+    recipe-input: SLIME_BALL
+    recipe-yield: 4
+    output: SLIME_BALL
+    min-drops: 2
+    max-drops: 4
+    custom-model-data: 1015
+    grow-time-seconds: 480
+
+  string:
+    display-name: "§f✦ String Seed"
+    lore:
+      - "§7Replaces §fspider farms§7."
+    recipe-input: STRING
+    recipe-yield: 4
+    output: STRING
+    min-drops: 2
+    max-drops: 5
+    custom-model-data: 1016
+    grow-time-seconds: 240
+
+  bone:
+    display-name: "§f✦ Bone Seed"
+    lore:
+      - "§7Replaces §fskeleton farms§7."
+      - "§7Useful even though bonemeal is disabled —"
+      - "§7craft into bone meal for §6paths and beacons§7."
+    recipe-input: BONE
+    recipe-yield: 4
+    output: BONE
+    min-drops: 2
+    max-drops: 4
+    custom-model-data: 1017
+    grow-time-seconds: 240
+
+  glowstone_dust:
+    display-name: "§e✦ Glowstone Seed"
+    lore:
+      - "§7Replaces §enether trips§7."
+    recipe-input: GLOWSTONE_DUST
+    recipe-yield: 4
+    output: GLOWSTONE_DUST
+    min-drops: 2
+    max-drops: 4
+    custom-model-data: 1018
+    grow-time-seconds: 360
+
+  honeycomb:
+    display-name: "§6✦ Honeycomb Seed"
+    lore:
+      - "§7Replaces §ebee farms§7."
+    recipe-input: HONEYCOMB
+    recipe-yield: 2
+    output: HONEYCOMB
+    min-drops: 1
+    max-drops: 2
+    custom-model-data: 1019
+    grow-time-seconds: 600
+
+  ghast_tear:
+    display-name: "§f✦ Ghast Seed"
+    lore:
+      - "§7Replaces §fghast farms§7."
+      - "§7Ingredient for regeneration potions."
+    recipe-input: GHAST_TEAR
+    recipe-yield: 1
+    output: GHAST_TEAR
+    min-drops: 1
+    max-drops: 1
+    custom-model-data: 1020
+    grow-time-seconds: 1200   # 20 min — rare
+
+  magma_cream:
+    display-name: "§4✦ Magma Cream Seed"
+    lore:
+      - "§7Replaces §cmagma cube farms§7."
+    recipe-input: MAGMA_CREAM
+    recipe-yield: 2
+    output: MAGMA_CREAM
+    min-drops: 1
+    max-drops: 2
+    custom-model-data: 1021
+    grow-time-seconds: 600
+
+  prismarine_shard:
+    display-name: "§3✦ Prismarine Seed"
+    lore:
+      - "§7Replaces §3ocean monument runs§7."
+    recipe-input: PRISMARINE_SHARD
+    recipe-yield: 4
+    output: PRISMARINE_SHARD
+    min-drops: 2
+    max-drops: 4
+    custom-model-data: 1022
+    grow-time-seconds: 600
+
+  nautilus_shell:
+    display-name: "§b✦ Nautilus Seed"
+    lore:
+      - "§7Replaces §bdrowned trident farms§7."
+      - "§7Used for §bConduits§7 — very rare."
+    recipe-input: NAUTILUS_SHELL
+    recipe-yield: 1
+    output: NAUTILUS_SHELL
+    min-drops: 1
+    max-drops: 1
+    custom-model-data: 1023
+    grow-time-seconds: 1500   # 25 min
+
+  echo_shard:
+    display-name: "§3✦ Echo Seed"
+    lore:
+      - "§7Replaces §3ancient city loot runs§7."
+      - "§7Used to craft Recovery Compasses."
+    recipe-input: ECHO_SHARD
+    recipe-yield: 1
+    output: ECHO_SHARD
+    min-drops: 1
+    max-drops: 1
+    custom-model-data: 1024
+    grow-time-seconds: 1500
+
+  netherite_scrap:
+    display-name: "§8✦ Netherite Seed"
+    lore:
+      - "§7An alternate path to §8netherite§7."
+      - "§7Very slow — balance is key."
+    recipe-input: NETHERITE_SCRAP
+    recipe-yield: 1
+    output: NETHERITE_SCRAP
+    min-drops: 1
+    max-drops: 1
+    custom-model-data: 1025
+    grow-time-seconds: 1800   # 30 min — epic
+
+
+# ============================================================
+#  EXAMPLE EXTRAS (commented out — uncomment to enable)
+# ============================================================
+
+#  glow_ink_sac:
+#    display-name: "§b✦ Glow Ink Seed"
+#    recipe-input: GLOW_INK_SAC
+#    recipe-yield: 4
+#    output: GLOW_INK_SAC
+#    min-drops: 2
+#    max-drops: 4
+#    grow-time-seconds: 360
+
+#  ink_sac:
+#    display-name: "§0✦ Ink Sac Seed"
+#    recipe-input: INK_SAC
+#    recipe-yield: 4
+#    output: INK_SAC
+#    min-drops: 2
+#    max-drops: 4
+#    grow-time-seconds: 240
+
+#  sugar:
+#    display-name: "§f✦ Sugar Seed"
+#    recipe-input: SUGAR
+#    recipe-yield: 6
+#    output: SUGAR
+#    min-drops: 3
+#    max-drops: 6
+#    grow-time-seconds: 120
+
+#  feather:
+#    display-name: "§f✦ Feather Seed"
+#    recipe-input: FEATHER
+#    recipe-yield: 4
+#    output: FEATHER
+#    min-drops: 2
+#    max-drops: 4
+#    grow-time-seconds: 240
+
+#  leather:
+#    display-name: "§6✦ Leather Seed"
+#    recipe-input: LEATHER
+#    recipe-yield: 2
+#    output: LEATHER
+#    min-drops: 1
+#    max-drops: 3
+#    grow-time-seconds: 360

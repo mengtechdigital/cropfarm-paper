@@ -1,0 +1,24 @@
+name: CropFarm
+version: 1.0.0
+main: com.cropfarm.CropFarm
+api-version: '1.21'
+description: Custom seed/crop system with configurable yields.
+author: Meng Tech LLC
+
+commands:
+  cropfarmreload:
+    description: Reload CropFarm config.yml.
+    usage: /cropfarmreload
+    permission: cropfarm.reload
+  cropfarmgive:
+    description: Give a CropFarm seed to a player.
+    usage: /cropfarmgive <crop> [amount] [player]
+    permission: cropfarm.give
+
+permissions:
+  cropfarm.reload:
+    description: Allows reloading CropFarm config.
+    default: op
+  cropfarm.give:
+    description: Allows giving CropFarm seeds.
+    default: op

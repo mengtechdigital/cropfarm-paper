@@ -33,13 +33,15 @@ public class CropType {
     private final int xpMin;
     private final int xpMax;
     private final String tier;
+    /** Category id derived from source file (e.g. "blocks", "endgame", "ores"). */
+    private final String category;
 
     public CropType(String id, String displayName, List<String> lore,
                     Material recipeInput, int recipeYield,
                     List<DropEntry> outputs,
                     int customModelData, int growTimeSeconds,
                     int maxPerPlayer, int xpMin, int xpMax,
-                    String tier) {
+                    String tier, String category) {
         this.id = id;
         this.displayName = displayName;
         this.lore = lore;
@@ -52,6 +54,7 @@ public class CropType {
         this.xpMin = xpMin;
         this.xpMax = xpMax;
         this.tier = tier;
+        this.category = category;
     }
 
     public String getId()             { return id; }
@@ -66,6 +69,7 @@ public class CropType {
     public int getXpMin()             { return xpMin; }
     public int getXpMax()             { return xpMax; }
     public String getTier()           { return tier; }
+    public String getCategory()       { return category; }
 
     /** Material used as the GUI / status icon (first declared output, falls back to wheat seeds). */
     public Material getPrimaryOutput() {

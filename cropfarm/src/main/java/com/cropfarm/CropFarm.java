@@ -124,6 +124,9 @@ public class CropFarm extends JavaPlugin {
     // Helpers
     // ---------------------------------------------------------------
 
+    /** Crop YAML resources bundled in the JAR. Exposed for CropManager to load as a baseline. */
+    public static String[] defaultCropFiles() { return DEFAULT_CROP_FILES.clone(); }
+
     private void saveDefaultCropFiles() {
         for (String f : DEFAULT_CROP_FILES) {
             File target = new File(getDataFolder(), f);

@@ -10,6 +10,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * Loads tier definitions and crop definitions from config.yml plus any
@@ -128,10 +133,18 @@ public class CropManager {
             }
         }
 
-        // ---- Crops from main config.yml ----
-        loadCropsFromSection(cfg.getConfigurationSection("crops"), "config.yml");
+        // ---- Phase 1: bundled defaults from JAR ----
+        // This guarantees every bundled crop is loaded even when an existing
+        // user file (preserved from a previous install) is missing newer
+        // entries. Phase 2 (disk) then overrides any that the user has
+        // edited in their plugins/CropFarm/ directory.
+        loadJarResource("config.yml");
+        for (String f : CropFarm.defaultCropFiles()) {
+            loadJarResource(f);
+        }
 
-        // ---- Crops from crops/*.yml ----
+        // ---- Phase 2: user disk files override the JAR baseline ----
+        loadCropsFromSection(cfg.getConfigurationSection("crops"), "config.yml");
         File cropsDir = new File(plugin.getDataFolder(), "crops");
         if (cropsDir.exists() && cropsDir.isDirectory()) {
             File[] files = cropsDir.listFiles((d, n) -> n.toLowerCase().endsWith(".yml"));
@@ -148,20 +161,46 @@ public class CropManager {
                 + tiers.size() + " tier(s).");
     }
 
-    private void loadCropsFromSection(ConfigurationSection crops, String sourceName) {
-        if (crops == null) return;
-        for (String id : crops.getKeys(false)) {
-            ConfigurationSection s = crops.getConfigurationSection(id);
-            if (s == null) continue;
-            loadOneCrop(id.toLowerCase(), s, sourceName);
+    private void loadJarResource(String path) {
+        try (InputStream is = plugin.getResource(path)) {
+            if (is == null) return;
+            YamlConfiguration y = YamlConfiguration.loadConfiguration(
+                    new InputStreamReader(is, StandardCharsets.UTF_8));
+            loadCropsFromSection(y.getConfigurationSection("crops"), "jar:" + path);
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.WARNING,
+                    "Cannot read bundled JAR resource " + path, e);
         }
     }
 
-    private void loadOneCrop(String id, ConfigurationSection s, String sourceName) {
+    private void loadCropsFromSection(ConfigurationSection crops, String sourceName) {
+        if (crops == null) return;
+        String category = categoryFromSource(sourceName);
+        for (String id : crops.getKeys(false)) {
+            ConfigurationSection s = crops.getConfigurationSection(id);
+            if (s == null) continue;
+            loadOneCrop(id.toLowerCase(), s, sourceName, category);
+        }
+    }
+
+    /** Source "jar:crops/blocks.yml" or "crops/blocks.yml" → category "blocks". */
+    private static String categoryFromSource(String source) {
+        if (source == null) return "ores";
+        String name = source;
+        if (name.startsWith("jar:")) name = name.substring(4);
+        if (name.startsWith("crops/")) name = name.substring(6);
+        if (name.endsWith(".yml")) name = name.substring(0, name.length() - 4);
+        // The OG crops live in config.yml's `crops:` section — call them "ores"
+        // since that's what they thematically are.
+        if (name.equals("config")) return "ores";
+        return name;
+    }
+
+    private void loadOneCrop(String id, ConfigurationSection s, String sourceName, String category) {
         if (cropTypes.containsKey(id)) {
-            plugin.getLogger().warning("Duplicate crop id '" + id + "' in " + sourceName
-                    + " — overriding earlier definition.");
-            // Strip the previously-registered recipe before re-registering.
+            // Duplicate is expected: user disk file overriding a JAR default,
+            // or a later disk file overriding an earlier one. Silent override —
+            // warning was too noisy now that JAR-defaults-first loading runs.
             plugin.getServer().removeRecipe(new NamespacedKey(plugin, "cropfarm_" + id));
         }
 
@@ -222,7 +261,7 @@ public class CropManager {
         CropType cropType = new CropType(id, displayName, lore,
                 recipeInput, recipeYield, outputs,
                 customModelData, growTime, maxPerPlayer, xpMin, xpMax,
-                tier.id());
+                tier.id(), category);
         cropTypes.put(id, cropType);
 
         NamespacedKey recipeKey = new NamespacedKey(plugin, "cropfarm_" + id);

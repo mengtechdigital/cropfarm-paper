@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here.
 
+## [1.7.1] — 2026-04-29
+
+### Fixed
+- **Server reported 167 crops instead of 170 after upgrade** — Bukkit's `saveResource(false)` deliberately doesn't overwrite existing user files, so when content was added to `crops/endgame.yml` (saddle, name_tag in 1.6.0; nether_star in 1.7.0) and `crops/decoratives.yml` (cave vines etc. in 1.7.0), upgraders were stuck with the older versions of those files. Crops introduced in newer versions never appeared on their server.
+- **Fix:** `CropManager.reload()` now loads bundled JAR defaults as a baseline first, then applies user disk files on top as overrides. New crops introduced in any update are guaranteed to appear; user-edited values for crops they care about still win.
+
+### Changed
+- **`/cropfarm menu` is now a two-level browser** — main menu shows category cards (Ores, Mob Drops, Blocks, Endgame, etc. — 20 categories) instead of dumping all 170 crops into a single paginated stream. Click a category to drill in; each category page has a "Back to Categories" button. Much more browsable at scale.
+- `/cropfarm menu <category>` opens directly to that category. Tab-completion shows the available category ids.
+- Each crop now carries a `category` field derived from its source file (e.g. `crops/blocks.yml` → category `blocks`). Custom user files automatically get a category from their filename — drop a `crops/my-pack.yml` and it appears as a "My Pack" category on the menu.
+
 ## [1.7.0] — 2026-04-29
 
 ### Added

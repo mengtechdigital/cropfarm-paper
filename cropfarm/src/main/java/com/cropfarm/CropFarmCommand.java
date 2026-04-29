@@ -70,13 +70,26 @@ public class CropFarmCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage("§cYou don't have permission.");
             return true;
         }
+        // /cropfarm menu                  → main category menu
+        // /cropfarm menu <category>       → category, page 1
+        // /cropfarm menu <category> <pg>  → category, page N
+        if (args.length == 0) {
+            plugin.getCropMenu().openMainMenu(player);
+            return true;
+        }
+        String category = args[0].toLowerCase();
+        if (!plugin.getCropMenu().categoryExists(category)) {
+            sender.sendMessage("§cUnknown category: " + category);
+            sender.sendMessage("§7Tab-complete /cropfarm menu to see all categories.");
+            return true;
+        }
         int page = 0;
-        if (args.length >= 1) {
+        if (args.length >= 2) {
             try {
-                page = Math.max(0, Integer.parseInt(args[0]) - 1);
+                page = Math.max(0, Integer.parseInt(args[1]) - 1);
             } catch (NumberFormatException ignored) { /* default to first page */ }
         }
-        plugin.getCropMenu().open(player, page);
+        plugin.getCropMenu().openCategory(player, category, page);
         return true;
     }
 
@@ -160,6 +173,9 @@ public class CropFarmCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length >= 2 && args[0].equalsIgnoreCase("give")) {
                 return tabCompleteGive(Arrays.copyOfRange(args, 1, args.length));
+            }
+            if (args.length == 2 && args[0].equalsIgnoreCase("menu")) {
+                return prefixFilter(plugin.getCropMenu().listCategories(), args[1]);
             }
             return Collections.emptyList();
         }

@@ -2,6 +2,7 @@ package com.cropfarm;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,88 +16,158 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Chest-based crop browser. Six rows (54 slots): the top 45 hold crops,
- * the bottom 9 hold navigation. Crops are sorted by tier order (common → epic)
- * then by id, then paginated 45 per page.
+ * Two-level chest browser:
+ *   MAIN     — grid of category cards, click any to drill in.
+ *   CATEGORY — paginated crop list filtered to one category, with prev /
+ *              back / info / next nav row.
  *
- * Click behaviour:
- *   - Left-click a crop  → details printed to chat.
- *   - Shift-click a crop → give one seed (requires cropfarm.give perm).
- *   - Slots 45 / 53      → previous / next page.
- *   - Slot 49            → close.
+ * Categories come from each crop's `category` field, which CropManager
+ * derives from the source filename (e.g. crops/blocks.yml → "blocks").
  *
- * The menu is identified via {@link CropMenuHolder} on the inventory, so we
- * never rely on the title string for routing.
+ * Identifies its own inventories via {@link CropMenuHolder} (never by
+ * title). The holder also carries the current mode + category + page so
+ * click routing is purely inventory-state driven.
+ *
+ * Click safety invariant: setCancelled fires BEFORE any guard or early
+ * return, so number-key swaps, double-click collect, F-swap, etc. cannot
+ * exfiltrate items. Do not move the cancel down.
  */
 public class CropMenu implements Listener {
 
     private static final int ROWS = 6;
     private static final int SIZE = ROWS * 9;
-    private static final int PAGE_SIZE = 45;
-    private static final int NAV_PREV_SLOT = 45;
-    private static final int NAV_INFO_SLOT = 49;
-    private static final int NAV_NEXT_SLOT = 53;
+    private static final int CONTENT_SLOTS = 45;          // 0..44 (5 rows)
+    private static final int NAV_PREV_SLOT  = 45;
+    private static final int NAV_BACK_SLOT  = 47;
     private static final int NAV_CLOSE_SLOT = 48;
+    private static final int NAV_INFO_SLOT  = 49;
+    private static final int NAV_NEXT_SLOT  = 53;
 
-    /** Order in which tiers appear in the menu. Unknown tiers fall to the end. */
+    /** Tier display order (and sort priority within a category page). */
     private static final List<String> TIER_ORDER =
             List.of("common", "uncommon", "rare", "epic", "legendary", "mythic");
 
+    /**
+     * Display order for known categories (matches the typical play
+     * progression). Unknown categories fall to the end alphabetically.
+     */
+    private static final List<String> CATEGORY_ORDER = List.of(
+            "ores", "raw-ores", "crafting-essentials", "blocks",
+            "saplings", "farm-crops", "foods", "mushrooms",
+            "vanilla", "wool", "flowers", "dyes",
+            "decoratives", "mob-drops", "heads", "pottery",
+            "froglights", "sniffer", "breeze-trial", "endgame"
+    );
+
+    /** Recognisable icon for each known category — clearer than auto-derived. */
+    private static final Map<String, Material> CATEGORY_ICONS = Map.ofEntries(
+            Map.entry("ores",                Material.DIAMOND),
+            Map.entry("raw-ores",            Material.RAW_IRON),
+            Map.entry("crafting-essentials", Material.STICK),
+            Map.entry("blocks",              Material.COBBLESTONE),
+            Map.entry("saplings",            Material.OAK_SAPLING),
+            Map.entry("farm-crops",          Material.WHEAT),
+            Map.entry("foods",               Material.COOKED_BEEF),
+            Map.entry("mushrooms",           Material.RED_MUSHROOM),
+            Map.entry("vanilla",             Material.APPLE),
+            Map.entry("wool",                Material.WHITE_WOOL),
+            Map.entry("flowers",             Material.POPPY),
+            Map.entry("dyes",                Material.RED_DYE),
+            Map.entry("decoratives",         Material.SPONGE),
+            Map.entry("mob-drops",           Material.ROTTEN_FLESH),
+            Map.entry("heads",               Material.SKELETON_SKULL),
+            Map.entry("pottery",             Material.BRICK),
+            Map.entry("froglights",          Material.OCHRE_FROGLIGHT),
+            Map.entry("sniffer",             Material.SNIFFER_EGG),
+            Map.entry("breeze-trial",        Material.BREEZE_ROD),
+            Map.entry("endgame",             Material.NETHER_STAR)
+    );
+
     private final CropFarm plugin;
+    private final NamespacedKey categoryKey;
 
     public CropMenu(CropFarm plugin) {
         this.plugin = plugin;
+        this.categoryKey = new NamespacedKey(plugin, "menu_category");
     }
 
     // ---------------------------------------------------------------
     // Open
     // ---------------------------------------------------------------
 
-    public void open(Player player, int requestedPage) {
-        List<CropType> sorted = sortedCrops();
-        int totalPages = Math.max(1, (int) Math.ceil(sorted.size() / (double) PAGE_SIZE));
+    /** Convenience: open the main category menu. */
+    public void open(Player player) {
+        openMainMenu(player);
+    }
+
+    public void openMainMenu(Player player) {
+        CropMenuHolder holder = new CropMenuHolder(CropMenuHolder.Mode.MAIN, null, 0);
+        Inventory inv = Bukkit.createInventory(holder, SIZE, "§8CropFarm — §fCategories");
+        holder.setInventory(inv);
+
+        List<CategoryEntry> categories = enumerateCategories();
+        for (int i = 0; i < categories.size() && i < CONTENT_SLOTS; i++) {
+            inv.setItem(i, buildCategoryCard(categories.get(i)));
+        }
+
+        // Nav row
+        inv.setItem(NAV_INFO_SLOT, navItem(Material.KNOWLEDGE_BOOK,
+                "§b✦ CropFarm",
+                "§7" + categories.size() + " categories",
+                "§7" + plugin.getCropManager().getCropTypes().size() + " crops total",
+                "",
+                "§7Click a category to browse it."));
+        inv.setItem(NAV_CLOSE_SLOT, navItem(Material.BARRIER, "§c✖ Close"));
+        for (int s = CONTENT_SLOTS; s < SIZE; s++) {
+            if (inv.getItem(s) == null) inv.setItem(s, navFiller());
+        }
+
+        player.openInventory(inv);
+    }
+
+    public void openCategory(Player player, String category, int requestedPage) {
+        List<CropType> sorted = sortedCropsInCategory(category);
+        int totalPages = Math.max(1, (int) Math.ceil(sorted.size() / (double) CONTENT_SLOTS));
         int page = Math.max(0, Math.min(requestedPage, totalPages - 1));
 
-        CropMenuHolder holder = new CropMenuHolder(page);
-        String title = "§8CropFarm — Page §f" + (page + 1) + "§8/§f" + totalPages;
+        CropMenuHolder holder = new CropMenuHolder(CropMenuHolder.Mode.CATEGORY, category, page);
+        String title = "§8" + prettyCategory(category)
+                + " §8— §fPage " + (page + 1) + "§8/§f" + totalPages;
         Inventory inv = Bukkit.createInventory(holder, SIZE, title);
         holder.setInventory(inv);
 
-        int from = page * PAGE_SIZE;
-        int to = Math.min(sorted.size(), from + PAGE_SIZE);
+        int from = page * CONTENT_SLOTS;
+        int to = Math.min(sorted.size(), from + CONTENT_SLOTS);
         for (int i = from; i < to; i++) {
-            CropType type = sorted.get(i);
-            inv.setItem(i - from, buildCropIcon(player, type));
+            inv.setItem(i - from, buildCropIcon(player, sorted.get(i)));
         }
 
-        // Navigation row (slots 45..53)
+        // Nav row
         if (page > 0) {
             inv.setItem(NAV_PREV_SLOT, navItem(Material.ARROW, "§e◀ Previous Page",
                     "§7Page " + page));
-        } else {
-            inv.setItem(NAV_PREV_SLOT, navFiller());
         }
+        inv.setItem(NAV_BACK_SLOT, navItem(Material.OAK_DOOR, "§e⏎ Back to Categories"));
+        inv.setItem(NAV_CLOSE_SLOT, navItem(Material.BARRIER, "§c✖ Close"));
         inv.setItem(NAV_INFO_SLOT, navItem(Material.KNOWLEDGE_BOOK,
-                "§b✦ CropFarm",
+                "§b✦ " + prettyCategory(category),
                 "§7Page §f" + (page + 1) + "§7/§f" + totalPages,
                 "§7" + sorted.size() + " crops",
                 "",
-                "§7Left-click a crop for details.",
+                "§7Left-click for details.",
                 "§7Shift-click to take a seed §8(op)§7."));
-        inv.setItem(NAV_CLOSE_SLOT, navItem(Material.BARRIER, "§c✖ Close"));
         if (page < totalPages - 1) {
             inv.setItem(NAV_NEXT_SLOT, navItem(Material.ARROW, "§eNext Page ▶",
                     "§7Page " + (page + 2)));
-        } else {
-            inv.setItem(NAV_NEXT_SLOT, navFiller());
         }
-        // Fill remaining nav slots with filler glass.
-        for (int s = NAV_PREV_SLOT; s <= NAV_NEXT_SLOT; s++) {
+        for (int s = CONTENT_SLOTS; s < SIZE; s++) {
             if (inv.getItem(s) == null) inv.setItem(s, navFiller());
         }
 
@@ -115,33 +186,63 @@ public class CropMenu implements Listener {
         // INVARIANT: cancel BEFORE any subsequent guards or early-returns.
         // Number-key (hotbar swap), F (swap-offhand), shift-click, and
         // double-click "collect-to-cursor" all rely on this cancel firing
-        // first to prevent item movement. Do not move it down.
+        // first. Do not move it down.
         event.setCancelled(true);
 
         if (!(event.getWhoClicked() instanceof Player player)) return;
-        if (event.getClickedInventory() != top) return; // clicks in player's own inv: cancelled, no routing
+        if (event.getClickedInventory() != top) return;
 
         int slot = event.getSlot();
-        int page = holder.getPage();
 
-        if (slot == NAV_PREV_SLOT && page > 0) {
-            playClick(player);
-            open(player, page - 1);
+        if (holder.getMode() == CropMenuHolder.Mode.MAIN) {
+            handleMainClick(player, slot);
+        } else {
+            handleCategoryClick(player, holder, slot, event.getClick());
+        }
+    }
+
+    private void handleMainClick(Player player, int slot) {
+        if (slot == NAV_CLOSE_SLOT) {
+            player.closeInventory();
             return;
         }
-        if (slot == NAV_NEXT_SLOT) {
+        if (slot >= CONTENT_SLOTS) return; // other nav slots: noop
+
+        // Read the category id from the card's PDC — robust against any
+        // reordering between menu render and click.
+        Inventory inv = player.getOpenInventory().getTopInventory();
+        ItemStack clicked = inv.getItem(slot);
+        if (clicked == null || !clicked.hasItemMeta()) return;
+        String catId = clicked.getItemMeta().getPersistentDataContainer()
+                .get(categoryKey, PersistentDataType.STRING);
+        if (catId == null) return;
+        playClick(player);
+        openCategory(player, catId, 0);
+    }
+
+    private void handleCategoryClick(Player player, CropMenuHolder holder, int slot, ClickType click) {
+        if (slot == NAV_BACK_SLOT) {
             playClick(player);
-            open(player, page + 1);
+            openMainMenu(player);
             return;
         }
         if (slot == NAV_CLOSE_SLOT) {
             player.closeInventory();
             return;
         }
-        if (slot >= PAGE_SIZE) return; // remaining nav slots: noop
+        if (slot == NAV_PREV_SLOT && holder.getPage() > 0) {
+            playClick(player);
+            openCategory(player, holder.getCategory(), holder.getPage() - 1);
+            return;
+        }
+        if (slot == NAV_NEXT_SLOT) {
+            playClick(player);
+            openCategory(player, holder.getCategory(), holder.getPage() + 1);
+            return;
+        }
+        if (slot >= CONTENT_SLOTS) return;
 
-        // Crop slot — resolve the crop by reading the icon's PDC.
-        ItemStack clicked = event.getCurrentItem();
+        ItemStack clicked = holder.getInventory().getItem(slot);
         if (clicked == null || !clicked.hasItemMeta()) return;
         ItemMeta meta = clicked.getItemMeta();
         String cropId = meta.getPersistentDataContainer()
@@ -150,7 +251,6 @@ public class CropMenu implements Listener {
         CropType type = plugin.getCropManager().getCropType(cropId);
         if (type == null) return;
 
-        ClickType click = event.getClick();
         if (click.isShiftClick()) {
             if (!player.hasPermission("cropfarm.give")) {
                 player.sendMessage("§cYou don't have permission to take seeds.");
@@ -167,7 +267,6 @@ public class CropMenu implements Listener {
             return;
         }
 
-        // Plain left-click → print details to chat.
         sendDetails(player, type);
         playClick(player);
     }
@@ -186,15 +285,53 @@ public class CropMenu implements Listener {
     }
 
     // ---------------------------------------------------------------
-    // Helpers
+    // Category enumeration / sorting
     // ---------------------------------------------------------------
 
-    private List<CropType> sortedCrops() {
-        List<CropType> all = new ArrayList<>(plugin.getCropManager().getCropTypes());
-        all.sort(Comparator
+    private record CategoryEntry(String id, String displayName, Material icon, int cropCount) { }
+
+    private List<CategoryEntry> enumerateCategories() {
+        Map<String, List<CropType>> byCategory = new LinkedHashMap<>();
+        for (CropType c : plugin.getCropManager().getCropTypes()) {
+            String cat = c.getCategory() == null || c.getCategory().isEmpty() ? "other" : c.getCategory();
+            byCategory.computeIfAbsent(cat, k -> new ArrayList<>()).add(c);
+        }
+
+        List<CategoryEntry> entries = new ArrayList<>();
+        for (var e : byCategory.entrySet()) {
+            String id = e.getKey();
+            Material icon = CATEGORY_ICONS.getOrDefault(id, fallbackIconFor(e.getValue()));
+            entries.add(new CategoryEntry(id, prettyCategory(id), icon, e.getValue().size()));
+        }
+        entries.sort(Comparator
+                .comparingInt((CategoryEntry c) -> categoryOrderIndex(c.id()))
+                .thenComparing(CategoryEntry::displayName));
+        return entries;
+    }
+
+    private static int categoryOrderIndex(String id) {
+        int i = CATEGORY_ORDER.indexOf(id);
+        return i < 0 ? CATEGORY_ORDER.size() : i;
+    }
+
+    private static Material fallbackIconFor(List<CropType> crops) {
+        if (crops.isEmpty()) return Material.WHEAT_SEEDS;
+        Material m = crops.get(0).getPrimaryOutput();
+        return m == null ? Material.WHEAT_SEEDS : m;
+    }
+
+    private List<CropType> sortedCropsInCategory(String category) {
+        List<CropType> out = new ArrayList<>();
+        for (CropType c : plugin.getCropManager().getCropTypes()) {
+            if (category.equals(c.getCategory()) ||
+                    (c.getCategory() == null && "ores".equals(category))) {
+                out.add(c);
+            }
+        }
+        out.sort(Comparator
                 .comparingInt((CropType c) -> tierIndex(c.getTier()))
                 .thenComparing(CropType::getId));
-        return all;
+        return out;
     }
 
     private static int tierIndex(String tierId) {
@@ -203,8 +340,27 @@ public class CropMenu implements Listener {
         return i < 0 ? TIER_ORDER.size() : i;
     }
 
+    // ---------------------------------------------------------------
+    // Card / icon builders
+    // ---------------------------------------------------------------
+
+    private ItemStack buildCategoryCard(CategoryEntry entry) {
+        ItemStack item = new ItemStack(entry.icon());
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
+        meta.setDisplayName("§b✦ §f" + entry.displayName());
+        List<String> lore = new ArrayList<>();
+        lore.add("§7" + entry.cropCount() + " crops");
+        lore.add("");
+        lore.add("§eClick to browse →");
+        meta.setLore(lore);
+        meta.getPersistentDataContainer().set(
+                categoryKey, PersistentDataType.STRING, entry.id());
+        item.setItemMeta(meta);
+        return item;
+    }
+
     private ItemStack buildCropIcon(Player player, CropType type) {
-        // Use the primary output material so players recognise what the crop produces.
         Material icon = type.getPrimaryOutput();
         ItemStack item = new ItemStack(icon == null ? Material.WHEAT_SEEDS : icon);
         ItemMeta meta = item.getItemMeta();
@@ -239,12 +395,6 @@ public class CropMenu implements Listener {
             lore.add("§8Drops: §f" + range + " " + humanize(only.item().name()));
         } else {
             lore.add("§8Drops: §f" + type.getOutputs().size() + " possible §7(weighted)");
-            for (CropType.DropEntry e : type.getOutputs()) {
-                String range = e.minAmount() == e.maxAmount()
-                        ? String.valueOf(e.minAmount())
-                        : e.minAmount() + "-" + e.maxAmount();
-                lore.add("  §7• §fw" + e.weight() + " §7→ §f" + range + " " + humanize(e.item().name()));
-            }
         }
 
         if (type.getXpMax() > 0) {
@@ -261,7 +411,6 @@ public class CropMenu implements Listener {
         }
 
         meta.setLore(lore);
-        // Tag the icon with the crop id so click handler can resolve it without parsing names.
         meta.getPersistentDataContainer().set(
                 plugin.getCropManager().cropTypeKey(),
                 PersistentDataType.STRING, type.getId());
@@ -302,12 +451,16 @@ public class CropMenu implements Listener {
         player.sendMessage("§8§m──────────");
     }
 
+    // ---------------------------------------------------------------
+    // Helpers
+    // ---------------------------------------------------------------
+
     private static ItemStack navItem(Material mat, String name, String... lore) {
         ItemStack it = new ItemStack(mat);
         ItemMeta m = it.getItemMeta();
         if (m != null) {
             m.setDisplayName(name);
-            if (lore.length > 0) m.setLore(java.util.Arrays.asList(lore));
+            if (lore.length > 0) m.setLore(Arrays.asList(lore));
             it.setItemMeta(m);
         }
         return it;
@@ -327,7 +480,7 @@ public class CropMenu implements Listener {
         player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 0.5f, 1.4f);
     }
 
-    /** "180" → "3 min", "7200" → "2h 0m", "45" → "45 sec". */
+    /** "180" → "3 min", "172800" → "48h 0m". */
     private static String formatGrowTime(int seconds) {
         if (seconds < 60) return seconds + " sec";
         if (seconds < 3600) {
@@ -340,10 +493,10 @@ public class CropMenu implements Listener {
         return h + "h " + m + "m";
     }
 
-    /** "GOLD_INGOT" → "Gold Ingot". */
+    /** "GOLD_INGOT" → "Gold Ingot", "mob-drops" → "Mob Drops". */
     private static String humanize(String enumName) {
         if (enumName == null || enumName.isEmpty()) return "";
-        String[] words = enumName.toLowerCase().split("_");
+        String[] words = enumName.toLowerCase().split("[_-]");
         StringBuilder sb = new StringBuilder();
         for (String w : words) {
             if (w.isEmpty()) continue;
@@ -353,9 +506,24 @@ public class CropMenu implements Listener {
         return sb.toString();
     }
 
-    /** Re-export for tests / external use. */
-    @SuppressWarnings("unused")
-    public static List<String> tierOrderView() {
-        return Collections.unmodifiableList(TIER_ORDER);
+    /** Public so commands can resolve a display name from a category id. */
+    public static String prettyCategory(String id) {
+        return humanize(id);
+    }
+
+    /** Returns whether a given category id has any crops loaded. Used by tab completion. */
+    public boolean categoryExists(String id) {
+        if (id == null) return false;
+        for (CropType c : plugin.getCropManager().getCropTypes()) {
+            if (id.equals(c.getCategory())) return true;
+        }
+        return false;
+    }
+
+    /** Sorted list of category ids — for tab completion. */
+    public List<String> listCategories() {
+        List<String> out = new ArrayList<>();
+        for (CategoryEntry e : enumerateCategories()) out.add(e.id());
+        return out;
     }
 }

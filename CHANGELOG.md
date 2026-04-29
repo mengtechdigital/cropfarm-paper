@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here.
 
+## [1.9.1] — 2026-04-29
+
+### Fixed
+- **Newly-planted seeds could pop off immediately in low light or other physics edge cases.** `Block.setType(WHEAT)` triggers a synchronous neighbor-update tick that lets vanilla re-check support / adjacent fluids before the plugin's `protect-from-automation` listeners can register the new block as tracked. The popped wheat dropped as an untagged vanilla `WHEAT_SEEDS`, leaving the player with a useless seed and (eventually) a compensation drop from the growth task — a confusing double-seed outcome. Now placed with `applyPhysics=false` so the immediate physics tick is skipped; subsequent physics events are caught normally by the existing protection.
+
 ## [1.9.0] — 2026-04-29
 
 ### Changed (BREAKING)

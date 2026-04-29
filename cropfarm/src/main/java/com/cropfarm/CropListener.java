@@ -88,11 +88,15 @@ public class CropListener implements Listener {
         }
 
         // Place wheat at age 0 — our scheduled task will advance it on a timer.
-        above.setType(Material.WHEAT);
+        // applyPhysics=false skips the synchronous neighbor-update tick that
+        // would otherwise let vanilla pop the block before we get a chance to
+        // track it (e.g., low-light pop, water-adjacent placement). Subsequent
+        // physics events are caught by protect-from-automation listeners.
+        above.setType(Material.WHEAT, false);
         BlockData data = above.getBlockData();
         if (data instanceof Ageable ageable) {
             ageable.setAge(0);
-            above.setBlockData(ageable);
+            above.setBlockData(ageable, false);
         }
 
         // Reservation already incremented the counter; trackReserved just records the entry.

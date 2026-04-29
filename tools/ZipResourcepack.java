@@ -16,11 +16,13 @@ public class ZipResourcepack {
         }
         Files.deleteIfExists(zip);
 
+        // IMPORTANT: pack.mcmeta and assets/ must be at the ZIP ROOT — server
+        // -pushed Minecraft resource packs reject zips that wrap everything
+        // in a top-level folder (local manual installs are more forgiving).
         try (var fos = new FileOutputStream(zip.toFile());
              var zos = new ZipOutputStream(fos)) {
             Files.walk(src).filter(Files::isRegularFile).forEach(p -> {
-                String entryName = "cropfarm-resourcepack/"
-                        + src.relativize(p).toString().replace('\\', '/');
+                String entryName = src.relativize(p).toString().replace('\\', '/');
                 try {
                     zos.putNextEntry(new ZipEntry(entryName));
                     Files.copy(p, zos);

@@ -46,15 +46,17 @@ public class GenerateTextures {
     static final Path RP_DIR    = BUILD_DIR.resolve("cropfarm-resourcepack");
 
     /**
-     * Pack format for Minecraft 1.21.5+. The new item-model-definitions
-     * system bumped pack format aggressively; use a wide supported_formats
-     * range so the pack still works as the user upgrades.
+     * Pack format. The item-model-definitions system bumped pack format
+     * aggressively across 1.21.4-1.21.11; we set the primary value at a
+     * recent number and use a wide supported_formats range so the pack
+     * still works as the user upgrades.
      *
-     *   Min in supported_formats covers 1.21.5 (where the new format became
-     *   mandatory). Max=999 is "future-proof up to whatever comes next".
+     *   Primary 64 covers 1.21.7-1.21.8 era. supported_formats spans 55
+     *   (1.21.5, where the new format became mandatory) through 999.
      */
-    static final int PACK_FORMAT_MIN = 55;   // Minecraft 1.21.5
-    static final int PACK_FORMAT_MAX = 999;  // future-proof
+    static final int PACK_FORMAT       = 64;
+    static final int SUPPORTED_MIN     = 55;
+    static final int SUPPORTED_MAX     = 999;
 
     /** Crop id (without "_seed" suffix) → tint hex. */
     static final Map<String, String> CROPS = new LinkedHashMap<>();
@@ -316,13 +318,15 @@ public class GenerateTextures {
         System.out.println("Wrote " + CROPS.size() + " textures + per-crop models.");
 
         // 5. items/wheat_seeds.json — the new dispatcher.
-        //    type=select, property=custom_model_data, reads strings[0],
-        //    matches `when` cases. Falls back to vanilla wheat seeds.
+        //    type=select, property=custom_model_data, index=0 (explicit so
+        //    no version-drift surprises), reads strings[0], matches `when`
+        //    cases. Falls back to vanilla wheat seeds.
         StringBuilder sb = new StringBuilder();
         sb.append("{\n")
           .append("  \"model\": {\n")
           .append("    \"type\": \"minecraft:select\",\n")
           .append("    \"property\": \"minecraft:custom_model_data\",\n")
+          .append("    \"index\": 0,\n")
           .append("    \"fallback\": {\n")
           .append("      \"type\": \"minecraft:model\",\n")
           .append("      \"model\": \"minecraft:item/wheat_seeds\"\n")
@@ -348,13 +352,13 @@ public class GenerateTextures {
         System.out.println("Wrote items/wheat_seeds.json with " + CROPS.size() + " cases.");
 
         // 6. pack.mcmeta + pack.png (64x64 nearest-neighbor upscale of vanilla seed).
-        //    supported_formats range covers 1.21.5+ through future minor bumps.
+        //    supported_formats uses the array [min, max] form which is the
+        //    most universally-accepted syntax across MC versions.
         Files.writeString(RP_DIR.resolve("pack.mcmeta"),
                 "{\n" +
                 "  \"pack\": {\n" +
-                "    \"pack_format\": " + PACK_FORMAT_MIN + ",\n" +
-                "    \"supported_formats\": { \"min_inclusive\": " + PACK_FORMAT_MIN
-                        + ", \"max_inclusive\": " + PACK_FORMAT_MAX + " },\n" +
+                "    \"pack_format\": " + PACK_FORMAT + ",\n" +
+                "    \"supported_formats\": [" + SUPPORTED_MIN + ", " + SUPPORTED_MAX + "],\n" +
                 "    \"description\": \"CropFarm — custom seed textures for "
                         + CROPS.size() + " crops.\"\n" +
                 "  }\n" +

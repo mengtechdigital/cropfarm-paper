@@ -1,0 +1,126 @@
+# ============================================================
+#  CropFarm — raw foods (meat, fish, eggs)
+# ============================================================
+#  Replaces the standard meat farms (chicken / cow / pig / sheep /
+#  rabbit) and fishing AFK setups. Drops are RAW — players still
+#  smelt to get the cooked version (and the cook XP).
+# ============================================================
+
+crops:
+
+  # ---------- Raw meat (animal farm replacements) ----------
+
+  chicken:
+    display-name: "§e✦ Raw Chicken Seed"
+    lore:
+      - "§7Replaces §echicken farms§7."
+    recipe-input: CHICKEN
+    recipe-yield: 4
+    output: CHICKEN
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  beef:
+    display-name: "§c✦ Raw Beef Seed"
+    lore:
+      - "§7Replaces §ccow farms§7."
+    recipe-input: BEEF
+    recipe-yield: 4
+    output: BEEF
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  porkchop:
+    display-name: "§d✦ Raw Pork Seed"
+    lore:
+      - "§7Replaces §dpig farms§7."
+    recipe-input: PORKCHOP
+    recipe-yield: 4
+    output: PORKCHOP
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  mutton:
+    display-name: "§c✦ Raw Mutton Seed"
+    lore:
+      - "§7Replaces §csheep farms§7."
+    recipe-input: MUTTON
+    recipe-yield: 4
+    output: MUTTON
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  rabbit:
+    display-name: "§e✦ Raw Rabbit Seed"
+    lore:
+      - "§7Replaces §erabbit farms§7."
+    recipe-input: RABBIT
+    recipe-yield: 2
+    output: RABBIT
+    min-drops: 1
+    max-drops: 3
+    tier: common
+
+  # ---------- Fish (replaces AFK fishing) ----------
+
+  cod:
+    display-name: "§e✦ Cod Seed"
+    lore:
+      - "§7Replaces §eAFK fishing§7."
+    recipe-input: COD
+    recipe-yield: 4
+    output: COD
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  salmon:
+    display-name: "§c✦ Salmon Seed"
+    lore:
+      - "§7Replaces §eAFK fishing§7."
+    recipe-input: SALMON
+    recipe-yield: 4
+    output: SALMON
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  tropical_fish:
+    display-name: "§b✦ Tropical Fish Seed"
+    lore:
+      - "§7Rare fishing pull — feeds axolotls."
+    recipe-input: TROPICAL_FISH
+    recipe-yield: 2
+    output: TROPICAL_FISH
+    min-drops: 1
+    max-drops: 2
+    tier: uncommon
+
+  pufferfish:
+    display-name: "§e✦ Pufferfish Seed"
+    lore:
+      - "§7Water-breathing potion ingredient."
+    recipe-input: PUFFERFISH
+    recipe-yield: 2
+    output: PUFFERFISH
+    min-drops: 1
+    max-drops: 2
+    tier: uncommon
+
+  # ---------- Eggs ----------
+
+  egg:
+    display-name: "§f✦ Egg Seed"
+    lore:
+      - "§7Replaces §fchicken-egg farms§7."
+      - "§7Cake, pumpkin pie, throwables."
+    recipe-input: EGG
+    recipe-yield: 4
+    output: EGG
+    min-drops: 2
+    max-drops: 4
+    tier: common

@@ -19,6 +19,11 @@ public class CropFarm extends JavaPlugin {
             "crops/saplings.yml",
             "crops/blocks.yml",
             "crops/endgame.yml",
+            "crops/farm-crops.yml",
+            "crops/foods.yml",
+            "crops/mushrooms.yml",
+            "crops/heads.yml",
+            "crops/decoratives.yml",
     };
 
     private CropManager cropManager;

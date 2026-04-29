@@ -1,9 +1,9 @@
 # ============================================================
-#  CropFarm — vanilla growables that are tedious or RNG-driven
+#  CropFarm — foraging items (vanilla growables that are tedious)
 # ============================================================
-#  Items vanilla can grow but the process is painful: apple drops
-#  from oak-leaf decay RNG, sea pickles only spawn in warm reefs,
-#  chorus fruit only in End cities, glow berries hide in lush caves.
+#  Items vanilla can produce but the process is RNG-driven or
+#  biome-locked: apple from oak-leaf decay, sea pickles from warm
+#  reefs, chorus fruit from End cities, glow berries from lush caves.
 # ============================================================
 
 crops:
@@ -18,7 +18,6 @@ crops:
     min-drops: 2
     max-drops: 4
     tier: common
-    grow-time-seconds: 240
 
   sweet_berries:
     display-name: "§c✦ Sweet Berry Seed"
@@ -30,7 +29,6 @@ crops:
     min-drops: 3
     max-drops: 5
     tier: common
-    grow-time-seconds: 180
 
   glow_berries:
     display-name: "§e✦ Glow Berry Seed"
@@ -41,7 +39,7 @@ crops:
     output: GLOW_BERRIES
     min-drops: 2
     max-drops: 4
-    tier: mid
+    tier: uncommon
 
   chorus_fruit:
     display-name: "§5✦ Chorus Fruit Seed"
@@ -63,7 +61,7 @@ crops:
     output: COCOA_BEANS
     min-drops: 2
     max-drops: 4
-    tier: mid
+    tier: uncommon
 
   sea_pickle:
     display-name: "§2✦ Sea Pickle Seed"
@@ -74,7 +72,7 @@ crops:
     output: SEA_PICKLE
     min-drops: 1
     max-drops: 3
-    tier: mid
+    tier: uncommon
 
   lily_pad:
     display-name: "§a✦ Lily Pad Seed"
@@ -86,4 +84,3 @@ crops:
     min-drops: 1
     max-drops: 3
     tier: common
-    grow-time-seconds: 180

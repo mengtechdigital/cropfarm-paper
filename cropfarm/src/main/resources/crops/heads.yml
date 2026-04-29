@@ -1,0 +1,57 @@
+# ============================================================
+#  CropFarm — mob heads
+# ============================================================
+#  Vanilla mob heads only drop from charged-creeper kills (or, for
+#  wither skull, the rare 1.25% wither-skeleton drop). The crop
+#  versions skip the TNT setup entirely.
+#
+#  Note: WITHER_SKELETON_SKULL is in endgame.yml — it gates the
+#  Wither boss fight and belongs with the legendary tier.
+# ============================================================
+
+crops:
+
+  skeleton_skull:
+    display-name: "§7✦ Skeleton Skull Seed"
+    lore:
+      - "§7Replaces §7charged-creeper kills§7."
+      - "§7Decorative + dispenser-mob disguise."
+    recipe-input: SKELETON_SKULL
+    recipe-yield: 1
+    output: SKELETON_SKULL
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  zombie_head:
+    display-name: "§2✦ Zombie Head Seed"
+    lore:
+      - "§7Replaces §2charged-creeper kills§7."
+    recipe-input: ZOMBIE_HEAD
+    recipe-yield: 1
+    output: ZOMBIE_HEAD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  creeper_head:
+    display-name: "§a✦ Creeper Head Seed"
+    lore:
+      - "§7Replaces §acreeper-vs-charged-creeper§7 setups."
+    recipe-input: CREEPER_HEAD
+    recipe-yield: 1
+    output: CREEPER_HEAD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  piglin_head:
+    display-name: "§d✦ Piglin Head Seed"
+    lore:
+      - "§7Replaces §dcharged-creeper piglin kills§7."
+    recipe-input: PIGLIN_HEAD
+    recipe-yield: 1
+    output: PIGLIN_HEAD
+    min-drops: 1
+    max-drops: 1
+    tier: rare

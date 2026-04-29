@@ -1,18 +1,17 @@
 # ============================================================
 #  CropFarm — endgame
 # ============================================================
-#  The most aspirational items in vanilla — wither skulls (1.25%
-#  drop, gates the Wither boss), totems (raid completion), heart of
-#  the sea (one per buried treasure), enchanted golden apples
-#  (uncraftable since 1.13), shulker shells, tridents.
+#  The most aspirational items in vanilla. All tiered legendary or
+#  mythic — grow times measured in hours and days, caps deliberately
+#  tight so this catalog doesn't trivialise the lategame economy.
 #
-#  All epic-tier with deliberately tight per-player caps so this
-#  catalog doesn't trivialise the lategame economy. A casual player
-#  patient enough to wait an hour gets one totem rather than camping
-#  pillager raids for a weekend.
+#  Legendary tier baseline: 6 hours grow, cap 8.
+#  Mythic   tier baseline: 24 hours grow, cap 2 (one a day per crop).
 # ============================================================
 
 crops:
+
+  # ---------- LEGENDARY (6h, cap 8) ----------
 
   wither_skeleton_skull:
     display-name: "§8✦ Wither Skull Seed"
@@ -24,9 +23,7 @@ crops:
     output: WITHER_SKELETON_SKULL
     min-drops: 1
     max-drops: 1
-    tier: epic
-    grow-time-seconds: 1800     # 30 min
-    max-per-player: 8           # ~2-3 Withers worth at one time
+    tier: legendary
 
   totem_of_undying:
     display-name: "§e✦ Totem Seed"
@@ -38,9 +35,7 @@ crops:
     output: TOTEM_OF_UNDYING
     min-drops: 1
     max-drops: 1
-    tier: epic
-    grow-time-seconds: 2400     # 40 min — totems should feel earned
-    max-per-player: 16
+    tier: legendary
 
   heart_of_the_sea:
     display-name: "§b✦ Heart of the Sea Seed"
@@ -52,9 +47,7 @@ crops:
     output: HEART_OF_THE_SEA
     min-drops: 1
     max-drops: 1
-    tier: epic
-    grow-time-seconds: 2400     # 40 min
-    max-per-player: 8
+    tier: legendary
 
   shulker_shell:
     display-name: "§5✦ Shulker Shell Seed"
@@ -66,9 +59,32 @@ crops:
     output: SHULKER_SHELL
     min-drops: 1
     max-drops: 2
-    tier: epic
-    grow-time-seconds: 1500     # 25 min
-    max-per-player: 16
+    tier: legendary
+
+  saddle:
+    display-name: "§6✦ Saddle Seed"
+    lore:
+      - "§7Skip the §6chest-loot lottery§7."
+      - "§7Vanilla: only from chests + fishing."
+    recipe-input: SADDLE
+    recipe-yield: 1
+    output: SADDLE
+    min-drops: 1
+    max-drops: 1
+    tier: legendary
+
+  name_tag:
+    display-name: "§f✦ Name Tag Seed"
+    lore:
+      - "§7Skip the §fdungeon / mineshaft§7 hunt."
+    recipe-input: NAME_TAG
+    recipe-yield: 1
+    output: NAME_TAG
+    min-drops: 1
+    max-drops: 1
+    tier: legendary
+
+  # ---------- MYTHIC (24h+, cap 2) ----------
 
   trident:
     display-name: "§3✦ Trident Seed"
@@ -80,24 +96,23 @@ crops:
     output: TRIDENT
     min-drops: 1
     max-drops: 1
-    tier: epic
-    grow-time-seconds: 1800     # 30 min
-    max-per-player: 16
+    tier: mythic
+    grow-time-seconds: 129600     # 36 hours — drowned-with-trident is ultra-rare
 
   enchanted_golden_apple:
     display-name: "§5✦ God Apple Seed"
     lore:
-      - "§7Uncraftable since §51.13§7 — chest-only in vanilla."
+      - "§7Uncraftable since §51.13§7."
+      - "§7Chest-only loot in vanilla."
     recipe-input: ENCHANTED_GOLDEN_APPLE
     recipe-yield: 1
     output: ENCHANTED_GOLDEN_APPLE
     min-drops: 1
     max-drops: 1
-    tier: epic
-    grow-time-seconds: 2400     # 40 min — deliberately rare-feeling
-    max-per-player: 8
+    tier: mythic
+    grow-time-seconds: 172800     # 48 hours — full two days
 
-  # ---------- Catalog companions ----------
+  # ---------- Catalog companions (lower tiers, kept here for cohesion) ----------
 
   prismarine_crystals:
     display-name: "§b✦ Prismarine Crystal Seed"
@@ -121,5 +136,4 @@ crops:
     output: HONEY_BOTTLE
     min-drops: 1
     max-drops: 2
-    tier: mid
-    grow-time-seconds: 480
+    tier: uncommon

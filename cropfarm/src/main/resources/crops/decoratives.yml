@@ -1,0 +1,32 @@
+# ============================================================
+#  CropFarm — decorative + odd-utility blocks
+# ============================================================
+#  Items that are technically obtainable in vanilla but a pain to
+#  collect at scale: ocean-monument sponges, mineshaft cobwebs.
+# ============================================================
+
+crops:
+
+  sponge:
+    display-name: "§e✦ Sponge Seed"
+    lore:
+      - "§7Replaces §eocean-monument sponge rooms§7."
+      - "§7Use to drain water pockets fast."
+    recipe-input: SPONGE
+    recipe-yield: 1
+    output: SPONGE
+    min-drops: 1
+    max-drops: 2
+    tier: rare
+
+  cobweb:
+    display-name: "§f✦ Cobweb Seed"
+    lore:
+      - "§7Replaces §fmineshaft cobweb hunts§7."
+      - "§7Slows mobs + decoration."
+    recipe-input: COBWEB
+    recipe-yield: 2
+    output: COBWEB
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon

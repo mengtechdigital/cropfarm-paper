@@ -94,7 +94,7 @@ crops:
     output: AZALEA
     min-drops: 1
     max-drops: 2
-    tier: mid
+    tier: uncommon
 
   flowering_azalea:
     display-name: "§d✦ Flowering Azalea Seed"
@@ -105,4 +105,4 @@ crops:
     output: FLOWERING_AZALEA
     min-drops: 1
     max-drops: 2
-    tier: mid
+    tier: uncommon

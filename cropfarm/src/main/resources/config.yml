@@ -96,29 +96,41 @@ settings:
 
 tiers:
   common:
-    grow-time-seconds: 180     # 3 min
-    max-per-player: 1000
+    grow-time-seconds: 180       # 3 min
+    max-per-player: 1024
     xp-min: 0
     xp-max: 1
     color: "§7"
-  mid:
-    grow-time-seconds: 360     # 6 min
+  uncommon:
+    grow-time-seconds: 360       # 6 min
     max-per-player: 256
     xp-min: 1
     xp-max: 3
-    color: "§e"
+    color: "§a"
   rare:
-    grow-time-seconds: 720     # 12 min
+    grow-time-seconds: 900       # 15 min
     max-per-player: 64
-    xp-min: 3
+    xp-min: 4
     xp-max: 7
     color: "§b"
   epic:
-    grow-time-seconds: 1500    # 25 min
+    grow-time-seconds: 2700      # 45 min
     max-per-player: 32
-    xp-min: 7
-    xp-max: 15
+    xp-min: 10
+    xp-max: 18
     color: "§5"
+  legendary:
+    grow-time-seconds: 21600     # 6 hours
+    max-per-player: 8
+    xp-min: 25
+    xp-max: 50
+    color: "§6"
+  mythic:
+    grow-time-seconds: 86400     # 24 hours (1 full day)
+    max-per-player: 2
+    xp-min: 80
+    xp-max: 150
+    color: "§d"
 
 
 # ============================================================
@@ -158,8 +170,7 @@ crops:
     min-drops: 1
     max-drops: 3
     custom-model-data: 1001
-    tier: epic
-    grow-time-seconds: 900   # 15 min — high-value (overrides tier default)
+    tier: rare
 
   emerald:
     display-name: "§2✦ Emerald Seed"
@@ -172,8 +183,7 @@ crops:
     min-drops: 1
     max-drops: 2
     custom-model-data: 1002
-    tier: epic
-    grow-time-seconds: 900
+    tier: rare
 
   gold:
     display-name: "§6✦ Gold Seed"
@@ -186,8 +196,7 @@ crops:
     min-drops: 2
     max-drops: 5
     custom-model-data: 1003
-    tier: mid
-    grow-time-seconds: 480   # 8 min
+    tier: uncommon
 
   iron:
     display-name: "§7✦ Iron Seed"
@@ -200,8 +209,7 @@ crops:
     min-drops: 2
     max-drops: 5
     custom-model-data: 1004
-    tier: mid
-    grow-time-seconds: 360   # 6 min
+    tier: uncommon
 
   coal:
     display-name: "§8✦ Coal Seed"
@@ -215,7 +223,6 @@ crops:
     max-drops: 6
     custom-model-data: 1005
     tier: common
-    grow-time-seconds: 180
 
   redstone:
     display-name: "§c✦ Redstone Seed"
@@ -228,8 +235,7 @@ crops:
     min-drops: 3
     max-drops: 6
     custom-model-data: 1006
-    tier: mid
-    grow-time-seconds: 360
+    tier: uncommon
 
   lapis_lazuli:
     display-name: "§9✦ Lapis Seed"
@@ -242,8 +248,7 @@ crops:
     min-drops: 3
     max-drops: 6
     custom-model-data: 1007
-    tier: mid
-    grow-time-seconds: 300
+    tier: uncommon
 
   nether_quartz:
     display-name: "§f✦ Quartz Seed"
@@ -256,8 +261,7 @@ crops:
     min-drops: 2
     max-drops: 5
     custom-model-data: 1008
-    tier: mid
-    grow-time-seconds: 420
+    tier: uncommon
 
   amethyst_shard:
     display-name: "§5✦ Amethyst Seed"
@@ -270,8 +274,7 @@ crops:
     min-drops: 2
     max-drops: 5
     custom-model-data: 1009
-    tier: mid
-    grow-time-seconds: 480
+    tier: uncommon
 
   copper:
     display-name: "§6✦ Copper Seed"
@@ -285,7 +288,6 @@ crops:
     max-drops: 6
     custom-model-data: 1010
     tier: common
-    grow-time-seconds: 240
 
   # ---------- MOB-FARM REPLACEMENTS ----------
 
@@ -299,8 +301,7 @@ crops:
     min-drops: 2
     max-drops: 4
     custom-model-data: 1012
-    tier: mid
-    grow-time-seconds: 420
+    tier: uncommon
 
   blaze_rod:
     display-name: "§6✦ Blaze Rod Seed"
@@ -314,7 +315,6 @@ crops:
     max-drops: 2
     custom-model-data: 1013
     tier: rare
-    grow-time-seconds: 900
 
   ender_pearl:
     display-name: "§3✦ Ender Seed"
@@ -327,7 +327,6 @@ crops:
     max-drops: 2
     custom-model-data: 1014
     tier: rare
-    grow-time-seconds: 900
 
   slime_ball:
     display-name: "§a✦ Slime Seed"
@@ -339,8 +338,7 @@ crops:
     min-drops: 2
     max-drops: 4
     custom-model-data: 1015
-    tier: mid
-    grow-time-seconds: 480
+    tier: uncommon
 
   string:
     display-name: "§f✦ String Seed"
@@ -353,7 +351,6 @@ crops:
     max-drops: 5
     custom-model-data: 1016
     tier: common
-    grow-time-seconds: 240
 
   bone:
     display-name: "§f✦ Bone Seed"
@@ -368,7 +365,6 @@ crops:
     max-drops: 4
     custom-model-data: 1017
     tier: common
-    grow-time-seconds: 240
 
   glowstone_dust:
     display-name: "§e✦ Glowstone Seed"
@@ -380,8 +376,7 @@ crops:
     min-drops: 2
     max-drops: 4
     custom-model-data: 1018
-    tier: mid
-    grow-time-seconds: 360
+    tier: uncommon
 
   honeycomb:
     display-name: "§6✦ Honeycomb Seed"
@@ -394,7 +389,6 @@ crops:
     max-drops: 2
     custom-model-data: 1019
     tier: rare
-    grow-time-seconds: 600
 
   ghast_tear:
     display-name: "§f✦ Ghast Seed"
@@ -408,7 +402,6 @@ crops:
     max-drops: 1
     custom-model-data: 1020
     tier: epic
-    grow-time-seconds: 1200   # 20 min — rare
 
   magma_cream:
     display-name: "§4✦ Magma Cream Seed"
@@ -421,7 +414,6 @@ crops:
     max-drops: 2
     custom-model-data: 1021
     tier: rare
-    grow-time-seconds: 600
 
   prismarine_shard:
     display-name: "§3✦ Prismarine Seed"
@@ -434,7 +426,6 @@ crops:
     max-drops: 4
     custom-model-data: 1022
     tier: rare
-    grow-time-seconds: 600
 
   nautilus_shell:
     display-name: "§b✦ Nautilus Seed"
@@ -448,7 +439,6 @@ crops:
     max-drops: 1
     custom-model-data: 1023
     tier: epic
-    grow-time-seconds: 1500   # 25 min
 
   echo_shard:
     display-name: "§3✦ Echo Seed"
@@ -462,7 +452,6 @@ crops:
     max-drops: 1
     custom-model-data: 1024
     tier: epic
-    grow-time-seconds: 1500
 
   netherite_scrap:
     display-name: "§8✦ Netherite Seed"
@@ -476,4 +465,3 @@ crops:
     max-drops: 1
     custom-model-data: 1025
     tier: epic
-    grow-time-seconds: 1800   # 30 min — epic

@@ -28,7 +28,6 @@ crops:
     min-drops: 1
     max-drops: 3
     tier: common
-    grow-time-seconds: 300
 
   sugar:
     display-name: "§f✦ Sugar Seed"
@@ -40,7 +39,6 @@ crops:
     min-drops: 3
     max-drops: 6
     tier: common
-    grow-time-seconds: 120
 
   ink_sac:
     display-name: "§0✦ Ink Sac Seed"
@@ -62,7 +60,7 @@ crops:
     output: GLOW_INK_SAC
     min-drops: 2
     max-drops: 4
-    tier: mid
+    tier: uncommon
 
   rotten_flesh:
     display-name: "§2✦ Flesh Seed"
@@ -85,7 +83,7 @@ crops:
     output: SPIDER_EYE
     min-drops: 1
     max-drops: 3
-    tier: mid
+    tier: uncommon
 
   rabbit_hide:
     display-name: "§e✦ Rabbit Hide Seed"
@@ -97,7 +95,6 @@ crops:
     min-drops: 1
     max-drops: 3
     tier: common
-    grow-time-seconds: 240
 
   rabbit_foot:
     display-name: "§d✦ Rabbit Foot Seed"
@@ -132,7 +129,6 @@ crops:
     min-drops: 1
     max-drops: 2
     tier: rare
-    grow-time-seconds: 720
 
   dragon_breath:
     display-name: "§5✦ Dragon Breath Seed"
@@ -145,4 +141,3 @@ crops:
     min-drops: 1
     max-drops: 1
     tier: epic
-    grow-time-seconds: 1500

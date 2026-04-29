@@ -2,6 +2,33 @@
 
 All notable changes to this project are documented here.
 
+## [1.6.0] — 2026-04-29
+
+### Changed
+- **Tier system expanded from 4 to 6 tiers** — `common`, `uncommon`, `rare`, `epic`, `legendary`, `mythic`. Old `mid` is auto-aliased to `uncommon` so existing user crops keep working.
+- **Per-player caps rebalanced** to a clean progression: `1024 / 256 / 64 / 32 / 8 / 2` from common → mythic.
+- **Top-tier grow times now measured in hours/days** to make endgame items feel earned:
+  - legendary baseline: **6 hours** (wither_skull, totem, heart_of_the_sea, shulker_shell, saddle, name_tag)
+  - mythic baseline: **24 hours**, with two specific overrides:
+    - `trident`: **36 hours** (drowned-with-trident is ultra-rare in vanilla)
+    - `enchanted_golden_apple` (god apple): **48 hours** — uncraftable since 1.13, full 2-day grow
+- **Diamond / emerald downgraded** epic → rare (15-min grow). They're valuable but no longer endgame-gating.
+- **All other tier reassignments**: every `mid` becomes `uncommon`; ghast_tear / nautilus_shell / echo_shard / netherite_scrap / dragon_breath stay epic but inherit the new 45-min grow time.
+- Removed redundant `grow-time-seconds` overrides from existing crops where the override matched the new tier default.
+
+### Added
+- **32 new crops across 5 new files** (catalog grew from 93 → 125):
+  - `crops/farm-crops.yml` (10) — wheat, carrot, potato, beetroot, pumpkin, melon, sugar_cane, cactus, bamboo, kelp. Vanilla farm crops without the water/light requirements.
+  - `crops/foods.yml` (10) — raw chicken, beef, porkchop, mutton, rabbit, cod, salmon, tropical_fish, pufferfish, egg. Replaces meat-mob and AFK-fishing farms.
+  - `crops/mushrooms.yml` (4) — red_mushroom, brown_mushroom, crimson_fungus, warped_fungus.
+  - `crops/heads.yml` (4) — skeleton_skull, zombie_head, creeper_head, piglin_head. Replaces charged-creeper-kill setups.
+  - `crops/decoratives.yml` (2) — sponge, cobweb.
+- **`crops/endgame.yml`** also gained `saddle` and `name_tag` (legendary tier) — both are chest-loot-only in vanilla.
+
+### Notes
+- Existing `tier: mid` entries in user crop files continue to load (aliased to `uncommon`). No manual editing required.
+- If you want to keep your old grow times, you can re-add `grow-time-seconds:` to any specific crop — overrides still take precedence over tier defaults.
+
 ## [1.5.0] — 2026-04-29
 
 ### Changed

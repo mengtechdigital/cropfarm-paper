@@ -1,0 +1,51 @@
+# ============================================================
+#  CropFarm — fungi (overworld + nether)
+# ============================================================
+
+crops:
+
+  red_mushroom:
+    display-name: "§c✦ Red Mushroom Seed"
+    lore:
+      - "§7Mushroom stew + huge mushroom bonemealing."
+    recipe-input: RED_MUSHROOM
+    recipe-yield: 2
+    output: RED_MUSHROOM
+    min-drops: 1
+    max-drops: 3
+    tier: common
+
+  brown_mushroom:
+    display-name: "§6✦ Brown Mushroom Seed"
+    lore:
+      - "§7Mushroom stew + suspicious-stew base."
+    recipe-input: BROWN_MUSHROOM
+    recipe-yield: 2
+    output: BROWN_MUSHROOM
+    min-drops: 1
+    max-drops: 3
+    tier: common
+
+  crimson_fungus:
+    display-name: "§4✦ Crimson Fungus Seed"
+    lore:
+      - "§7Bonemeal grows crimson trees."
+      - "§7Hoglin breeding food."
+    recipe-input: CRIMSON_FUNGUS
+    recipe-yield: 2
+    output: CRIMSON_FUNGUS
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon
+
+  warped_fungus:
+    display-name: "§3✦ Warped Fungus Seed"
+    lore:
+      - "§7Bonemeal grows warped trees."
+      - "§7Used to make Warped Fungus on a Stick."
+    recipe-input: WARPED_FUNGUS
+    recipe-yield: 2
+    output: WARPED_FUNGUS
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon

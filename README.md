@@ -10,10 +10,10 @@ Comes with a matching **resource pack** that gives every original seed its own c
 
 ## Highlights
 
-- **93 craftable seeds out of the box** — every ore, every mob drop worth grinding, every block builders need in bulk, plus aspirational endgame items (wither skulls, totems, god apples, shulker shells, tridents).
-- **Tier system** (common / mid / rare / epic) — supplies sane defaults for grow time, per-player planting cap, and XP per harvest. Each crop can override any field inline.
-- **Per-player planting cap** — default 1000 / 256 / 64 / 32 crops by tier. Stops one player from carpeting a chunk in 10 000 diamond crops. Op perm `cropfarm.bypass-cap` ignores the limit.
-- **Auto-XP on harvest** — every fully-grown crop drops XP orbs scaled to its tier (0–1 common, 1–3 mid, 3–7 rare, 7–15 epic).
+- **125 craftable seeds out of the box** — every ore, every mob drop worth grinding, every block builders need in bulk, vanilla farm crops, raw foods + fish, mushrooms, mob heads, plus aspirational endgame items (wither skulls, totems, god apples, shulker shells, tridents, saddles, name tags).
+- **6-tier system** (common / uncommon / rare / epic / legendary / mythic) — supplies sane defaults for grow time, per-player planting cap, and XP per harvest. Each crop can override any field inline.
+- **Per-player planting cap** — default 1024 / 256 / 64 / 32 / 8 / 2 crops by tier. Stops one player from carpeting a chunk in 10 000 diamond crops. Op perm `cropfarm.bypass-cap` ignores the limit.
+- **Auto-XP on harvest** — every fully-grown crop drops XP scaled to its tier (0–1 common up to 80–150 mythic).
 - **Per-crop timed growth** — light, water, and weather no longer matter. Each crop has a configurable `grow-time-seconds`.
 - **Weighted multi-output drops** — for the random-color `wool` crop and any future loot-table style crops you define.
 - **Multi-file crop loader** — drop any `*.yml` into `plugins/CropFarm/crops/` to extend the catalog without touching `config.yml`.
@@ -81,12 +81,14 @@ Tab-completion is supported for subcommands, crop ids, and player names.
 
 | Tier | Grow time | Cap per player | XP on harvest | Color |
 |---|---|---|---|---|
-| **common** | 3 min | 1000 | 0–1 | §7 gray |
-| **mid** | 6 min | 256 | 1–3 | §e yellow |
-| **rare** | 12 min | 64 | 3–7 | §b aqua |
-| **epic** | 25 min | 32 | 7–15 | §5 purple |
+| **common** | 3 min | 1024 | 0–1 | §7 gray |
+| **uncommon** | 6 min | 256 | 1–3 | §a green |
+| **rare** | 15 min | 64 | 4–7 | §b aqua |
+| **epic** | 45 min | 32 | 10–18 | §5 purple |
+| **legendary** | 6 hours | 8 | 25–50 | §6 gold |
+| **mythic** | 24 hours | 2 | 80–150 | §d pink |
 
-Edit the `tiers:` section of `config.yml` to retune all of these globally, or override individual fields per crop.
+`trident` overrides mythic to **36 hours** and `enchanted_golden_apple` (god apple) overrides to **48 hours** — both are deliberately aspirational. Edit the `tiers:` section of `config.yml` to retune the defaults globally, or override individual fields per crop.
 
 ---
 
@@ -96,11 +98,16 @@ Edit the `tiers:` section of `config.yml` to retune all of these globally, or ov
 |---|---|---|
 | Original ores + mob essences | `config.yml` | diamond, emerald, gold, iron, coal, redstone, lapis_lazuli, nether_quartz, amethyst_shard, copper, gunpowder, blaze_rod, ender_pearl, slime_ball, string, bone, glowstone_dust, honeycomb, ghast_tear, magma_cream, prismarine_shard, nautilus_shell, echo_shard, netherite_scrap |
 | Mob drops | `crops/mob-drops.yml` | feather, leather, sugar, ink_sac, glow_ink_sac, rotten_flesh, spider_eye, rabbit_hide, rabbit_foot, turtle_scute, phantom_membrane, dragon_breath |
-| Wool (random color) | `crops/wool.yml` | wool |
-| Vanilla growables | `crops/vanilla.yml` | apple, sweet_berries, glow_berries, chorus_fruit, cocoa_beans, sea_pickle, lily_pad |
+| Foraging (vanilla growables) | `crops/vanilla.yml` | apple, sweet_berries, glow_berries, chorus_fruit, cocoa_beans, sea_pickle, lily_pad |
+| Vanilla farm crops + reeds | `crops/farm-crops.yml` | wheat, carrot, potato, beetroot, pumpkin, melon, sugar_cane, cactus, bamboo, kelp |
+| Raw foods (meat / fish / eggs) | `crops/foods.yml` | chicken, beef, porkchop, mutton, rabbit, cod, salmon, tropical_fish, pufferfish, egg |
+| Mushrooms / fungi | `crops/mushrooms.yml` | red_mushroom, brown_mushroom, crimson_fungus, warped_fungus |
 | Saplings (10 trees) | `crops/saplings.yml` | oak_sapling, spruce_sapling, birch_sapling, jungle_sapling, acacia_sapling, dark_oak_sapling, mangrove_propagule, cherry_sapling, azalea, flowering_azalea |
+| Wool (random color) | `crops/wool.yml` | wool |
 | Block generators | `crops/blocks.yml` | sand, gravel, clay (→ clay_balls), cobblestone, stone, deepslate, dirt, mud, granite, diorite, andesite, tuff, calcite, netherrack, soul_sand, soul_soil, basalt, blackstone, magma_block, nether_wart, end_stone, purpur_block, ice, packed_ice, blue_ice, snow_block, pointed_dripstone, moss_block, glow_lichen, obsidian, crying_obsidian |
-| Endgame | `crops/endgame.yml` | wither_skeleton_skull, totem_of_undying, heart_of_the_sea, shulker_shell, trident, enchanted_golden_apple, prismarine_crystals, honey_bottle |
+| Mob heads | `crops/heads.yml` | skeleton_skull, zombie_head, creeper_head, piglin_head |
+| Decoratives / utility | `crops/decoratives.yml` | sponge, cobweb |
+| Endgame | `crops/endgame.yml` | wither_skeleton_skull, totem_of_undying, heart_of_the_sea, shulker_shell, saddle, name_tag, trident, enchanted_golden_apple, prismarine_crystals, honey_bottle |
 
 **To add or change a crop**: edit any of these files (or drop a new `crops/*.yml`), then run `/cropfarm reload`. Every field is documented inline.
 

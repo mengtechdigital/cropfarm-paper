@@ -121,7 +121,7 @@ public class CropManager {
             }
         }
         if (tiers.isEmpty()) {
-            for (String t : new String[]{"common", "mid", "rare", "epic"}) {
+            for (String t : new String[]{"common", "uncommon", "rare", "epic", "legendary", "mythic"}) {
                 tiers.put(t, Tier.defaultFor(t));
             }
         }
@@ -163,8 +163,10 @@ public class CropManager {
             plugin.getServer().removeRecipe(new NamespacedKey(plugin, "cropfarm_" + id));
         }
 
-        String tierId = s.getString("tier", "common");
-        Tier tier = tiers.getOrDefault(tierId.toLowerCase(), Tier.defaultFor(tierId));
+        // Normalise pre-1.6.0 tier names so existing configs keep working.
+        String rawTier = s.getString("tier", "common").toLowerCase();
+        String tierId = (rawTier.equals("mid") || rawTier.equals("medium")) ? "uncommon" : rawTier;
+        Tier tier = tiers.getOrDefault(tierId, Tier.defaultFor(tierId));
 
         String recipeInputName = s.getString("recipe-input", "");
         Material recipeInput = Material.matchMaterial(recipeInputName);

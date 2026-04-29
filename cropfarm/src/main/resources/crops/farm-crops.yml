@@ -1,0 +1,126 @@
+# ============================================================
+#  CropFarm — vanilla farm crops + reeds-style growables
+# ============================================================
+#  Wheat, carrot, potato, beetroot — vanilla farmable with water +
+#  light, but our seeded version skips the conditions entirely.
+#  Pumpkin / melon — the patch-style farms vanilla forces you into.
+#  Sugar cane / cactus / bamboo / kelp — vertical-growth materials.
+# ============================================================
+
+crops:
+
+  # ---------- Vanilla food crops ----------
+
+  wheat:
+    display-name: "§e✦ Wheat Seed"
+    lore:
+      - "§7Bread, hay bales, animal breeding."
+    recipe-input: WHEAT
+    recipe-yield: 4
+    output: WHEAT
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  carrot:
+    display-name: "§6✦ Carrot Seed"
+    lore:
+      - "§7Skip the §6village raid§7 to find your first."
+    recipe-input: CARROT
+    recipe-yield: 4
+    output: CARROT
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  potato:
+    display-name: "§e✦ Potato Seed"
+    lore:
+      - "§7Bake → best emergency food."
+    recipe-input: POTATO
+    recipe-yield: 4
+    output: POTATO
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  beetroot:
+    display-name: "§c✦ Beetroot Seed"
+    lore:
+      - "§7Beetroot soup + dye."
+    recipe-input: BEETROOT
+    recipe-yield: 4
+    output: BEETROOT
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  # ---------- Patch-style growables ----------
+
+  pumpkin:
+    display-name: "§6✦ Pumpkin Seed"
+    lore:
+      - "§7Skip the §6observer-piston§7 farm builds."
+    recipe-input: PUMPKIN
+    recipe-yield: 4
+    output: PUMPKIN
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  melon:
+    display-name: "§a✦ Melon Seed"
+    lore:
+      - "§7One block → 3-7 slices in vanilla."
+    recipe-input: MELON
+    recipe-yield: 4
+    output: MELON_SLICE
+    min-drops: 3
+    max-drops: 6
+    tier: common
+
+  # ---------- Reeds / vertical growers ----------
+
+  sugar_cane:
+    display-name: "§a✦ Sugar Cane Seed"
+    lore:
+      - "§7Paper, sugar, fermented spider eyes."
+    recipe-input: SUGAR_CANE
+    recipe-yield: 4
+    output: SUGAR_CANE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  cactus:
+    display-name: "§2✦ Cactus Seed"
+    lore:
+      - "§7Green dye + smelt for emerald-XP."
+    recipe-input: CACTUS
+    recipe-yield: 2
+    output: CACTUS
+    min-drops: 1
+    max-drops: 3
+    tier: common
+
+  bamboo:
+    display-name: "§a✦ Bamboo Seed"
+    lore:
+      - "§7Scaffolding, bamboo planks, panda food."
+    recipe-input: BAMBOO
+    recipe-yield: 4
+    output: BAMBOO
+    min-drops: 3
+    max-drops: 6
+    tier: common
+
+  kelp:
+    display-name: "§2✦ Kelp Seed"
+    lore:
+      - "§7Dried kelp blocks = top-tier furnace fuel."
+    recipe-input: KELP
+    recipe-yield: 4
+    output: KELP
+    min-drops: 2
+    max-drops: 4
+    tier: common

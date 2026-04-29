@@ -4,10 +4,6 @@
 #  Replaces sand-duper TNT machines, cobble generators, ice farms,
 #  Nether trips, and the like. The "crop" still grows on farmland —
 #  the block just happens to be sand or obsidian rather than wheat.
-#
-#  Common-tier block crops have generous caps so casuals can stockpile
-#  for builds. Rare-tier blocks (blue_ice, obsidian, dripstone) are
-#  capped low to avoid trivialising lategame economies.
 # ============================================================
 
 crops:
@@ -24,7 +20,6 @@ crops:
     min-drops: 3
     max-drops: 6
     tier: common
-    grow-time-seconds: 120
 
   gravel:
     display-name: "§7✦ Gravel Seed"
@@ -37,7 +32,6 @@ crops:
     min-drops: 3
     max-drops: 6
     tier: common
-    grow-time-seconds: 120
 
   clay:
     display-name: "§b✦ Clay Seed"
@@ -50,7 +44,6 @@ crops:
     min-drops: 4
     max-drops: 6
     tier: common
-    grow-time-seconds: 240
 
   cobblestone:
     display-name: "§7✦ Cobble Seed"
@@ -62,7 +55,6 @@ crops:
     min-drops: 4
     max-drops: 8
     tier: common
-    grow-time-seconds: 60
 
   stone:
     display-name: "§7✦ Stone Seed"
@@ -74,7 +66,6 @@ crops:
     min-drops: 3
     max-drops: 6
     tier: common
-    grow-time-seconds: 180
 
   deepslate:
     display-name: "§8✦ Deepslate Seed"
@@ -86,7 +77,6 @@ crops:
     min-drops: 2
     max-drops: 5
     tier: common
-    grow-time-seconds: 240
 
   dirt:
     display-name: "§6✦ Dirt Seed"
@@ -98,7 +88,6 @@ crops:
     min-drops: 4
     max-drops: 8
     tier: common
-    grow-time-seconds: 60
 
   mud:
     display-name: "§6✦ Mud Seed"
@@ -109,7 +98,7 @@ crops:
     output: MUD
     min-drops: 2
     max-drops: 4
-    tier: mid
+    tier: uncommon
 
   # ---------- STONE VARIANTS ----------
 
@@ -158,7 +147,7 @@ crops:
     output: CALCITE
     min-drops: 1
     max-drops: 3
-    tier: mid
+    tier: uncommon
 
   # ---------- NETHER ----------
 
@@ -172,7 +161,6 @@ crops:
     min-drops: 3
     max-drops: 6
     tier: common
-    grow-time-seconds: 180
 
   soul_sand:
     display-name: "§8✦ Soul Sand Seed"
@@ -183,7 +171,7 @@ crops:
     output: SOUL_SAND
     min-drops: 2
     max-drops: 3
-    tier: mid
+    tier: uncommon
 
   soul_soil:
     display-name: "§8✦ Soul Soil Seed"
@@ -194,7 +182,7 @@ crops:
     output: SOUL_SOIL
     min-drops: 2
     max-drops: 3
-    tier: mid
+    tier: uncommon
 
   basalt:
     display-name: "§8✦ Basalt Seed"
@@ -203,7 +191,7 @@ crops:
     output: BASALT
     min-drops: 2
     max-drops: 4
-    tier: mid
+    tier: uncommon
 
   blackstone:
     display-name: "§8✦ Blackstone Seed"
@@ -212,7 +200,7 @@ crops:
     output: BLACKSTONE
     min-drops: 2
     max-drops: 4
-    tier: mid
+    tier: uncommon
 
   magma_block:
     display-name: "§c✦ Magma Block Seed"
@@ -223,7 +211,7 @@ crops:
     output: MAGMA_BLOCK
     min-drops: 1
     max-drops: 3
-    tier: mid
+    tier: uncommon
 
   nether_wart:
     display-name: "§4✦ Nether Wart Seed"
@@ -234,7 +222,7 @@ crops:
     output: NETHER_WART
     min-drops: 3
     max-drops: 6
-    tier: mid
+    tier: uncommon
 
   # ---------- END ----------
 
@@ -247,7 +235,7 @@ crops:
     output: END_STONE
     min-drops: 2
     max-drops: 4
-    tier: mid
+    tier: uncommon
 
   purpur_block:
     display-name: "§5✦ Purpur Seed"
@@ -258,7 +246,7 @@ crops:
     output: PURPUR_BLOCK
     min-drops: 2
     max-drops: 4
-    tier: mid
+    tier: uncommon
 
   # ---------- COLD BIOME ----------
 
@@ -269,7 +257,7 @@ crops:
     output: ICE
     min-drops: 2
     max-drops: 4
-    tier: mid
+    tier: uncommon
 
   packed_ice:
     display-name: "§b✦ Packed Ice Seed"
@@ -280,7 +268,7 @@ crops:
     output: PACKED_ICE
     min-drops: 1
     max-drops: 3
-    tier: mid
+    tier: uncommon
 
   blue_ice:
     display-name: "§b✦ Blue Ice Seed"
@@ -303,7 +291,6 @@ crops:
     min-drops: 2
     max-drops: 5
     tier: common
-    grow-time-seconds: 180
 
   # ---------- CAVE / RARE ----------
 
@@ -316,7 +303,7 @@ crops:
     output: POINTED_DRIPSTONE
     min-drops: 1
     max-drops: 3
-    tier: mid
+    tier: uncommon
 
   moss_block:
     display-name: "§a✦ Moss Seed"
@@ -327,7 +314,7 @@ crops:
     output: MOSS_BLOCK
     min-drops: 1
     max-drops: 3
-    tier: mid
+    tier: uncommon
 
   glow_lichen:
     display-name: "§a✦ Glow Lichen Seed"
@@ -338,7 +325,7 @@ crops:
     output: GLOW_LICHEN
     min-drops: 1
     max-drops: 3
-    tier: mid
+    tier: uncommon
 
   obsidian:
     display-name: "§5✦ Obsidian Seed"

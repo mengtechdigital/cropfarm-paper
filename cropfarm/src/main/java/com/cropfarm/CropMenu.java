@@ -44,7 +44,8 @@ public class CropMenu implements Listener {
     private static final int NAV_CLOSE_SLOT = 48;
 
     /** Order in which tiers appear in the menu. Unknown tiers fall to the end. */
-    private static final List<String> TIER_ORDER = List.of("common", "mid", "rare", "epic");
+    private static final List<String> TIER_ORDER =
+            List.of("common", "uncommon", "rare", "epic", "legendary", "mythic");
 
     private final CropFarm plugin;
 

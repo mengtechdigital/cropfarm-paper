@@ -22,3 +22,6 @@ permissions:
   cropfarm.give:
     description: Allows giving CropFarm seeds.
     default: op
+  cropfarm.bypass-cap:
+    description: Bypass the per-player planting cap on every crop.
+    default: op

@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,7 +38,7 @@ public class CropListener implements Listener {
     // Plant
     // ---------------------------------------------------------------
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlant(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getHand() != EquipmentSlot.HAND) return;
@@ -55,6 +56,22 @@ public class CropListener implements Listener {
         Block above = clicked.getRelative(BlockFace.UP);
         if (above.getType() != Material.AIR) return;
 
+        Player player = event.getPlayer();
+
+        // Per-player cap: atomic check-and-reserve. Bypass for op perm.
+        boolean bypass = player.hasPermission("cropfarm.bypass-cap");
+        int cap = bypass ? 0 : type.getMaxPerPlayer();
+        if (!plugin.getTrackedCrops().tryReserve(player.getUniqueId(), type.getId(), cap)) {
+            String msg = mgr.getCapReachedMessage()
+                    .replace("{crop}", type.getDisplayName())
+                    .replace("{cap}",  String.valueOf(type.getMaxPerPlayer()))
+                    .replace("{count}", String.valueOf(
+                            plugin.getTrackedCrops().countFor(player.getUniqueId(), type.getId())));
+            player.sendMessage(msg);
+            event.setCancelled(true);
+            return;
+        }
+
         // Place wheat at age 0 — our scheduled task will advance it on a timer.
         above.setType(Material.WHEAT);
         BlockData data = above.getBlockData();
@@ -63,10 +80,10 @@ public class CropListener implements Listener {
             above.setBlockData(ageable);
         }
 
-        plugin.getTrackedCrops().track(above.getLocation(), type.getId());
+        // Reservation already incremented the counter; trackReserved just records the entry.
+        plugin.getTrackedCrops().trackReserved(above.getLocation(), type.getId(), player.getUniqueId());
         plugin.getNametagService().spawn(above.getLocation(), type);
 
-        Player player = event.getPlayer();
         if (player.getGameMode() != GameMode.CREATIVE) {
             inHand.setAmount(inHand.getAmount() - 1);
         }
@@ -89,7 +106,7 @@ public class CropListener implements Listener {
     // Break / harvest
     // ---------------------------------------------------------------
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
         if (block.getType() != Material.WHEAT) return;
@@ -99,7 +116,7 @@ public class CropListener implements Listener {
 
         CropManager mgr = plugin.getCropManager();
         CropType type = mgr.getCropType(tracked.cropId());
-        // Even if the type was removed from config, still untrack + clean nametag so the world stays tidy.
+        // Even if the type was removed from config, untrack + clean nametag so the world stays tidy.
         plugin.getNametagService().remove(block.getLocation());
         plugin.getTrackedCrops().untrack(block.getLocation());
         if (type == null) return;
@@ -110,7 +127,7 @@ public class CropListener implements Listener {
         Player player = event.getPlayer();
 
         if (ageable.getAge() < ageable.getMaximumAge()) {
-            // Not fully grown — return seed
+            // Not fully grown — return seed (no XP).
             event.setDropItems(false);
             if (mgr.isReturnSeedOnEarlyBreak() && player.getGameMode() != GameMode.CREATIVE) {
                 ItemStack seed = mgr.createSeed(type, 1);
@@ -124,15 +141,24 @@ public class CropListener implements Listener {
             return;
         }
 
-        // Fully grown — drop output + return one seed so the cycle continues
+        // Fully grown — drop weighted output + return one seed so the cycle continues.
         event.setDropItems(false);
-        int amount = type.getMinDrops()
-                + random.nextInt(type.getMaxDrops() - type.getMinDrops() + 1);
+        CropType.DropEntry chosen = type.pickOutput(random);
+        int spread = Math.max(0, chosen.maxAmount() - chosen.minAmount());
+        int amount = chosen.minAmount() + (spread > 0 ? random.nextInt(spread + 1) : 0);
         Location dropLoc = block.getLocation().add(0.5, 0.5, 0.5);
-        block.getWorld().dropItemNaturally(dropLoc, new ItemStack(type.getOutput(), amount));
+        block.getWorld().dropItemNaturally(dropLoc, new ItemStack(chosen.item(), amount));
 
         if (player.getGameMode() != GameMode.CREATIVE) {
             block.getWorld().dropItemNaturally(dropLoc, mgr.createSeed(type, 1));
+        }
+
+        // XP drop (auto-XP replaces the old xp_bottle crop).
+        int xpSpread = Math.max(0, type.getXpMax() - type.getXpMin());
+        int xp = type.getXpMin() + (xpSpread > 0 ? random.nextInt(xpSpread + 1) : 0);
+        if (xp > 0) {
+            ExperienceOrb orb = block.getWorld().spawn(dropLoc, ExperienceOrb.class);
+            orb.setExperience(xp);
         }
 
         if (mgr.isParticles()) {
@@ -144,8 +170,21 @@ public class CropListener implements Listener {
 
         String msg = mgr.getHarvestMessage()
                 .replace("{amount}", String.valueOf(amount))
-                .replace("{output}", type.getOutput().name());
+                .replace("{output}", humanize(chosen.item().name()));
         player.sendMessage(msg);
+    }
+
+    /** Convert "GOLD_INGOT" → "Gold Ingot" for harvest chat messages. */
+    private static String humanize(String enumName) {
+        if (enumName == null || enumName.isEmpty()) return "";
+        String[] words = enumName.toLowerCase().split("_");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < words.length; i++) {
+            if (words[i].isEmpty()) continue;
+            if (sb.length() > 0) sb.append(' ');
+            sb.append(Character.toUpperCase(words[i].charAt(0))).append(words[i].substring(1));
+        }
+        return sb.toString();
     }
 
     // ---------------------------------------------------------------

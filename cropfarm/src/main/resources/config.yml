@@ -11,21 +11,31 @@
 #  4. Break the crop when fully grown to receive the output
 #     plus one returned seed (so the cycle continues).
 #  5. Breaking early returns the seed — nothing is lost.
+#  6. Harvesting fully-grown crops drops XP orbs based on tier.
 #
-#  ADDING A NEW CROP
-#  -----------------
-#  Add a new entry under `crops:` with a unique lowercase id.
-#  Then run /cropfarmreload (or restart the server).
+#  TIERS
+#  -----
+#  Each crop belongs to a tier. Tiers define defaults for grow
+#  time, per-player planting cap, and XP drops per harvest. A
+#  crop can override any of these inline.
 #
-#  GROW TIMES
-#  ----------
-#  `grow-time-seconds` controls how long from age 0 → fully grown.
-#  Stages advance smoothly over that interval (8 stages: 0..7).
-#  Suggested ranges:
-#    common  : 120 – 240   (2–4 min)
-#    mid     : 300 – 480   (5–8 min)
-#    rare    : 600 – 900   (10–15 min)
-#    epic    : 1200 – 1800 (20–30 min)
+#  PER-PLAYER CAP
+#  --------------
+#  Players can plant up to `max-per-player` crops of a given
+#  type at one time. 0 = unlimited. Op perm `cropfarm.bypass-cap`
+#  ignores the cap entirely.
+#
+#  WEIGHTED OUTPUTS (optional)
+#  ---------------------------
+#  Instead of `output:` + `min-drops:`/`max-drops:`, define
+#  `outputs:` as a list of `{ item, weight, min, max }` for
+#  random-color wool, dye crops, rare-proc loot tables, etc.
+#
+#  EXTRA CROP FILES
+#  ----------------
+#  You can split crops across files: drop any *.yml file into
+#  `plugins/CropFarm/crops/`. Each file's `crops:` section is
+#  merged in load order (alphabetical). Last write wins on dupes.
 #
 #  COLOR CODES
 #  -----------
@@ -62,6 +72,47 @@ settings:
   harvest-message:         "§b✦ Harvested §f{amount}x {output}§b!"
   early-break-message:     "§e⚠ Not fully grown yet! §7({stage}/{max}) Seed returned."
   bonemeal-blocked-message: "§c⚠ Magic seeds resist bone meal — they grow on their own time."
+  cap-reached-message:     "§c⚠ You've planted the maximum §f{cap}§c {crop}§c. Harvest some first."
+
+
+# ============================================================
+#  TIER DEFINITIONS
+# ============================================================
+#
+#  Every crop has `tier: <id>`. The tier supplies defaults for
+#  grow-time-seconds, max-per-player, xp-min, xp-max — but a
+#  crop can override any of those fields individually.
+#
+#  Suggested philosophy: common = bulk casual farming, epic =
+#  endgame trickle. Lower caps for rarer items keeps the in-game
+#  economy sane and prevents 10000-diamond AFK setups.
+# ============================================================
+
+tiers:
+  common:
+    grow-time-seconds: 180     # 3 min
+    max-per-player: 1000
+    xp-min: 0
+    xp-max: 1
+    color: "§7"
+  mid:
+    grow-time-seconds: 360     # 6 min
+    max-per-player: 256
+    xp-min: 1
+    xp-max: 3
+    color: "§e"
+  rare:
+    grow-time-seconds: 720     # 12 min
+    max-per-player: 64
+    xp-min: 3
+    xp-max: 7
+    color: "§b"
+  epic:
+    grow-time-seconds: 1500    # 25 min
+    max-per-player: 32
+    xp-min: 7
+    xp-max: 15
+    color: "§5"
 
 
 # ============================================================
@@ -73,10 +124,15 @@ settings:
 #    lore               — Tooltip lines on the seed item.
 #    recipe-input       — Material required to craft seeds.
 #    recipe-yield       — How many seeds the recipe produces (1–64).
-#    output             — Material dropped when harvested.
+#    output             — Material dropped when harvested. (Single-output form.)
 #    min-drops, max-drops — Drop range when fully grown.
+#    outputs            — (Optional) Weighted list; replaces output/min-drops/max-drops.
+#                         Each entry: { item: <MAT>, weight: <int>, min: <int>, max: <int> }
 #    custom-model-data  — For optional resource pack textures (0 = vanilla).
-#    grow-time-seconds  — Time from planting to fully grown.
+#    tier               — Tier id from above (sets grow-time / cap / xp defaults).
+#    grow-time-seconds  — Optional override of the tier's grow time.
+#    max-per-player     — Optional override of the tier's planting cap (0 = unlimited).
+#    xp-min, xp-max     — Optional overrides for XP drop range on harvest.
 # ============================================================
 
 crops:
@@ -96,7 +152,8 @@ crops:
     min-drops: 1
     max-drops: 3
     custom-model-data: 1001
-    grow-time-seconds: 900   # 15 min — high-value
+    tier: epic
+    grow-time-seconds: 900   # 15 min — high-value (overrides tier default)
 
   emerald:
     display-name: "§2✦ Emerald Seed"
@@ -109,6 +166,7 @@ crops:
     min-drops: 1
     max-drops: 2
     custom-model-data: 1002
+    tier: epic
     grow-time-seconds: 900
 
   gold:
@@ -122,6 +180,7 @@ crops:
     min-drops: 2
     max-drops: 5
     custom-model-data: 1003
+    tier: mid
     grow-time-seconds: 480   # 8 min
 
   iron:
@@ -135,6 +194,7 @@ crops:
     min-drops: 2
     max-drops: 5
     custom-model-data: 1004
+    tier: mid
     grow-time-seconds: 360   # 6 min
 
   coal:
@@ -148,7 +208,8 @@ crops:
     min-drops: 3
     max-drops: 6
     custom-model-data: 1005
-    grow-time-seconds: 180   # 3 min — common
+    tier: common
+    grow-time-seconds: 180
 
   redstone:
     display-name: "§c✦ Redstone Seed"
@@ -161,6 +222,7 @@ crops:
     min-drops: 3
     max-drops: 6
     custom-model-data: 1006
+    tier: mid
     grow-time-seconds: 360
 
   lapis_lazuli:
@@ -174,6 +236,7 @@ crops:
     min-drops: 3
     max-drops: 6
     custom-model-data: 1007
+    tier: mid
     grow-time-seconds: 300
 
   nether_quartz:
@@ -187,6 +250,7 @@ crops:
     min-drops: 2
     max-drops: 5
     custom-model-data: 1008
+    tier: mid
     grow-time-seconds: 420
 
   amethyst_shard:
@@ -200,6 +264,7 @@ crops:
     min-drops: 2
     max-drops: 5
     custom-model-data: 1009
+    tier: mid
     grow-time-seconds: 480
 
   copper:
@@ -213,22 +278,14 @@ crops:
     min-drops: 3
     max-drops: 6
     custom-model-data: 1010
+    tier: common
     grow-time-seconds: 240
 
   # ---------- MOB-FARM REPLACEMENTS ----------
-
-  xp_bottle:
-    display-name: "§a✦ Experience Seed"
-    lore:
-      - "§7Replaces §aXP grinders§7."
-      - "§7Drops §aBottles o' Enchanting§7."
-    recipe-input: EXPERIENCE_BOTTLE
-    recipe-yield: 2
-    output: EXPERIENCE_BOTTLE
-    min-drops: 1
-    max-drops: 2
-    custom-model-data: 1011
-    grow-time-seconds: 600
+  #
+  # The old `xp_bottle` crop was removed in 1.4.0 — every harvest
+  # now drops XP automatically based on tier. To recover the old
+  # behavior on a specific crop, override its `xp-min`/`xp-max`.
 
   gunpowder:
     display-name: "§8✦ Gunpowder Seed"
@@ -240,6 +297,7 @@ crops:
     min-drops: 2
     max-drops: 4
     custom-model-data: 1012
+    tier: mid
     grow-time-seconds: 420
 
   blaze_rod:
@@ -253,6 +311,7 @@ crops:
     min-drops: 1
     max-drops: 2
     custom-model-data: 1013
+    tier: rare
     grow-time-seconds: 900
 
   ender_pearl:
@@ -265,6 +324,7 @@ crops:
     min-drops: 1
     max-drops: 2
     custom-model-data: 1014
+    tier: rare
     grow-time-seconds: 900
 
   slime_ball:
@@ -277,6 +337,7 @@ crops:
     min-drops: 2
     max-drops: 4
     custom-model-data: 1015
+    tier: mid
     grow-time-seconds: 480
 
   string:
@@ -289,6 +350,7 @@ crops:
     min-drops: 2
     max-drops: 5
     custom-model-data: 1016
+    tier: common
     grow-time-seconds: 240
 
   bone:
@@ -303,6 +365,7 @@ crops:
     min-drops: 2
     max-drops: 4
     custom-model-data: 1017
+    tier: common
     grow-time-seconds: 240
 
   glowstone_dust:
@@ -315,6 +378,7 @@ crops:
     min-drops: 2
     max-drops: 4
     custom-model-data: 1018
+    tier: mid
     grow-time-seconds: 360
 
   honeycomb:
@@ -327,6 +391,7 @@ crops:
     min-drops: 1
     max-drops: 2
     custom-model-data: 1019
+    tier: rare
     grow-time-seconds: 600
 
   ghast_tear:
@@ -340,6 +405,7 @@ crops:
     min-drops: 1
     max-drops: 1
     custom-model-data: 1020
+    tier: epic
     grow-time-seconds: 1200   # 20 min — rare
 
   magma_cream:
@@ -352,6 +418,7 @@ crops:
     min-drops: 1
     max-drops: 2
     custom-model-data: 1021
+    tier: rare
     grow-time-seconds: 600
 
   prismarine_shard:
@@ -364,6 +431,7 @@ crops:
     min-drops: 2
     max-drops: 4
     custom-model-data: 1022
+    tier: rare
     grow-time-seconds: 600
 
   nautilus_shell:
@@ -377,6 +445,7 @@ crops:
     min-drops: 1
     max-drops: 1
     custom-model-data: 1023
+    tier: epic
     grow-time-seconds: 1500   # 25 min
 
   echo_shard:
@@ -390,6 +459,7 @@ crops:
     min-drops: 1
     max-drops: 1
     custom-model-data: 1024
+    tier: epic
     grow-time-seconds: 1500
 
   netherite_scrap:
@@ -403,54 +473,5 @@ crops:
     min-drops: 1
     max-drops: 1
     custom-model-data: 1025
+    tier: epic
     grow-time-seconds: 1800   # 30 min — epic
-
-
-# ============================================================
-#  EXAMPLE EXTRAS (commented out — uncomment to enable)
-# ============================================================
-
-#  glow_ink_sac:
-#    display-name: "§b✦ Glow Ink Seed"
-#    recipe-input: GLOW_INK_SAC
-#    recipe-yield: 4
-#    output: GLOW_INK_SAC
-#    min-drops: 2
-#    max-drops: 4
-#    grow-time-seconds: 360
-
-#  ink_sac:
-#    display-name: "§0✦ Ink Sac Seed"
-#    recipe-input: INK_SAC
-#    recipe-yield: 4
-#    output: INK_SAC
-#    min-drops: 2
-#    max-drops: 4
-#    grow-time-seconds: 240
-
-#  sugar:
-#    display-name: "§f✦ Sugar Seed"
-#    recipe-input: SUGAR
-#    recipe-yield: 6
-#    output: SUGAR
-#    min-drops: 3
-#    max-drops: 6
-#    grow-time-seconds: 120
-
-#  feather:
-#    display-name: "§f✦ Feather Seed"
-#    recipe-input: FEATHER
-#    recipe-yield: 4
-#    output: FEATHER
-#    min-drops: 2
-#    max-drops: 4
-#    grow-time-seconds: 240
-
-#  leather:
-#    display-name: "§6✦ Leather Seed"
-#    recipe-input: LEATHER
-#    recipe-yield: 2
-#    output: LEATHER
-#    min-drops: 1
-#    max-drops: 3
-#    grow-time-seconds: 360

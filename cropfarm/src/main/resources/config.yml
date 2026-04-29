@@ -288,10 +288,6 @@ crops:
     grow-time-seconds: 240
 
   # ---------- MOB-FARM REPLACEMENTS ----------
-  #
-  # The old `xp_bottle` crop was removed in 1.4.0 — every harvest
-  # now drops XP automatically based on tier. To recover the old
-  # behavior on a specific crop, override its `xp-min`/`xp-max`.
 
   gunpowder:
     display-name: "§8✦ Gunpowder Seed"

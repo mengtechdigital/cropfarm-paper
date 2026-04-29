@@ -51,7 +51,8 @@ public class GenerateTextures {
         addCrop("nether_quartz",   1008, "ECECEC");
         addCrop("amethyst_shard",  1009, "9C27B0");
         addCrop("copper",          1010, "C77B45");
-        addCrop("xp_bottle",       1011, "76FF03");
+        // CMD 1011 was the removed xp_bottle crop — left unused so existing
+        // resource packs don't have to re-number every model after it.
         addCrop("gunpowder",       1012, "8E8E8E");
         addCrop("blaze_rod",       1013, "FFA000");
         addCrop("ender_pearl",     1014, "00BFA5");

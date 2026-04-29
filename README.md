@@ -39,8 +39,6 @@ Comes with a matching **resource pack** that gives every original seed its own c
    - `plugins/CropFarm/.native/` (sqlite-jdbc unpacks its platform native lib here)
 3. Tweak any of the config files to taste, then run `/cropfarm reload`.
 
-> **Upgrading from 1.4.x:** the plugin auto-migrates your old `crops.yml` into `crops.db` on first start of 1.5.0, then renames the YAML to `crops.yml.<timestamp>.bak` for safe-keeping. No manual steps needed.
-
 ### Resource pack (optional, recommended)
 
 You have two paths.

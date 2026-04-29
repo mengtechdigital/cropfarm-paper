@@ -5,16 +5,15 @@ All notable changes to this project are documented here.
 ## [1.5.0] — 2026-04-29
 
 ### Changed
-- **Storage migrated from `crops.yml` to embedded SQLite (`crops.db`)** — every plant, break, and growth-task untrack is now a synchronous indexed write instead of a full-file YAML rewrite at shutdown. Crash-safe (WAL mode). One-shot migration runs on first start of 1.5.0; the old `crops.yml` is renamed to `crops.yml.<timestamp>.bak` so prior backups are never overwritten. Config files (`config.yml`, `crops/*.yml`) stay YAML — they're for humans to edit.
+- **Storage moved from a YAML file to embedded SQLite (`crops.db`)** — every plant, break, and growth-task untrack is now a synchronous indexed write instead of a full-file rewrite at shutdown. Crash-safe (WAL mode). Config files (`config.yml`, `crops/*.yml`) stay YAML — they're for humans to edit.
 - **Direct-to-inventory harvest** — fully-grown crops put their output, returned seed, and XP straight into the player's inventory and XP bar instead of spawning dropped item entities and ExperienceOrbs at the crop. For a 100-crop harvest run, entity creation drops from 200+ to 0. Inventory-full leftover spills at the crop block so nothing is ever lost. Toggleable via `settings.direct-to-inventory` (default true).
 
 ### Added
-- `org.xerial:sqlite-jdbc:3.46.1.0` shaded into the plugin JAR (relocated to `com.cropfarm.lib.sqlite` to avoid clashing with other plugins). JAR grows from ~50 KB to ~14 MB. SQLite is embedded — no port, no separate process, no daemon.
-- `CropStore` interface + `SqliteCropStore` implementation. Direct driver instantiation (bypasses `DriverManager` global registry to ensure our relocated driver is used even if another plugin registers a different sqlite-jdbc version). Native library extraction scoped to `plugins/CropFarm/.native/` to avoid Windows DLL-lock collisions.
+- `org.xerial:sqlite-jdbc:3.46.1.0` bundled into the plugin JAR. JAR grows from ~50 KB to ~14 MB. SQLite is embedded — no port, no separate process, no daemon.
+- `CropStore` interface + `SqliteCropStore` implementation. Direct driver instantiation (bypasses `DriverManager` global registry). Native library extraction scoped to `plugins/CropFarm/.native/` to avoid Windows DLL-lock collisions across plugins.
 
 ### Notes
-- Existing servers upgrading from 1.4.x: on first restart, your `crops.yml` is automatically migrated into `crops.db` and renamed to `crops.yml.<timestamp>.bak`. No manual intervention required. If you run into trouble, restore the `.bak`, delete `crops.db`, and downgrade.
-- If `crops.db` is unreadable on startup, the plugin refuses to start (rather than silently re-migrating from YAML and risking double-insert on top of partial DB data). Inspect or restore the file manually before restarting.
+- If `crops.db` is unreadable on startup, the plugin refuses to start rather than silently masking a corrupt database. Inspect or restore the file before restarting.
 
 ## [1.4.0] — 2026-04-29
 

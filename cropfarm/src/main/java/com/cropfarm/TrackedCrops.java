@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -32,8 +31,8 @@ public class TrackedCrops {
             new ConcurrentHashMap<>();
 
     /**
-     * @param initial entries already loaded from the store (or migrated from
-     *                legacy YAML). Owners with non-null UUID seed playerCounts.
+     * @param initial entries already loaded from the store. Owners with
+     *                non-null UUID seed playerCounts.
      */
     public TrackedCrops(CropFarm plugin, CropStore store, Map<String, TrackedCrop> initial) {
         this.plugin = plugin;
@@ -78,24 +77,6 @@ public class TrackedCrops {
         if (prev != null && prev.owner() != null) {
             // Stale entry overwritten — release the old owner's slot.
             decrement(prev.owner(), prev.cropId());
-        }
-        store.put(key, entry);
-    }
-
-    /**
-     * Unconditional track (no cap check, increments counter). Use when the
-     * caller doesn't go through tryReserve (legacy migration, console-driven
-     * planting in future).
-     */
-    public void track(Location loc, String cropId, UUID owner) {
-        String key = serialize(loc);
-        TrackedCrop entry = new TrackedCrop(cropId, System.currentTimeMillis(), owner);
-        TrackedCrop prev = crops.put(key, entry);
-        if (prev != null && prev.owner() != null) {
-            decrement(prev.owner(), prev.cropId());
-        }
-        if (owner != null) {
-            increment(owner, cropId);
         }
         store.put(key, entry);
     }
@@ -180,14 +161,4 @@ public class TrackedCrops {
         }
     }
 
-    // ---- Persistence passthroughs ----
-
-    /** Force the underlying store to flush. SQLite is auto-flushing; legacy paths use this. */
-    public void save() {
-        store.flush();
-    }
-
-    public Map<String, TrackedCrop> unmodifiableView() {
-        return Collections.unmodifiableMap(crops);
-    }
 }

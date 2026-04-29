@@ -145,39 +145,10 @@ public class SqliteCropStore implements CropStore {
         }
     }
 
-    @Override
-    public synchronized void putAll(Map<String, TrackedCrop> entries) {
-        if (entries.isEmpty()) return;
-        boolean prevAutoCommit = true;
-        try {
-            prevAutoCommit = connection.getAutoCommit();
-            connection.setAutoCommit(false);
-            for (Map.Entry<String, TrackedCrop> e : entries.entrySet()) {
-                TrackedCrop c = e.getValue();
-                insertStmt.setString(1, e.getKey());
-                insertStmt.setString(2, c.cropId());
-                insertStmt.setLong(3, c.plantedAtMillis());
-                if (c.owner() == null) {
-                    insertStmt.setNull(4, java.sql.Types.VARCHAR);
-                } else {
-                    insertStmt.setString(4, c.owner().toString());
-                }
-                insertStmt.addBatch();
-            }
-            insertStmt.executeBatch();
-            connection.commit();
-        } catch (SQLException ex) {
-            try { connection.rollback(); } catch (SQLException ignored) { }
-            throw new CropStoreException("Bulk insert failed; rolled back", ex);
-        } finally {
-            try { connection.setAutoCommit(prevAutoCommit); } catch (SQLException ignored) { }
-        }
-    }
-
     /**
      * Throws {@link CropStoreException} on read failure. Callers must NOT
-     * treat a thrown exception the same as an empty result — that would mask
-     * a corrupt DB and risk re-migrating legacy YAML on top of partial data.
+     * treat a thrown exception as an empty result — that would mask a
+     * corrupt DB and start with no tracked crops.
      */
     @Override
     public synchronized Map<String, TrackedCrop> loadAll() {
@@ -201,11 +172,6 @@ public class SqliteCropStore implements CropStore {
             throw new CropStoreException("Failed to load planted_crops", e);
         }
         return result;
-    }
-
-    @Override
-    public void flush() {
-        // SQLite WAL auto-checkpoints; no-op for our use.
     }
 
     @Override

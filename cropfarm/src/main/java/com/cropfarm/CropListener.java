@@ -11,6 +11,7 @@ import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
+import java.util.Map;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -131,8 +132,7 @@ public class CropListener implements Listener {
             event.setDropItems(false);
             if (mgr.isReturnSeedOnEarlyBreak() && player.getGameMode() != GameMode.CREATIVE) {
                 ItemStack seed = mgr.createSeed(type, 1);
-                Location dropLoc = block.getLocation().add(0.5, 0.5, 0.5);
-                block.getWorld().dropItemNaturally(dropLoc, seed);
+                deliver(player, block.getLocation(), seed, mgr.isDirectToInventory());
             }
             String msg = mgr.getEarlyBreakMessage()
                     .replace("{stage}", String.valueOf(ageable.getAge()))
@@ -141,24 +141,31 @@ public class CropListener implements Listener {
             return;
         }
 
-        // Fully grown — drop weighted output + return one seed so the cycle continues.
+        // Fully grown — yield weighted output + return one seed so the cycle continues.
         event.setDropItems(false);
         CropType.DropEntry chosen = type.pickOutput(random);
         int spread = Math.max(0, chosen.maxAmount() - chosen.minAmount());
         int amount = chosen.minAmount() + (spread > 0 ? random.nextInt(spread + 1) : 0);
         Location dropLoc = block.getLocation().add(0.5, 0.5, 0.5);
-        block.getWorld().dropItemNaturally(dropLoc, new ItemStack(chosen.item(), amount));
+
+        boolean direct = mgr.isDirectToInventory();
+        deliver(player, block.getLocation(), new ItemStack(chosen.item(), amount), direct);
 
         if (player.getGameMode() != GameMode.CREATIVE) {
-            block.getWorld().dropItemNaturally(dropLoc, mgr.createSeed(type, 1));
+            deliver(player, block.getLocation(), mgr.createSeed(type, 1), direct);
         }
 
-        // XP drop (auto-XP replaces the old xp_bottle crop).
+        // XP — direct-grant when configured, else spawn an orb at the crop.
         int xpSpread = Math.max(0, type.getXpMax() - type.getXpMin());
         int xp = type.getXpMin() + (xpSpread > 0 ? random.nextInt(xpSpread + 1) : 0);
         if (xp > 0) {
-            ExperienceOrb orb = block.getWorld().spawn(dropLoc, ExperienceOrb.class);
-            orb.setExperience(xp);
+            if (direct) {
+                player.giveExp(xp);
+                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5f, 1.6f);
+            } else {
+                ExperienceOrb orb = block.getWorld().spawn(dropLoc, ExperienceOrb.class);
+                orb.setExperience(xp);
+            }
         }
 
         if (mgr.isParticles()) {
@@ -172,6 +179,26 @@ public class CropListener implements Listener {
                 .replace("{amount}", String.valueOf(amount))
                 .replace("{output}", humanize(chosen.item().name()));
         player.sendMessage(msg);
+    }
+
+    /**
+     * Try to put the stack into the player's inventory; spill any leftover at
+     * the crop block as a drop. When direct delivery is disabled or the player
+     * is in spectator (no usable inventory), drops at the crop block instead.
+     */
+    private static void deliver(Player player, Location cropLoc, ItemStack stack, boolean direct) {
+        if (stack == null || stack.getAmount() <= 0) return;
+        Location dropLoc = cropLoc.clone().add(0.5, 0.5, 0.5);
+        if (!direct || player.getGameMode() == GameMode.SPECTATOR) {
+            cropLoc.getWorld().dropItemNaturally(dropLoc, stack);
+            return;
+        }
+        Map<Integer, ItemStack> leftover = player.getInventory().addItem(stack);
+        if (leftover.isEmpty()) return;
+        // Inventory full: spill remainder at the crop so nothing is lost.
+        for (ItemStack rest : leftover.values()) {
+            cropLoc.getWorld().dropItemNaturally(dropLoc, rest);
+        }
     }
 
     /** Convert "GOLD_INGOT" → "Gold Ingot" for harvest chat messages. */

@@ -60,6 +60,12 @@ settings:
   # Set true to allow vanilla bonemeal-rushing.
   allow-bonemeal: false
 
+  # If true (default), harvested items + XP go straight into the
+  # player's inventory / XP bar — no dropped item entities, no XP
+  # orbs. Massively reduces server entity load on big farms.
+  # Set false for the classic dropped-item behavior.
+  direct-to-inventory: true
+
   # ---- Floating nametag above each planted crop ----
   nametag-enabled: true
   nametag-show-progress: true            # show stage e.g. (3/7)

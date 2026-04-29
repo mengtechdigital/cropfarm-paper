@@ -29,18 +29,18 @@ import java.util.logging.Level;
  *                         enough; tolerates power loss with at most last
  *                         transaction lost, which is acceptable for crops)
  *
- * Driver loading: we instantiate the relocated driver directly via Class.forName
- * + connect(), bypassing DriverManager. This avoids two issues with Bukkit's
- * plugin classloader environment:
- *   - DriverManager's global registry can return another plugin's sqlite-jdbc
- *     driver instance, sidestepping our relocation entirely.
- *   - JDBC SPI loading via DriverManager doesn't always see plugin-scoped
- *     META-INF/services descriptors.
+ * Driver loading: we instantiate the driver directly via Class.forName +
+ * connect(), bypassing DriverManager. This avoids DriverManager's global
+ * registry returning another plugin's sqlite-jdbc driver instance.
  *
  * Native library extraction: sqlite-jdbc unpacks platform .so/.dll/.dylib on
  * first use. We point its tmpdir at our plugin data folder so two plugins
- * each bundling a different sqlite-jdbc version don't collide on the same
- * temp filename (a Windows DLL-lock hazard).
+ * each bundling sqlite-jdbc don't collide on the same temp filename (a
+ * Windows DLL-lock hazard).
+ *
+ * NOTE: org.sqlite is intentionally NOT shaded-relocated. The native library
+ * has JNI symbols hardcoded with the original package name; a relocated
+ * class throws UnsatisfiedLinkError on the first native call.
  */
 public class SqliteCropStore implements CropStore {
 
@@ -103,22 +103,16 @@ public class SqliteCropStore implements CropStore {
     }
 
     /**
-     * Load the relocated driver class and instantiate it directly. Falls back
-     * to the unrelocated name for dev runs (plain `java -cp` without shade).
+     * Load org.sqlite.JDBC and instantiate it directly. Each plugin
+     * classloader holds its own copy of the driver, so we don't share
+     * driver state with other plugins that bundle sqlite-jdbc.
      */
     private static Driver loadDriver() throws SQLException {
-        Class<?> driverClass;
         try {
-            driverClass = Class.forName("com.cropfarm.lib.sqlite.JDBC");
-        } catch (ClassNotFoundException ignored) {
-            try {
-                driverClass = Class.forName("org.sqlite.JDBC");
-            } catch (ClassNotFoundException ee) {
-                throw new SQLException("SQLite JDBC driver not on classpath", ee);
-            }
-        }
-        try {
+            Class<?> driverClass = Class.forName("org.sqlite.JDBC");
             return (Driver) driverClass.getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("SQLite JDBC driver not on classpath", e);
         } catch (ReflectiveOperationException e) {
             throw new SQLException("Cannot instantiate SQLite JDBC driver", e);
         }

@@ -64,16 +64,17 @@
                         <goals><goal>shade</goal></goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <relocations>
-                                <!-- Avoid clashing with other plugins that bundle sqlite-jdbc. -->
-                                <relocation>
-                                    <pattern>org.sqlite</pattern>
-                                    <shadedPattern>com.cropfarm.lib.sqlite</shadedPattern>
-                                </relocation>
-                            </relocations>
+                            <!--
+                                NOTE: org.sqlite is intentionally NOT relocated. The
+                                sqlite-jdbc native library has JNI symbols hardcoded
+                                with the original package name (Java_org_sqlite_*),
+                                so a relocated class would throw UnsatisfiedLinkError
+                                when calling _open_utf8 etc. Each plugin classloader
+                                still loads its own copy of the driver from its own
+                                bundled JAR, so we don't actually clash with other
+                                plugins that bundle sqlite-jdbc.
+                            -->
                             <transformers>
-                                <!-- Rewrites META-INF/services/* descriptors so the
-                                     relocated org.sqlite.JDBC class name is reflected. -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                             </transformers>
                             <filters>

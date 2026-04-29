@@ -6,6 +6,10 @@ description: Custom seed/crop system with configurable yields.
 author: Meng Tech LLC
 
 commands:
+  cropfarm:
+    description: Open the CropFarm menu, reload config, or give seeds.
+    usage: /cropfarm [menu|reload|give <crop> [amount] [player]]
+    aliases: [cf]
   cropfarmreload:
     description: Reload CropFarm config.yml.
     usage: /cropfarmreload
@@ -16,6 +20,9 @@ commands:
     permission: cropfarm.give
 
 permissions:
+  cropfarm.menu:
+    description: Allows opening the /cropfarm menu.
+    default: true
   cropfarm.reload:
     description: Allows reloading CropFarm config.
     default: op

@@ -112,6 +112,19 @@ crops:
     tier: mythic
     grow-time-seconds: 172800     # 48 hours — full two days
 
+  nether_star:
+    display-name: "§f✦ Nether Star Seed"
+    lore:
+      - "§7Replaces §fWither boss farming§7."
+      - "§7One star = one beacon."
+    recipe-input: NETHER_STAR
+    recipe-yield: 1
+    output: NETHER_STAR
+    min-drops: 1
+    max-drops: 1
+    tier: mythic
+    grow-time-seconds: 172800     # 48 hours — fighting the Wither is non-trivial
+
   # ---------- Catalog companions (lower tiers, kept here for cohesion) ----------
 
   prismarine_crystals:

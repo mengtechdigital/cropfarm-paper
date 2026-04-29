@@ -1,0 +1,36 @@
+# ============================================================
+#  CropFarm — dyes (weighted random color)
+# ============================================================
+#  One "dye seed" yields a random vanilla dye. Even weights — every
+#  color is equally useful for builders. To force a specific color,
+#  copy this entry and replace `outputs:` with a single material
+#  entry (e.g. just RED_DYE, weight 1).
+# ============================================================
+
+crops:
+
+  dye:
+    display-name: "§d✦ Dye Seed"
+    lore:
+      - "§7Random color on harvest §8(weighted)§7."
+      - "§7Skip the §dflower-grinding§7 setup."
+    recipe-input: WHITE_DYE
+    recipe-yield: 4
+    outputs:
+      - { item: WHITE_DYE,      weight: 1, min: 1, max: 2 }
+      - { item: ORANGE_DYE,     weight: 1, min: 1, max: 2 }
+      - { item: MAGENTA_DYE,    weight: 1, min: 1, max: 2 }
+      - { item: LIGHT_BLUE_DYE, weight: 1, min: 1, max: 2 }
+      - { item: YELLOW_DYE,     weight: 1, min: 1, max: 2 }
+      - { item: LIME_DYE,       weight: 1, min: 1, max: 2 }
+      - { item: PINK_DYE,       weight: 1, min: 1, max: 2 }
+      - { item: GRAY_DYE,       weight: 1, min: 1, max: 2 }
+      - { item: LIGHT_GRAY_DYE, weight: 1, min: 1, max: 2 }
+      - { item: CYAN_DYE,       weight: 1, min: 1, max: 2 }
+      - { item: PURPLE_DYE,     weight: 1, min: 1, max: 2 }
+      - { item: BLUE_DYE,       weight: 1, min: 1, max: 2 }
+      - { item: BROWN_DYE,      weight: 1, min: 1, max: 2 }
+      - { item: GREEN_DYE,      weight: 1, min: 1, max: 2 }
+      - { item: RED_DYE,        weight: 1, min: 1, max: 2 }
+      - { item: BLACK_DYE,      weight: 1, min: 1, max: 2 }
+    tier: common

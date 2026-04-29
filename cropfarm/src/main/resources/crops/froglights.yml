@@ -1,0 +1,43 @@
+# ============================================================
+#  CropFarm — froglights
+# ============================================================
+#  Froglights only spawn when a specific frog variant eats a small
+#  magma cube. Color depends on biome: warm = ochre, temperate =
+#  verdant, cold = pearlescent. The crop versions skip the breeding
+#  + magma-cube-feeding setup entirely.
+# ============================================================
+
+crops:
+
+  ochre_froglight:
+    display-name: "§e✦ Ochre Froglight Seed"
+    lore:
+      - "§7Warm-biome frog × magma cube."
+    recipe-input: OCHRE_FROGLIGHT
+    recipe-yield: 1
+    output: OCHRE_FROGLIGHT
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  verdant_froglight:
+    display-name: "§a✦ Verdant Froglight Seed"
+    lore:
+      - "§7Temperate-biome frog × magma cube."
+    recipe-input: VERDANT_FROGLIGHT
+    recipe-yield: 1
+    output: VERDANT_FROGLIGHT
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  pearlescent_froglight:
+    display-name: "§d✦ Pearlescent Froglight Seed"
+    lore:
+      - "§7Cold-biome frog × magma cube."
+    recipe-input: PEARLESCENT_FROGLIGHT
+    recipe-yield: 1
+    output: PEARLESCENT_FROGLIGHT
+    min-drops: 1
+    max-drops: 1
+    tier: rare

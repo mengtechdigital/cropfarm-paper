@@ -1,0 +1,36 @@
+# ============================================================
+#  CropFarm — raw ores
+# ============================================================
+#  The raw item form of iron / gold / copper — alternative to the
+#  ingot crops in config.yml. Smelt them into ingots for crafting,
+#  or stack 9 into a raw block for compact storage.
+# ============================================================
+
+crops:
+
+  raw_iron:
+    display-name: "§6✦ Raw Iron Seed"
+    recipe-input: RAW_IRON
+    recipe-yield: 4
+    output: RAW_IRON
+    min-drops: 2
+    max-drops: 4
+    tier: uncommon
+
+  raw_gold:
+    display-name: "§e✦ Raw Gold Seed"
+    recipe-input: RAW_GOLD
+    recipe-yield: 4
+    output: RAW_GOLD
+    min-drops: 2
+    max-drops: 4
+    tier: uncommon
+
+  raw_copper:
+    display-name: "§6✦ Raw Copper Seed"
+    recipe-input: RAW_COPPER
+    recipe-yield: 4
+    output: RAW_COPPER
+    min-drops: 3
+    max-drops: 6
+    tier: common

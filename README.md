@@ -10,7 +10,7 @@ Comes with a matching **resource pack** that gives every original seed its own c
 
 ## Highlights
 
-- **125 craftable seeds out of the box** — every ore, every mob drop worth grinding, every block builders need in bulk, vanilla farm crops, raw foods + fish, mushrooms, mob heads, plus aspirational endgame items (wither skulls, totems, god apples, shulker shells, tridents, saddles, name tags).
+- **170 craftable seeds out of the box** — every ore, every mob drop worth grinding, every block builders need in bulk, vanilla farm crops, raw foods + fish, mushrooms, mob heads, flowers, dyes (weighted), pottery sherds (weighted), 1.21 trial-chamber drops (mace, breeze rod, ominous keys), sniffer + frog-light rares, plus aspirational endgame items (nether star, wither skulls, totems, god apples, shulker shells, tridents, saddles, name tags).
 - **6-tier system** (common / uncommon / rare / epic / legendary / mythic) — supplies sane defaults for grow time, per-player planting cap, and XP per harvest. Each crop can override any field inline.
 - **Per-player planting cap** — default 1024 / 256 / 64 / 32 / 8 / 2 crops by tier. Stops one player from carpeting a chunk in 10 000 diamond crops. Op perm `cropfarm.bypass-cap` ignores the limit.
 - **Auto-XP on harvest** — every fully-grown crop drops XP scaled to its tier (0–1 common up to 80–150 mythic).
@@ -106,8 +106,16 @@ Tab-completion is supported for subcommands, crop ids, and player names.
 | Wool (random color) | `crops/wool.yml` | wool |
 | Block generators | `crops/blocks.yml` | sand, gravel, clay (→ clay_balls), cobblestone, stone, deepslate, dirt, mud, granite, diorite, andesite, tuff, calcite, netherrack, soul_sand, soul_soil, basalt, blackstone, magma_block, nether_wart, end_stone, purpur_block, ice, packed_ice, blue_ice, snow_block, pointed_dripstone, moss_block, glow_lichen, obsidian, crying_obsidian |
 | Mob heads | `crops/heads.yml` | skeleton_skull, zombie_head, creeper_head, piglin_head |
-| Decoratives / utility | `crops/decoratives.yml` | sponge, cobweb |
-| Endgame | `crops/endgame.yml` | wither_skeleton_skull, totem_of_undying, heart_of_the_sea, shulker_shell, saddle, name_tag, trident, enchanted_golden_apple, prismarine_crystals, honey_bottle |
+| Decoratives / lush + Nether vines | `crops/decoratives.yml` | sponge, cobweb, vine, weeping_vines, twisting_vines, big_dripleaf, small_dripleaf, spore_blossom |
+| Flowers | `crops/flowers.yml` | dandelion, poppy, oxeye_daisy, cornflower, allium, blue_orchid, azure_bluet, lily_of_the_valley, wither_rose, torchflower, pitcher_plant |
+| Dyes (weighted random color) | `crops/dyes.yml` | dye |
+| Crafting essentials | `crops/crafting-essentials.yml` | stick, paper, brick, nether_brick, glass, glass_pane, charcoal, snowball |
+| Raw ores | `crops/raw-ores.yml` | raw_iron, raw_gold, raw_copper |
+| 1.21 trial chamber | `crops/breeze-trial.yml` | armadillo_scute, breeze_rod, wind_charge, trial_key, ominous_trial_key, ominous_bottle, heavy_core, mace |
+| Sniffer / archaeology | `crops/sniffer.yml` | sniffer_egg, torchflower_seeds, pitcher_pod |
+| Froglights | `crops/froglights.yml` | ochre_froglight, verdant_froglight, pearlescent_froglight |
+| Pottery sherds (weighted random pattern) | `crops/pottery.yml` | pottery_sherd |
+| Endgame | `crops/endgame.yml` | wither_skeleton_skull, totem_of_undying, heart_of_the_sea, shulker_shell, saddle, name_tag, trident, enchanted_golden_apple, nether_star, prismarine_crystals, honey_bottle |
 
 **To add or change a crop**: edit any of these files (or drop a new `crops/*.yml`), then run `/cropfarm reload`. Every field is documented inline.
 

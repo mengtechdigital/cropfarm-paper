@@ -2,6 +2,25 @@
 
 All notable changes to this project are documented here.
 
+## [1.7.0] — 2026-04-29
+
+### Added
+- **45 new crops across 8 new files (+ 7 added to existing files)** — catalog grew from 125 → 170 by sweeping the 1.21.x catalog for items casual players want to bulk-farm. Skipped per-color sets (16-color wool/concrete/etc.), one-per-world uniqueness items (dragon egg, elytra), and trivially-craftable items.
+  - `crops/breeze-trial.yml` (8) — 1.21 trial chamber: armadillo_scute, breeze_rod, wind_charge, trial_key, ominous_trial_key, ominous_bottle, heavy_core, mace. Mace overrides mythic to 36 hours.
+  - `crops/sniffer.yml` (3) — sniffer_egg (epic), torchflower_seeds, pitcher_pod.
+  - `crops/froglights.yml` (3) — pearlescent, verdant, ochre. All rare.
+  - `crops/crafting-essentials.yml` (8) — stick, paper, brick, nether_brick, glass, glass_pane, charcoal, snowball.
+  - `crops/raw-ores.yml` (3) — raw_iron, raw_gold, raw_copper.
+  - `crops/flowers.yml` (11) — dandelion, poppy, oxeye_daisy, cornflower, allium, blue_orchid, azure_bluet, lily_of_the_valley, wither_rose, torchflower, pitcher_plant.
+  - `crops/dyes.yml` (1 weighted) — single seed yields a random vanilla dye, even-weighted across all 16 colors.
+  - `crops/pottery.yml` (1 weighted) — single seed yields a random pattern from the 23 pottery sherds (incl. 1.21 flow + guster).
+- **`crops/endgame.yml` gained `nether_star`** — the Wither boss drop, mythic with a 48-hour grow time.
+- **`crops/decoratives.yml` extended** with vine, weeping_vines, twisting_vines, big_dripleaf, small_dripleaf, spore_blossom (6 new entries — full lush-cave + Nether-vine coverage).
+
+### Notes
+- Compile target stays paper-api 1.21.1 for max back-compat. Materials added in 1.21.4+ (e.g. pale garden / eyeblossom) are not included; if you're on a newer server and want them, drop a custom `crops/pale-garden.yml` into your data folder.
+- Items unavailable on older runtimes are gracefully skipped at load time (the loader logs a warning per missing material and continues).
+
 ## [1.6.1] — 2026-04-29
 
 ### Fixed

@@ -1,0 +1,97 @@
+# ============================================================
+#  CropFarm — crafting essentials
+# ============================================================
+#  Bulk crafting bottlenecks. All trivially craftable from primary
+#  resources, but in volume the smelting / chopping / planking
+#  cycles get tedious for casual builders.
+# ============================================================
+
+crops:
+
+  stick:
+    display-name: "§6✦ Stick Seed"
+    lore:
+      - "§7Tools, scaffolding, torches, fishing rods..."
+    recipe-input: STICK
+    recipe-yield: 8
+    output: STICK
+    min-drops: 4
+    max-drops: 8
+    tier: common
+
+  paper:
+    display-name: "§f✦ Paper Seed"
+    lore:
+      - "§7Bookshelves, maps, fireworks."
+    recipe-input: PAPER
+    recipe-yield: 4
+    output: PAPER
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  brick:
+    display-name: "§c✦ Brick Seed"
+    lore:
+      - "§7Smelt-free brick item — bulk for builds."
+    recipe-input: BRICK
+    recipe-yield: 4
+    output: BRICK
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  nether_brick:
+    display-name: "§4✦ Nether Brick Seed"
+    lore:
+      - "§7Smelt-free nether brick item."
+    recipe-input: NETHER_BRICK
+    recipe-yield: 4
+    output: NETHER_BRICK
+    min-drops: 2
+    max-drops: 4
+    tier: uncommon
+
+  glass:
+    display-name: "§b✦ Glass Seed"
+    lore:
+      - "§7Skip the §bsmelt-sand§7 cycle."
+    recipe-input: GLASS
+    recipe-yield: 4
+    output: GLASS
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  glass_pane:
+    display-name: "§b✦ Glass Pane Seed"
+    lore:
+      - "§7Window panes for builds."
+    recipe-input: GLASS_PANE
+    recipe-yield: 8
+    output: GLASS_PANE
+    min-drops: 4
+    max-drops: 8
+    tier: common
+
+  charcoal:
+    display-name: "§8✦ Charcoal Seed"
+    lore:
+      - "§7Vegetarian alternative to coal — 8 smelts."
+    recipe-input: CHARCOAL
+    recipe-yield: 4
+    output: CHARCOAL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  snowball:
+    display-name: "§f✦ Snowball Seed"
+    lore:
+      - "§7Throwables + snow golem ammunition."
+    recipe-input: SNOWBALL
+    recipe-yield: 4
+    output: SNOWBALL
+    min-drops: 2
+    max-drops: 4
+    tier: common

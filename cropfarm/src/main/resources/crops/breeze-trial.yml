@@ -1,0 +1,100 @@
+# ============================================================
+#  CropFarm — 1.21 trial chamber content
+# ============================================================
+#  Items added in 1.21: breeze drops, trial keys, the mace + heavy
+#  core forging chain, ominous mechanic, armadillo scute.
+# ============================================================
+
+crops:
+
+  armadillo_scute:
+    display-name: "§6✦ Armadillo Scute Seed"
+    lore:
+      - "§7Crafted into §6wolf armor§7."
+    recipe-input: ARMADILLO_SCUTE
+    recipe-yield: 2
+    output: ARMADILLO_SCUTE
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon
+
+  breeze_rod:
+    display-name: "§3✦ Breeze Rod Seed"
+    lore:
+      - "§7Replaces §3breeze farms§7."
+      - "§7Crafts into wind charges."
+    recipe-input: BREEZE_ROD
+    recipe-yield: 2
+    output: BREEZE_ROD
+    min-drops: 1
+    max-drops: 2
+    tier: rare
+
+  wind_charge:
+    display-name: "§b✦ Wind Charge Seed"
+    lore:
+      - "§7Movement utility + ranged knockback."
+    recipe-input: WIND_CHARGE
+    recipe-yield: 4
+    output: WIND_CHARGE
+    min-drops: 2
+    max-drops: 4
+    tier: rare
+
+  trial_key:
+    display-name: "§e✦ Trial Key Seed"
+    lore:
+      - "§7Replaces §etrial-spawner grinding§7."
+      - "§7Unlocks vault chests."
+    recipe-input: TRIAL_KEY
+    recipe-yield: 1
+    output: TRIAL_KEY
+    min-drops: 1
+    max-drops: 1
+    tier: epic
+
+  ominous_trial_key:
+    display-name: "§5✦ Ominous Trial Key Seed"
+    lore:
+      - "§7Unlocks §5ominous vaults§7 — best loot."
+    recipe-input: OMINOUS_TRIAL_KEY
+    recipe-yield: 1
+    output: OMINOUS_TRIAL_KEY
+    min-drops: 1
+    max-drops: 1
+    tier: legendary
+
+  ominous_bottle:
+    display-name: "§5✦ Ominous Bottle Seed"
+    lore:
+      - "§7Drink to gain §5Bad Omen§7 + raid trigger."
+    recipe-input: OMINOUS_BOTTLE
+    recipe-yield: 2
+    output: OMINOUS_BOTTLE
+    min-drops: 1
+    max-drops: 2
+    tier: epic
+
+  heavy_core:
+    display-name: "§d✦ Heavy Core Seed"
+    lore:
+      - "§7Vault-chest only — needed for §dmaces§7."
+    recipe-input: HEAVY_CORE
+    recipe-yield: 1
+    output: HEAVY_CORE
+    min-drops: 1
+    max-drops: 1
+    tier: mythic
+
+  mace:
+    display-name: "§d✦ Mace Seed"
+    lore:
+      - "§7Smash weapon — damage scales with fall distance."
+      - "§7Forged from heavy core + breeze rod in vanilla."
+    recipe-input: MACE
+    recipe-yield: 1
+    output: MACE
+    min-drops: 1
+    max-drops: 1
+    tier: mythic
+    grow-time-seconds: 129600     # 36 hours — top-tier weapon

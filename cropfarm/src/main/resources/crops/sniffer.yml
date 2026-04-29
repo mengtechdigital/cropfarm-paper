@@ -1,0 +1,43 @@
+# ============================================================
+#  CropFarm — sniffer + archaeology rares
+# ============================================================
+#  Sniffer eggs only spawn in specific suspicious-sand locations
+#  in the warm ocean. The seeds (torchflower, pitcher pod) are
+#  sniffer drops — gates the new flora.
+# ============================================================
+
+crops:
+
+  sniffer_egg:
+    display-name: "§a✦ Sniffer Egg Seed"
+    lore:
+      - "§7Replaces §awarm-ocean archaeology§7 lottery."
+      - "§7Hatch on moss for a baby sniffer."
+    recipe-input: SNIFFER_EGG
+    recipe-yield: 1
+    output: SNIFFER_EGG
+    min-drops: 1
+    max-drops: 1
+    tier: epic
+
+  torchflower_seeds:
+    display-name: "§e✦ Torchflower Seed"
+    lore:
+      - "§7Sniffer-only drop. Gates §etorchflowers§7."
+    recipe-input: TORCHFLOWER_SEEDS
+    recipe-yield: 2
+    output: TORCHFLOWER_SEEDS
+    min-drops: 1
+    max-drops: 3
+    tier: rare
+
+  pitcher_pod:
+    display-name: "§5✦ Pitcher Pod Seed"
+    lore:
+      - "§7Sniffer-only drop. Gates §5pitcher plants§7."
+    recipe-input: PITCHER_POD
+    recipe-yield: 2
+    output: PITCHER_POD
+    min-drops: 1
+    max-drops: 3
+    tier: rare

@@ -2,7 +2,8 @@
 #  CropFarm — decorative + odd-utility blocks
 # ============================================================
 #  Items that are technically obtainable in vanilla but a pain to
-#  collect at scale: ocean-monument sponges, mineshaft cobwebs.
+#  collect at scale: sponges, mineshaft cobwebs, lush-cave
+#  dripleaves, Nether-cave vines.
 # ============================================================
 
 crops:
@@ -29,4 +30,70 @@ crops:
     output: COBWEB
     min-drops: 1
     max-drops: 3
+    tier: uncommon
+
+  vine:
+    display-name: "§a✦ Vine Seed"
+    lore:
+      - "§7Climbing + jungle decoration."
+    recipe-input: VINE
+    recipe-yield: 2
+    output: VINE
+    min-drops: 1
+    max-drops: 3
+    tier: common
+
+  weeping_vines:
+    display-name: "§4✦ Weeping Vine Seed"
+    lore:
+      - "§7Crimson-forest decoration."
+    recipe-input: WEEPING_VINES
+    recipe-yield: 2
+    output: WEEPING_VINES
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon
+
+  twisting_vines:
+    display-name: "§3✦ Twisting Vine Seed"
+    lore:
+      - "§7Warped-forest decoration."
+    recipe-input: TWISTING_VINES
+    recipe-yield: 2
+    output: TWISTING_VINES
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon
+
+  big_dripleaf:
+    display-name: "§a✦ Big Dripleaf Seed"
+    lore:
+      - "§7Lush cave platform — drops players when stepped on."
+    recipe-input: BIG_DRIPLEAF
+    recipe-yield: 2
+    output: BIG_DRIPLEAF
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon
+
+  small_dripleaf:
+    display-name: "§a✦ Small Dripleaf Seed"
+    lore:
+      - "§7Bonemeal grows into big dripleaf."
+    recipe-input: SMALL_DRIPLEAF
+    recipe-yield: 2
+    output: SMALL_DRIPLEAF
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon
+
+  spore_blossom:
+    display-name: "§d✦ Spore Blossom Seed"
+    lore:
+      - "§7Hanging lush-cave flower with spore particles."
+    recipe-input: SPORE_BLOSSOM
+    recipe-yield: 1
+    output: SPORE_BLOSSOM
+    min-drops: 1
+    max-drops: 2
     tier: uncommon

@@ -1,0 +1,43 @@
+# ============================================================
+#  CropFarm — pottery sherds (weighted random pattern)
+# ============================================================
+#  One "pottery seed" yields a random pattern from the 22 sherd
+#  variants (1.20–1.21). Use these to decorate pots — combine 4
+#  sherds + 4 bricks (or just bricks) at a crafter to make a
+#  decorated pot with the chosen patterns.
+# ============================================================
+
+crops:
+
+  pottery_sherd:
+    display-name: "§6✦ Pottery Sherd Seed"
+    lore:
+      - "§7Random sherd pattern §8(weighted)§7."
+      - "§7Replaces §6brushing suspicious sand/gravel§7."
+    recipe-input: BRICK
+    recipe-yield: 1
+    outputs:
+      - { item: ANGLER_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
+      - { item: ARCHER_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
+      - { item: ARMS_UP_POTTERY_SHERD,     weight: 1, min: 1, max: 1 }
+      - { item: BLADE_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
+      - { item: BREWER_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
+      - { item: BURN_POTTERY_SHERD,        weight: 1, min: 1, max: 1 }
+      - { item: DANGER_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
+      - { item: EXPLORER_POTTERY_SHERD,    weight: 1, min: 1, max: 1 }
+      - { item: FLOW_POTTERY_SHERD,        weight: 1, min: 1, max: 1 }
+      - { item: FRIEND_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
+      - { item: GUSTER_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
+      - { item: HEART_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
+      - { item: HEARTBREAK_POTTERY_SHERD,  weight: 1, min: 1, max: 1 }
+      - { item: HOWL_POTTERY_SHERD,        weight: 1, min: 1, max: 1 }
+      - { item: MINER_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
+      - { item: MOURNER_POTTERY_SHERD,     weight: 1, min: 1, max: 1 }
+      - { item: PLENTY_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
+      - { item: PRIZE_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
+      - { item: SCRAPE_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
+      - { item: SHEAF_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
+      - { item: SHELTER_POTTERY_SHERD,     weight: 1, min: 1, max: 1 }
+      - { item: SKULL_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
+      - { item: SNORT_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
+    tier: rare

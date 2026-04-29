@@ -1,0 +1,127 @@
+# ============================================================
+#  CropFarm — flowers
+# ============================================================
+#  Each flower is a single-color crop. For a "random flower" pick,
+#  see crops/dyes.yml — flowers craft into dyes, and the dye seed
+#  yields a weighted random color.
+#
+#  The 1.20+ Sniffer-gated flowers (torchflower, pitcher_plant) are
+#  here as the actual flower blocks; the seeds (torchflower_seeds,
+#  pitcher_pod) live in crops/sniffer.yml.
+# ============================================================
+
+crops:
+
+  dandelion:
+    display-name: "§e✦ Dandelion Seed"
+    recipe-input: DANDELION
+    recipe-yield: 4
+    output: DANDELION
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  poppy:
+    display-name: "§c✦ Poppy Seed"
+    recipe-input: POPPY
+    recipe-yield: 4
+    output: POPPY
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  oxeye_daisy:
+    display-name: "§f✦ Oxeye Daisy Seed"
+    recipe-input: OXEYE_DAISY
+    recipe-yield: 4
+    output: OXEYE_DAISY
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  cornflower:
+    display-name: "§9✦ Cornflower Seed"
+    recipe-input: CORNFLOWER
+    recipe-yield: 4
+    output: CORNFLOWER
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  allium:
+    display-name: "§5✦ Allium Seed"
+    lore:
+      - "§7Magenta dye source."
+    recipe-input: ALLIUM
+    recipe-yield: 2
+    output: ALLIUM
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon
+
+  blue_orchid:
+    display-name: "§b✦ Blue Orchid Seed"
+    lore:
+      - "§7Light-blue dye — swamp biome only in vanilla."
+    recipe-input: BLUE_ORCHID
+    recipe-yield: 2
+    output: BLUE_ORCHID
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon
+
+  azure_bluet:
+    display-name: "§f✦ Azure Bluet Seed"
+    lore:
+      - "§7Light-gray dye source."
+    recipe-input: AZURE_BLUET
+    recipe-yield: 2
+    output: AZURE_BLUET
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon
+
+  lily_of_the_valley:
+    display-name: "§f✦ Lily of the Valley Seed"
+    lore:
+      - "§7White dye + suspicious-stew nausea."
+    recipe-input: LILY_OF_THE_VALLEY
+    recipe-yield: 2
+    output: LILY_OF_THE_VALLEY
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon
+
+  wither_rose:
+    display-name: "§8✦ Wither Rose Seed"
+    lore:
+      - "§7Vanilla source: §8a Wither killing a mob§7."
+      - "§7Black dye + grants Wither effect."
+    recipe-input: WITHER_ROSE
+    recipe-yield: 1
+    output: WITHER_ROSE
+    min-drops: 1
+    max-drops: 2
+    tier: rare
+
+  torchflower:
+    display-name: "§e✦ Torchflower Bloom Seed"
+    lore:
+      - "§7The bloomed flower. For seeds, see sniffer.yml."
+    recipe-input: TORCHFLOWER
+    recipe-yield: 1
+    output: TORCHFLOWER
+    min-drops: 1
+    max-drops: 2
+    tier: rare
+
+  pitcher_plant:
+    display-name: "§5✦ Pitcher Plant Bloom Seed"
+    lore:
+      - "§7The bloomed plant. For pods, see sniffer.yml."
+    recipe-input: PITCHER_PLANT
+    recipe-yield: 1
+    output: PITCHER_PLANT
+    min-drops: 1
+    max-drops: 2
+    tier: rare

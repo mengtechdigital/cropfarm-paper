@@ -24,6 +24,14 @@ public class CropFarm extends JavaPlugin {
             "crops/mushrooms.yml",
             "crops/heads.yml",
             "crops/decoratives.yml",
+            "crops/breeze-trial.yml",
+            "crops/sniffer.yml",
+            "crops/froglights.yml",
+            "crops/crafting-essentials.yml",
+            "crops/raw-ores.yml",
+            "crops/flowers.yml",
+            "crops/dyes.yml",
+            "crops/pottery.yml",
     };
 
     private CropManager cropManager;

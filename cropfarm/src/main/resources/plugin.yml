@@ -1,5 +1,5 @@
 name: CropFarm
-version: 1.6.1
+version: 1.7.0
 main: com.cropfarm.CropFarm
 api-version: '1.21'
 description: Custom seed/crop system with configurable yields.

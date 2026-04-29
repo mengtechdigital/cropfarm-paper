@@ -10,6 +10,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.ExperienceOrb;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,6 +27,7 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -366,6 +368,36 @@ public class CropListener implements Listener {
         int h = seconds / 3600;
         int m = (seconds % 3600) / 60;
         return m == 0 ? h + "h" : h + "h " + m + "m";
+    }
+
+    // ---------------------------------------------------------------
+    // Pickup normalisation
+    //
+    // Two CropFarm seeds with the same crop id should always stack, but
+    // ItemStack stacking checks byte-for-byte metadata equality. Seeds
+    // crafted on older plugin versions (e.g. pre-1.9.0 set integer
+    // custom_model_data; 1.9.0+ uses custom_model_data.strings) end up
+    // with different metadata than seeds created by the current
+    // createSeed(), so they refuse to stack with each other and with
+    // freshly-dropped compensation seeds from the growth task.
+    //
+    // Whenever a tagged seed is picked up, refresh it through createSeed()
+    // so its metadata matches the current version's format. Drop + re-pick
+    // an old stack once and it'll stack with everything new from then on.
+    // ---------------------------------------------------------------
+
+    @EventHandler(ignoreCancelled = true)
+    public void onSeedPickup(EntityPickupItemEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        Item itemEntity = event.getItem();
+        ItemStack stack = itemEntity.getItemStack();
+        if (stack.getType() != Material.WHEAT_SEEDS) return;
+        CropType type = plugin.getCropManager().getCropTypeFromSeed(stack);
+        if (type == null) return;
+        ItemStack normalized = plugin.getCropManager().createSeed(type, stack.getAmount());
+        if (!stack.isSimilar(normalized)) {
+            itemEntity.setItemStack(normalized);
+        }
     }
 
     // ---------------------------------------------------------------

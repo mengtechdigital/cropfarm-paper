@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here.
 
+## [1.9.2] — 2026-04-29
+
+### Fixed
+- **Crop seeds crafted on different plugin versions wouldn't stack.** ItemStack stacking is a byte-for-byte metadata equality check. Seeds crafted before 1.9.0 used an integer `custom_model_data`; 1.9.0+ switched to `custom_model_data.strings = [cropId]`. Two seeds with the same display name and PDC tag but different `custom_model_data` shapes refused to stack — visible mostly when the growth task dropped a compensation seed (current format) into an inventory full of older-format seeds. New `EntityPickupItemEvent` handler normalises any tagged seed through the current `createSeed()` on pickup, so old-format stacks self-heal: drop + re-pick once and they'll merge with every newly-dropped seed of the same crop.
+
 ## [1.9.1] — 2026-04-29
 
 ### Fixed

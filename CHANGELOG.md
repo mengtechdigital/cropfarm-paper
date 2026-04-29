@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented here.
 
+## [1.8.0] — 2026-04-29
+
+### Added
+- **Held-seed right-click hint.** Right-click empty air (or any non-farmland block) with a tagged seed → one-line chat message showing display name, tier, grow time, your planted vs cap, and the recipe. Discoverability win for new players who don't know `/cropfarm menu` exists. Per-player 2-second cooldown so spam-clicking doesn't spam chat.
+- **CoreProtect integration** (soft-dependency). When CoreProtect is installed, every plant and break is logged through `CoreProtectAPI.logPlacement` / `logRemoval`. Lets `/co lookup` and `/co rollback` see CropFarm activity. Auto-detected at enable time; entirely no-op when CoreProtect isn't present. Compatible with API v9+.
+
+### Performance
+- **Per-chunk crop index.** `TrackedCrops.hasCropsInChunk(world, chunkX, chunkZ)` is now an O(1) lookup. Used as a short-circuit in the protection event handlers — `BlockFromToEvent` (water flow) fires on every flowing block on every tick across every loaded chunk; events in chunks with no tracked crops now skip a Location-string serialisation each.
+- **Async SQLite writes.** `put` and `remove` enqueue ops to a dedicated background `CropFarm-DB-Writer` thread that batches up to 256 ops into a single transaction. The main server thread no longer waits for disk I/O on plant or break. `loadAll` drains the queue first; `close` interrupts the worker, joins (5s timeout), then synchronously drains anything pending — graceful shutdown never loses writes. A hard `kill -9` could lose at most a few seconds of unflushed plants.
+
+### Build
+- Added `playpro` Maven repo + `net.coreprotect:coreprotect:23.1` as `provided` dependency.
+- Added `softdepend: [CoreProtect]` to plugin.yml.
+
 ## [1.7.1] — 2026-04-29
 
 ### Fixed

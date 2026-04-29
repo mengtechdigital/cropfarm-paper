@@ -40,6 +40,7 @@ public class CropFarm extends JavaPlugin {
     private CropGrowthTask growthTask;
     private CropMenu cropMenu;
     private SqliteCropStore cropStore;
+    private CoreProtectHook coreProtect;
 
     @Override
     public void onEnable() {
@@ -79,6 +80,8 @@ public class CropFarm extends JavaPlugin {
         this.trackedCrops   = new TrackedCrops(this, cropStore, initial);
         this.nametagService = new NametagService(this);
         this.cropMenu       = new CropMenu(this);
+        this.coreProtect    = new CoreProtectHook(this);
+        coreProtect.tryHook();
 
         getServer().getPluginManager().registerEvents(new CropListener(this), this);
         getServer().getPluginManager().registerEvents(cropMenu, this);
@@ -154,4 +157,5 @@ public class CropFarm extends JavaPlugin {
     public TrackedCrops getTrackedCrops()     { return trackedCrops; }
     public NametagService getNametagService() { return nametagService; }
     public CropMenu getCropMenu()             { return cropMenu; }
+    public CoreProtectHook getCoreProtect()   { return coreProtect; }
 }

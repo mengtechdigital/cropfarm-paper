@@ -32,12 +32,19 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 public class CropListener implements Listener {
 
     private final CropFarm plugin;
     private final Random random = new Random();
+    /** Per-player throttle for the held-seed hint (right-click fires twice on
+     *  the same swing in some Paper builds, plus players spam it). */
+    private final Map<UUID, Long> hintCooldown = new HashMap<>();
+    private static final long HINT_COOLDOWN_MS = 2000L;
 
     public CropListener(CropFarm plugin) {
         this.plugin = plugin;
@@ -92,6 +99,7 @@ public class CropListener implements Listener {
         // Reservation already incremented the counter; trackReserved just records the entry.
         plugin.getTrackedCrops().trackReserved(above.getLocation(), type.getId(), player.getUniqueId());
         plugin.getNametagService().spawn(above.getLocation(), type);
+        plugin.getCoreProtect().logPlace(player, above.getLocation(), Material.WHEAT);
 
         if (player.getGameMode() != GameMode.CREATIVE) {
             inHand.setAmount(inHand.getAmount() - 1);
@@ -128,6 +136,7 @@ public class CropListener implements Listener {
         // Even if the type was removed from config, untrack + clean nametag so the world stays tidy.
         plugin.getNametagService().remove(block.getLocation());
         plugin.getTrackedCrops().untrack(block.getLocation());
+        plugin.getCoreProtect().logBreak(event.getPlayer(), block.getLocation(), Material.WHEAT);
         if (type == null) return;
 
         BlockData data = block.getBlockData();
@@ -265,6 +274,62 @@ public class CropListener implements Listener {
     }
 
     // ---------------------------------------------------------------
+    // Held-seed right-click hint
+    //
+    // Right-click empty air (or any non-farmland block) with a tagged seed
+    // shows a one-line discovery message: tier, grow time, planted/cap,
+    // recipe-input. Helps players who don't know /cropfarm menu exists.
+    // ---------------------------------------------------------------
+
+    @EventHandler(ignoreCancelled = true)
+    public void onSeedHint(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        Action action = event.getAction();
+        if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return;
+        // For block clicks: skip if it's farmland — onPlant handles those.
+        if (action == Action.RIGHT_CLICK_BLOCK) {
+            Block clicked = event.getClickedBlock();
+            if (clicked != null && clicked.getType() == Material.FARMLAND) return;
+        }
+
+        ItemStack inHand = event.getItem();
+        if (inHand == null || inHand.getType() != Material.WHEAT_SEEDS) return;
+        CropManager mgr = plugin.getCropManager();
+        CropType type = mgr.getCropTypeFromSeed(inHand);
+        if (type == null) return;
+
+        Player player = event.getPlayer();
+        long now = System.currentTimeMillis();
+        Long last = hintCooldown.get(player.getUniqueId());
+        if (last != null && now - last < HINT_COOLDOWN_MS) return;
+        hintCooldown.put(player.getUniqueId(), now);
+
+        int planted = plugin.getTrackedCrops().countFor(player.getUniqueId(), type.getId());
+        String capPart = type.getMaxPerPlayer() > 0
+                ? planted + "§7/§f" + type.getMaxPerPlayer()
+                : String.valueOf(planted);
+        Tier tier = mgr.getTier(type.getTier());
+        String tierColor = tier == null ? "§7" : tier.color();
+        String tierLabel = type.getTier() == null ? "—" : type.getTier();
+
+        player.sendMessage(type.getDisplayName()
+                + " §8| " + tierColor + tierLabel
+                + " §8| §f" + formatGrowTime(type.getGrowTimeSeconds()) + " §7grow"
+                + " §8| §f" + capPart + " §7planted");
+        player.sendMessage("§8Right-click §6farmland §8to plant. "
+                + "Recipe: §f1 " + humanize(type.getRecipeInput().name())
+                + " §7→§f " + type.getRecipeYield() + " seeds.");
+    }
+
+    private static String formatGrowTime(int seconds) {
+        if (seconds < 60) return seconds + " sec";
+        if (seconds < 3600) return (seconds / 60) + " min";
+        int h = seconds / 3600;
+        int m = (seconds % 3600) / 60;
+        return m == 0 ? h + "h" : h + "h " + m + "m";
+    }
+
+    // ---------------------------------------------------------------
     // Reconcile nametags as chunks come into view
     // ---------------------------------------------------------------
 
@@ -359,16 +424,21 @@ public class CropListener implements Listener {
      * True if the block is itself a tracked crop, OR is farmland directly
      * supporting one (so we keep the crop's substrate intact too).
      *
-     * BlockFromToEvent fires on every water-flow tick across every loaded
-     * chunk; the size() short-circuit avoids the per-call Location.toString
-     * hash on servers with no tracked crops yet.
+     * Performance: BlockFromToEvent fires on every water-flow tick across
+     * every loaded chunk. The per-chunk index short-circuit means events in
+     * chunks with no crops cost only one ConcurrentHashMap lookup instead
+     * of two Location-string serialisations.
      */
     private boolean isProtected(Block b) {
-        if (plugin.getTrackedCrops().size() == 0) return false;
-        if (plugin.getTrackedCrops().contains(b.getLocation())) return true;
+        TrackedCrops tracked = plugin.getTrackedCrops();
+        if (tracked.size() == 0) return false;
+        if (!tracked.hasCropsInChunk(b.getWorld().getName(), b.getX() >> 4, b.getZ() >> 4)) {
+            return false;
+        }
+        if (tracked.contains(b.getLocation())) return true;
         if (b.getType() == Material.FARMLAND) {
             Block above = b.getRelative(BlockFace.UP);
-            return plugin.getTrackedCrops().contains(above.getLocation());
+            return tracked.contains(above.getLocation());
         }
         return false;
     }

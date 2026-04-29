@@ -7,7 +7,7 @@
 
     <groupId>com.cropfarm</groupId>
     <artifactId>CropFarm</artifactId>
-    <version>1.7.1</version>
+    <version>1.8.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -20,6 +20,10 @@
         <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>playpro</id>
+            <url>https://maven.playpro.com</url>
         </repository>
     </repositories>
 
@@ -35,6 +39,13 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.46.1.0</version>
             <scope>compile</scope>
+        </dependency>
+        <!-- Soft-depend: optional plant/break logging for rollback. -->
+        <dependency>
+            <groupId>net.coreprotect</groupId>
+            <artifactId>coreprotect</artifactId>
+            <version>23.1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

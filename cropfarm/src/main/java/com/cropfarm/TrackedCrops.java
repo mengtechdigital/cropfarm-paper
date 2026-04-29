@@ -29,6 +29,13 @@ public class TrackedCrops {
     /** Per-player count of planted crops keyed by cropId. */
     private final ConcurrentHashMap<UUID, ConcurrentHashMap<String, AtomicInteger>> playerCounts =
             new ConcurrentHashMap<>();
+    /**
+     * Per-chunk crop count, keyed by "worldName,chunkX,chunkZ".
+     * Lets isProtected() short-circuit quickly when an event fires in a
+     * chunk that has no tracked crops (the common case for water flow,
+     * piston, mob trample on busy servers).
+     */
+    private final ConcurrentHashMap<String, AtomicInteger> chunkCounts = new ConcurrentHashMap<>();
 
     /**
      * @param initial entries already loaded from the store. Owners with
@@ -41,6 +48,7 @@ public class TrackedCrops {
             crops.put(e.getKey(), e.getValue());
             UUID owner = e.getValue().owner();
             if (owner != null) increment(owner, e.getValue().cropId());
+            incrementChunkByKey(e.getKey());
         }
         plugin.getLogger().info("TrackedCrops: " + crops.size() + " crops loaded from store.");
     }
@@ -77,6 +85,8 @@ public class TrackedCrops {
         if (prev != null && prev.owner() != null) {
             // Stale entry overwritten — release the old owner's slot.
             decrement(prev.owner(), prev.cropId());
+        } else if (prev == null) {
+            incrementChunk(loc);
         }
         store.put(key, entry);
     }
@@ -84,8 +94,9 @@ public class TrackedCrops {
     public void untrack(Location loc) {
         String key = serialize(loc);
         TrackedCrop prev = crops.remove(key);
-        if (prev != null && prev.owner() != null) {
-            decrement(prev.owner(), prev.cropId());
+        if (prev != null) {
+            if (prev.owner() != null) decrement(prev.owner(), prev.cropId());
+            decrementChunk(loc);
         }
         store.remove(key);
     }
@@ -105,6 +116,15 @@ public class TrackedCrops {
 
     public int size() {
         return crops.size();
+    }
+
+    /**
+     * O(1) check: is there at least one tracked crop in this chunk? Used by
+     * the protection event handlers to short-circuit far away from any farm.
+     */
+    public boolean hasCropsInChunk(String worldName, int chunkX, int chunkZ) {
+        AtomicInteger v = chunkCounts.get(chunkKey(worldName, chunkX, chunkZ));
+        return v != null && v.get() > 0;
     }
 
     /** Current planted count for a given player + crop type. */
@@ -134,6 +154,47 @@ public class TrackedCrops {
         // Leave zero counters in place to avoid the orphaned-map race
         // (decrement-then-increment on the same UUID). Memory cost is bounded
         // by (players × cropTypes), negligible.
+    }
+
+    // ---- Chunk index helpers ----
+
+    private static String chunkKey(String worldName, int chunkX, int chunkZ) {
+        return worldName + "," + chunkX + "," + chunkZ;
+    }
+
+    private static String chunkKeyForLoc(String serialised) {
+        // serialised format: world,x,y,z
+        String[] parts = serialised.split(",");
+        if (parts.length != 4) return null;
+        try {
+            int chunkX = Integer.parseInt(parts[1]) >> 4;
+            int chunkZ = Integer.parseInt(parts[3]) >> 4;
+            return chunkKey(parts[0], chunkX, chunkZ);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private void incrementChunk(Location loc) {
+        String key = chunkKey(loc.getWorld().getName(),
+                loc.getBlockX() >> 4, loc.getBlockZ() >> 4);
+        chunkCounts.computeIfAbsent(key, k -> new AtomicInteger()).incrementAndGet();
+    }
+
+    private void incrementChunkByKey(String serialised) {
+        String key = chunkKeyForLoc(serialised);
+        if (key == null) return;
+        chunkCounts.computeIfAbsent(key, k -> new AtomicInteger()).incrementAndGet();
+    }
+
+    private void decrementChunk(Location loc) {
+        String key = chunkKey(loc.getWorld().getName(),
+                loc.getBlockX() >> 4, loc.getBlockZ() >> 4);
+        AtomicInteger counter = chunkCounts.get(key);
+        if (counter == null) return;
+        if (counter.updateAndGet(v -> v <= 1 ? 0 : v - 1) == 0) {
+            chunkCounts.remove(key, counter);
+        }
     }
 
     // ---- (De)serialisation ----

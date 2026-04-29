@@ -1,9 +1,10 @@
 name: CropFarm
-version: 1.7.1
+version: 1.8.0
 main: com.cropfarm.CropFarm
 api-version: '1.21'
 description: Custom seed/crop system with configurable yields.
 author: Meng Tech LLC
+softdepend: [CoreProtect]
 
 commands:
   cropfarm:

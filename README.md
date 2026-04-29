@@ -17,6 +17,8 @@ Comes with a matching **resource pack** that gives every original seed its own c
 - **Per-crop timed growth** — light, water, and weather no longer matter. Each crop has a configurable `grow-time-seconds`.
 - **Weighted multi-output drops** — for the random-color `wool` crop and any future loot-table style crops you define.
 - **Multi-file crop loader** — drop any `*.yml` into `plugins/CropFarm/crops/` to extend the catalog without touching `config.yml`.
+- **Embedded SQLite storage** for runtime tracking — synchronous WAL-mode writes, crash-safe, no separate database process. Config files stay YAML for human editing.
+- **Direct-to-inventory harvest** — crops, returned seed, and XP go straight into the player; no dropped-item entities or XP orbs spawned (massive entity-lag reduction on large farms). Toggleable.
 - **`/cropfarm menu` GUI** — paginated chest browser showing every crop grouped by tier, with planted-vs-cap counter, recipe, drops, and XP per harvest. Left-click for chat details, shift-click to take a seed (op).
 - **Floating nametag above each plant** — `§b✦ Diamond Seed §7§o(3/7)` while growing, `§a§l✓ Ready!` when done. Native `TextDisplay` entities — no resource pack required.
 - **Returns one seed on harvest** so the cycle continues automatically.
@@ -33,8 +35,11 @@ Comes with a matching **resource pack** that gives every original seed its own c
 2. Restart the server. It generates:
    - `plugins/CropFarm/config.yml` (settings, tiers, original 24 ore + mob crops)
    - `plugins/CropFarm/crops/*.yml` (additional 68 crops across mob-drops, wool, vanilla, saplings, blocks, endgame)
-   - `plugins/CropFarm/crops.yml` (auto-managed planted-crop tracking)
+   - `plugins/CropFarm/crops.db` (SQLite — auto-managed planted-crop tracking)
+   - `plugins/CropFarm/.native/` (sqlite-jdbc unpacks its platform native lib here)
 3. Tweak any of the config files to taste, then run `/cropfarm reload`.
+
+> **Upgrading from 1.4.x:** the plugin auto-migrates your old `crops.yml` into `crops.db` on first start of 1.5.0, then renames the YAML to `crops.yml.<timestamp>.bak` for safe-keeping. No manual steps needed.
 
 ### Resource pack (optional, recommended)
 

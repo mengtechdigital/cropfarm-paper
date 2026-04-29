@@ -3,10 +3,7 @@ package com.cropfarm;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,43 +11,46 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 
 /**
- * Stores all currently-planted crops keyed by serialised location.
- * Persists to crops.yml between restarts.
+ * In-memory cache of all currently-planted crops keyed by serialised location.
+ * Persists each change synchronously through the supplied {@link CropStore}
+ * (SQLite by default — see {@link SqliteCropStore}).
  *
- * Format on disk: list of "world,x,y,z|cropId|plantedAtMillis|ownerUuid"
- *   - 2-field entries (locKey|cropId) are migrated to "now" with no owner.
- *   - 3-field entries (no owner) are loaded with null owner and don't count
- *     against any cap (treated as legacy/unowned).
- *
- * Concurrency: all paths into this class run on the main server thread today
- * (event handlers + a BukkitTask scheduled with runTaskTimer). The data
- * structures use ConcurrentHashMap + AtomicInteger so that any future async
- * caller cannot lose increments through a torn read-modify-write.
+ * Concurrency: all paths run on the main server thread today (event handlers
+ * + a BukkitTask scheduled with runTaskTimer). Data structures use
+ * ConcurrentHashMap + AtomicInteger so future async callers cannot lose
+ * increments through a torn read-modify-write.
  */
 public class TrackedCrops {
 
     private final CropFarm plugin;
+    private final CropStore store;
     private final Map<String, TrackedCrop> crops = new ConcurrentHashMap<>();
-    /** Per-player count of planted crops keyed by cropId. AtomicInteger ensures
-     *  increments/decrements are not lost across threads. */
-    private final ConcurrentHashMap<UUID, ConcurrentHashMap<String, AtomicInteger>> playerCounts = new ConcurrentHashMap<>();
+    /** Per-player count of planted crops keyed by cropId. */
+    private final ConcurrentHashMap<UUID, ConcurrentHashMap<String, AtomicInteger>> playerCounts =
+            new ConcurrentHashMap<>();
 
-    private File dataFile;
-    private YamlConfiguration dataConfig;
-
-    public TrackedCrops(CropFarm plugin) {
+    /**
+     * @param initial entries already loaded from the store (or migrated from
+     *                legacy YAML). Owners with non-null UUID seed playerCounts.
+     */
+    public TrackedCrops(CropFarm plugin, CropStore store, Map<String, TrackedCrop> initial) {
         this.plugin = plugin;
-        load();
+        this.store = store;
+        for (Map.Entry<String, TrackedCrop> e : initial.entrySet()) {
+            crops.put(e.getKey(), e.getValue());
+            UUID owner = e.getValue().owner();
+            if (owner != null) increment(owner, e.getValue().cropId());
+        }
+        plugin.getLogger().info("TrackedCrops: " + crops.size() + " crops loaded from store.");
     }
 
     // ---- Mutation ----
 
     /**
-     * Atomically check the player's cap and, if room, reserve a slot.
-     * Caller must immediately follow a successful reserve with {@link #trackReserved}
+     * Atomically check the player's cap and, if room, reserve a slot. Caller
+     * must immediately follow a successful reserve with {@link #trackReserved}
      * once the block is placed. Returns false if cap was already met.
      *
      * cap of 0 (or owner null) means unlimited and always succeeds.
@@ -72,36 +72,41 @@ public class TrackedCrops {
      * Does NOT touch the per-player counter (that was bumped by tryReserve).
      */
     public void trackReserved(Location loc, String cropId, UUID owner) {
-        TrackedCrop prev = crops.put(serialize(loc),
-                new TrackedCrop(cropId, System.currentTimeMillis(), owner));
+        String key = serialize(loc);
+        TrackedCrop entry = new TrackedCrop(cropId, System.currentTimeMillis(), owner);
+        TrackedCrop prev = crops.put(key, entry);
         if (prev != null && prev.owner() != null) {
-            // Stale entry overwritten — release the old owner's slot since we kept
-            // the new one's reservation already.
+            // Stale entry overwritten — release the old owner's slot.
             decrement(prev.owner(), prev.cropId());
         }
+        store.put(key, entry);
     }
 
     /**
-     * Unconditional track (no cap check, increments counter). Use only when the
-     * caller doesn't care about caps (legacy migration, console /give wired to
-     * auto-plant in future, etc.). Plant flow should use tryReserve + trackReserved.
+     * Unconditional track (no cap check, increments counter). Use when the
+     * caller doesn't go through tryReserve (legacy migration, console-driven
+     * planting in future).
      */
     public void track(Location loc, String cropId, UUID owner) {
-        TrackedCrop prev = crops.put(serialize(loc),
-                new TrackedCrop(cropId, System.currentTimeMillis(), owner));
+        String key = serialize(loc);
+        TrackedCrop entry = new TrackedCrop(cropId, System.currentTimeMillis(), owner);
+        TrackedCrop prev = crops.put(key, entry);
         if (prev != null && prev.owner() != null) {
             decrement(prev.owner(), prev.cropId());
         }
         if (owner != null) {
             increment(owner, cropId);
         }
+        store.put(key, entry);
     }
 
     public void untrack(Location loc) {
-        TrackedCrop prev = crops.remove(serialize(loc));
+        String key = serialize(loc);
+        TrackedCrop prev = crops.remove(key);
         if (prev != null && prev.owner() != null) {
             decrement(prev.owner(), prev.cropId());
         }
+        store.remove(key);
     }
 
     public TrackedCrop get(Location loc) {
@@ -145,9 +150,9 @@ public class TrackedCrops {
         if (counter == null) return;
         // Floor at 0 in case of double-untrack.
         counter.updateAndGet(v -> Math.max(0, v - 1));
-        // We deliberately leave zero counters in place rather than removing them,
-        // to avoid the orphaned-map race (decrement-then-increment on the same UUID).
-        // Memory cost is negligible; entries are bounded by (players × cropTypes).
+        // Leave zero counters in place to avoid the orphaned-map race
+        // (decrement-then-increment on the same UUID). Memory cost is bounded
+        // by (players × cropTypes), negligible.
     }
 
     // ---- (De)serialisation ----
@@ -175,52 +180,11 @@ public class TrackedCrops {
         }
     }
 
-    // ---- Persistence ----
+    // ---- Persistence passthroughs ----
 
-    private void load() {
-        dataFile = new File(plugin.getDataFolder(), "crops.yml");
-        if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdirs();
-        if (!dataFile.exists()) {
-            try { dataFile.createNewFile(); }
-            catch (IOException e) { plugin.getLogger().log(Level.SEVERE, "Cannot create crops.yml", e); }
-        }
-        dataConfig = YamlConfiguration.loadConfiguration(dataFile);
-
-        long now = System.currentTimeMillis();
-        List<String> entries = dataConfig.getStringList("crops");
-        for (String entry : entries) {
-            String[] parts = entry.split("\\|");
-            if (parts.length < 2) continue;
-            String locKey = parts[0];
-            String cropId = parts[1];
-            long plantedAt = now;
-            UUID owner = null;
-            if (parts.length >= 3) {
-                try { plantedAt = Long.parseLong(parts[2]); }
-                catch (NumberFormatException ignored) { /* fall back to now */ }
-            }
-            if (parts.length >= 4 && !parts[3].isEmpty()) {
-                try { owner = UUID.fromString(parts[3]); }
-                catch (IllegalArgumentException ignored) { /* leave null */ }
-            }
-            crops.put(locKey, new TrackedCrop(cropId, plantedAt, owner));
-            if (owner != null) {
-                increment(owner, cropId);
-            }
-        }
-        plugin.getLogger().info("Loaded " + crops.size() + " persisted crop location(s).");
-    }
-
+    /** Force the underlying store to flush. SQLite is auto-flushing; legacy paths use this. */
     public void save() {
-        List<String> entries = new ArrayList<>();
-        for (Map.Entry<String, TrackedCrop> e : crops.entrySet()) {
-            TrackedCrop t = e.getValue();
-            String ownerPart = t.owner() == null ? "" : t.owner().toString();
-            entries.add(e.getKey() + "|" + t.cropId() + "|" + t.plantedAtMillis() + "|" + ownerPart);
-        }
-        dataConfig.set("crops", entries);
-        try { dataConfig.save(dataFile); }
-        catch (IOException e) { plugin.getLogger().log(Level.SEVERE, "Cannot save crops.yml", e); }
+        store.flush();
     }
 
     public Map<String, TrackedCrop> unmodifiableView() {

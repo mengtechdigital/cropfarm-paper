@@ -1,0 +1,108 @@
+# ============================================================
+#  CropFarm — saplings (wood farming)
+# ============================================================
+#  Wood is the universal building bottleneck. Each crop yields
+#  saplings rather than logs so casual players still need to plant
+#  and grow trees the vanilla way — the crop just removes the
+#  scavenging step.
+# ============================================================
+
+crops:
+
+  oak_sapling:
+    display-name: "§2✦ Oak Sapling Seed"
+    recipe-input: OAK_SAPLING
+    recipe-yield: 4
+    output: OAK_SAPLING
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  spruce_sapling:
+    display-name: "§2✦ Spruce Sapling Seed"
+    recipe-input: SPRUCE_SAPLING
+    recipe-yield: 4
+    output: SPRUCE_SAPLING
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  birch_sapling:
+    display-name: "§e✦ Birch Sapling Seed"
+    recipe-input: BIRCH_SAPLING
+    recipe-yield: 4
+    output: BIRCH_SAPLING
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  jungle_sapling:
+    display-name: "§a✦ Jungle Sapling Seed"
+    recipe-input: JUNGLE_SAPLING
+    recipe-yield: 4
+    output: JUNGLE_SAPLING
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  acacia_sapling:
+    display-name: "§6✦ Acacia Sapling Seed"
+    recipe-input: ACACIA_SAPLING
+    recipe-yield: 4
+    output: ACACIA_SAPLING
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  dark_oak_sapling:
+    display-name: "§8✦ Dark Oak Sapling Seed"
+    recipe-input: DARK_OAK_SAPLING
+    recipe-yield: 4
+    output: DARK_OAK_SAPLING
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  mangrove_propagule:
+    display-name: "§c✦ Mangrove Seed"
+    lore:
+      - "§7Skip the §cmangrove swamp§7 trip."
+    recipe-input: MANGROVE_PROPAGULE
+    recipe-yield: 4
+    output: MANGROVE_PROPAGULE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  cherry_sapling:
+    display-name: "§d✦ Cherry Sapling Seed"
+    lore:
+      - "§7Skip the §dcherry-grove§7 trip."
+    recipe-input: CHERRY_SAPLING
+    recipe-yield: 4
+    output: CHERRY_SAPLING
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  azalea:
+    display-name: "§a✦ Azalea Seed"
+    lore:
+      - "§7Plant on dirt to grow azalea trees."
+    recipe-input: AZALEA
+    recipe-yield: 2
+    output: AZALEA
+    min-drops: 1
+    max-drops: 2
+    tier: mid
+
+  flowering_azalea:
+    display-name: "§d✦ Flowering Azalea Seed"
+    lore:
+      - "§7Bloomed variant — grows azalea trees."
+    recipe-input: FLOWERING_AZALEA
+    recipe-yield: 1
+    output: FLOWERING_AZALEA
+    min-drops: 1
+    max-drops: 2
+    tier: mid

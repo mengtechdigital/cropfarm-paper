@@ -1,0 +1,89 @@
+# ============================================================
+#  CropFarm — vanilla growables that are tedious or RNG-driven
+# ============================================================
+#  Items vanilla can grow but the process is painful: apple drops
+#  from oak-leaf decay RNG, sea pickles only spawn in warm reefs,
+#  chorus fruit only in End cities, glow berries hide in lush caves.
+# ============================================================
+
+crops:
+
+  apple:
+    display-name: "§c✦ Apple Seed"
+    lore:
+      - "§7Skip the §coak-leaf decay§7 lottery."
+    recipe-input: APPLE
+    recipe-yield: 4
+    output: APPLE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+    grow-time-seconds: 240
+
+  sweet_berries:
+    display-name: "§c✦ Sweet Berry Seed"
+    lore:
+      - "§7No bush, no fall damage."
+    recipe-input: SWEET_BERRIES
+    recipe-yield: 4
+    output: SWEET_BERRIES
+    min-drops: 3
+    max-drops: 5
+    tier: common
+    grow-time-seconds: 180
+
+  glow_berries:
+    display-name: "§e✦ Glow Berry Seed"
+    lore:
+      - "§7Skip the §elush-cave§7 hunt."
+    recipe-input: GLOW_BERRIES
+    recipe-yield: 2
+    output: GLOW_BERRIES
+    min-drops: 2
+    max-drops: 4
+    tier: mid
+
+  chorus_fruit:
+    display-name: "§5✦ Chorus Fruit Seed"
+    lore:
+      - "§7Replaces §5End-city teleport farms§7."
+    recipe-input: CHORUS_FRUIT
+    recipe-yield: 2
+    output: CHORUS_FRUIT
+    min-drops: 2
+    max-drops: 4
+    tier: rare
+
+  cocoa_beans:
+    display-name: "§6✦ Cocoa Seed"
+    lore:
+      - "§7Replaces §6jungle cocoa-pod farms§7."
+    recipe-input: COCOA_BEANS
+    recipe-yield: 4
+    output: COCOA_BEANS
+    min-drops: 2
+    max-drops: 4
+    tier: mid
+
+  sea_pickle:
+    display-name: "§2✦ Sea Pickle Seed"
+    lore:
+      - "§7Replaces §2warm-reef hunting§7."
+    recipe-input: SEA_PICKLE
+    recipe-yield: 2
+    output: SEA_PICKLE
+    min-drops: 1
+    max-drops: 3
+    tier: mid
+
+  lily_pad:
+    display-name: "§a✦ Lily Pad Seed"
+    lore:
+      - "§7Replaces §aswamp boating§7."
+    recipe-input: LILY_PAD
+    recipe-yield: 2
+    output: LILY_PAD
+    min-drops: 1
+    max-drops: 3
+    tier: common
+    grow-time-seconds: 180

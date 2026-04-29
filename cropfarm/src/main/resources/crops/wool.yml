@@ -1,0 +1,33 @@
+# ============================================================
+#  CropFarm — wool
+# ============================================================
+#  One "wool seed" with a weighted random color output mirroring
+#  vanilla sheep spawn rates. Casual builders get a stream of mostly
+#  white wool with occasional natural-color variety.
+#
+#  To force a specific color, copy this entry, set `outputs:` to a
+#  single material (e.g. RED_WOOL with weight 1), and rename the id.
+# ============================================================
+
+crops:
+
+  wool:
+    display-name: "§f✦ Wool Seed"
+    lore:
+      - "§7Replaces §fsheep farms§7."
+      - "§7Random color on harvest §8(weighted)§7."
+    recipe-input: WHITE_WOOL
+    recipe-yield: 4
+    outputs:
+      - { item: WHITE_WOOL,      weight: 60, min: 1, max: 2 }
+      - { item: BLACK_WOOL,      weight: 8,  min: 1, max: 1 }
+      - { item: GRAY_WOOL,       weight: 8,  min: 1, max: 1 }
+      - { item: LIGHT_GRAY_WOOL, weight: 8,  min: 1, max: 1 }
+      - { item: BROWN_WOOL,      weight: 8,  min: 1, max: 1 }
+      - { item: PINK_WOOL,       weight: 4,  min: 1, max: 1 }
+      - { item: RED_WOOL,        weight: 1,  min: 1, max: 1 }
+      - { item: BLUE_WOOL,       weight: 1,  min: 1, max: 1 }
+      - { item: YELLOW_WOOL,     weight: 1,  min: 1, max: 1 }
+      - { item: GREEN_WOOL,      weight: 1,  min: 1, max: 1 }
+    tier: common
+    grow-time-seconds: 180

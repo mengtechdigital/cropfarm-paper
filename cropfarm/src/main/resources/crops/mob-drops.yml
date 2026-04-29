@@ -1,0 +1,148 @@
+# ============================================================
+#  CropFarm — mob drops
+# ============================================================
+#  Replaces classic AFK mob farms (chicken, cow, squid, spider,
+#  zombie, rabbit, turtle, phantom, ender dragon).
+# ============================================================
+
+crops:
+
+  feather:
+    display-name: "§f✦ Feather Seed"
+    lore:
+      - "§7Replaces §fchicken farms§7."
+    recipe-input: FEATHER
+    recipe-yield: 4
+    output: FEATHER
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  leather:
+    display-name: "§6✦ Leather Seed"
+    lore:
+      - "§7Replaces §6cow farms§7."
+    recipe-input: LEATHER
+    recipe-yield: 2
+    output: LEATHER
+    min-drops: 1
+    max-drops: 3
+    tier: common
+    grow-time-seconds: 300
+
+  sugar:
+    display-name: "§f✦ Sugar Seed"
+    lore:
+      - "§7Replaces §fsugar-cane row farms§7."
+    recipe-input: SUGAR
+    recipe-yield: 6
+    output: SUGAR
+    min-drops: 3
+    max-drops: 6
+    tier: common
+    grow-time-seconds: 120
+
+  ink_sac:
+    display-name: "§0✦ Ink Sac Seed"
+    lore:
+      - "§7Replaces §8squid farms§7."
+    recipe-input: INK_SAC
+    recipe-yield: 4
+    output: INK_SAC
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  glow_ink_sac:
+    display-name: "§b✦ Glow Ink Seed"
+    lore:
+      - "§7Replaces §bglow-squid farms§7."
+    recipe-input: GLOW_INK_SAC
+    recipe-yield: 4
+    output: GLOW_INK_SAC
+    min-drops: 2
+    max-drops: 4
+    tier: mid
+
+  rotten_flesh:
+    display-name: "§2✦ Flesh Seed"
+    lore:
+      - "§7Replaces §2zombie farms§7."
+      - "§7Trade with clerics for emeralds."
+    recipe-input: ROTTEN_FLESH
+    recipe-yield: 4
+    output: ROTTEN_FLESH
+    min-drops: 3
+    max-drops: 6
+    tier: common
+
+  spider_eye:
+    display-name: "§4✦ Spider Eye Seed"
+    lore:
+      - "§7Replaces §cspider farms§7."
+    recipe-input: SPIDER_EYE
+    recipe-yield: 2
+    output: SPIDER_EYE
+    min-drops: 1
+    max-drops: 3
+    tier: mid
+
+  rabbit_hide:
+    display-name: "§e✦ Rabbit Hide Seed"
+    lore:
+      - "§7Replaces §erabbit hide farms§7."
+    recipe-input: RABBIT_HIDE
+    recipe-yield: 2
+    output: RABBIT_HIDE
+    min-drops: 1
+    max-drops: 3
+    tier: common
+    grow-time-seconds: 240
+
+  rabbit_foot:
+    display-name: "§d✦ Rabbit Foot Seed"
+    lore:
+      - "§7Rare drop — 10% from rabbits in vanilla."
+    recipe-input: RABBIT_FOOT
+    recipe-yield: 1
+    output: RABBIT_FOOT
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  turtle_scute:
+    display-name: "§a✦ Scute Seed"
+    lore:
+      - "§7Replaces §ababy-turtle scute farms§7."
+    recipe-input: TURTLE_SCUTE
+    recipe-yield: 1
+    output: TURTLE_SCUTE
+    min-drops: 1
+    max-drops: 2
+    tier: rare
+
+  phantom_membrane:
+    display-name: "§5✦ Phantom Seed"
+    lore:
+      - "§7Replaces §5phantom farms§7."
+      - "§7No more sleepless nights of grinding."
+    recipe-input: PHANTOM_MEMBRANE
+    recipe-yield: 1
+    output: PHANTOM_MEMBRANE
+    min-drops: 1
+    max-drops: 2
+    tier: rare
+    grow-time-seconds: 720
+
+  dragon_breath:
+    display-name: "§5✦ Dragon Breath Seed"
+    lore:
+      - "§7Replaces §5dragon refight grinding§7."
+      - "§7Lingering potions become bulk-affordable."
+    recipe-input: DRAGON_BREATH
+    recipe-yield: 1
+    output: DRAGON_BREATH
+    min-drops: 1
+    max-drops: 1
+    tier: epic
+    grow-time-seconds: 1500

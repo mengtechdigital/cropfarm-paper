@@ -4,7 +4,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 public class CropFarm extends JavaPlugin {
+
+    /** Bundled default crop files copied to plugins/CropFarm/crops/ on first start. */
+    private static final String[] DEFAULT_CROP_FILES = {
+            "crops/mob-drops.yml",
+            "crops/wool.yml",
+            "crops/vanilla.yml",
+            "crops/saplings.yml",
+            "crops/blocks.yml",
+            "crops/endgame.yml",
+    };
 
     private CropManager cropManager;
     private TrackedCrops trackedCrops;
@@ -15,6 +27,7 @@ public class CropFarm extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        saveDefaultCropFiles();
 
         this.cropManager    = new CropManager(this);
         this.trackedCrops   = new TrackedCrops(this);
@@ -59,6 +72,19 @@ public class CropFarm extends JavaPlugin {
             trackedCrops.save();
         }
         getLogger().info("CropFarm disabled.");
+    }
+
+    private void saveDefaultCropFiles() {
+        for (String f : DEFAULT_CROP_FILES) {
+            File target = new File(getDataFolder(), f);
+            if (target.exists()) continue;
+            try {
+                saveResource(f, false);
+            } catch (IllegalArgumentException e) {
+                // Bundled file missing from jar — content drop hasn't shipped this file yet.
+                getLogger().warning("Default crop file not bundled in jar: " + f);
+            }
+        }
     }
 
     private void registerCommand(String name, CropFarmCommand executor,

@@ -111,6 +111,28 @@ crops:
     max-drops: 4
     tier: uncommon
 
+  packed_mud:
+    display-name: "§6✦ Packed Mud Seed"
+    lore:
+      - "§7Crafting base for §6mud bricks§7."
+    recipe-input: PACKED_MUD
+    recipe-yield: 4
+    output: PACKED_MUD
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  mud_bricks:
+    display-name: "§6✦ Mud Bricks Seed"
+    lore:
+      - "§7Pre-baked §6mud bricks§7 for builds."
+    recipe-input: MUD_BRICKS
+    recipe-yield: 4
+    output: MUD_BRICKS
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
   # ---------- STONE VARIANTS ----------
 
   granite:

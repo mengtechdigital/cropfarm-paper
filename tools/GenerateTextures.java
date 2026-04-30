@@ -327,6 +327,8 @@ public class GenerateTextures {
         // ---- crops/blocks.yml (additions) ----
         addCrop("cobbled_deepslate",    "4F4F55");
         addCrop("dark_prismarine",      "375A4A");
+        addCrop("packed_mud",           "8C6B47");
+        addCrop("mud_bricks",           "8E6A4A");
 
         // ---- crops/concrete.yml (16 separate colors) ----
         addCrop("white_concrete",       "CFD5D6");

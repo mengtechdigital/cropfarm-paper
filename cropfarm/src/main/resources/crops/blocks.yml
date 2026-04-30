@@ -78,6 +78,17 @@ crops:
     max-drops: 5
     tier: common
 
+  cobbled_deepslate:
+    display-name: "§8✦ Cobbled Deepslate Seed"
+    lore:
+      - "§7Replaces §8deep-mining for cobbled§7."
+    recipe-input: COBBLED_DEEPSLATE
+    recipe-yield: 4
+    output: COBBLED_DEEPSLATE
+    min-drops: 3
+    max-drops: 6
+    tier: common
+
   dirt:
     display-name: "§6✦ Dirt Seed"
     lore:
@@ -337,6 +348,17 @@ crops:
     min-drops: 1
     max-drops: 2
     tier: rare
+
+  dark_prismarine:
+    display-name: "§3✦ Dark Prismarine Seed"
+    lore:
+      - "§7Replaces §3guardian-farm prismarine combos§7."
+    recipe-input: DARK_PRISMARINE
+    recipe-yield: 2
+    output: DARK_PRISMARINE
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon
 
   crying_obsidian:
     display-name: "§5✦ Crying Obsidian Seed"

@@ -138,8 +138,22 @@ public class CropListener implements Listener {
         // Pre-empt that pop-off by removing our crop ourselves.
         if (block.getType() == Material.FARMLAND) {
             Block above = block.getRelative(BlockFace.UP);
-            if (above.getType() == Material.WHEAT) {
-                handleSupportLost(above, event.getPlayer());
+            if (above.getType() == Material.WHEAT
+                    && plugin.getTrackedCrops().contains(above.getLocation())) {
+                // Apply the same hoe gate to seed recovery via farmland break,
+                // otherwise players bypass require-hoe-to-harvest by digging
+                // the dirt instead of breaking the crop directly.
+                Player breaker = event.getPlayer();
+                CropManager mgr = plugin.getCropManager();
+                if (mgr.isRequireHoeToHarvest()
+                        && breaker.getGameMode() != GameMode.CREATIVE
+                        && !breaker.hasPermission("cropfarm.bypass-hoe")
+                        && !isHoe(breaker.getInventory().getItemInMainHand().getType())) {
+                    event.setCancelled(true);
+                    breaker.sendMessage(mgr.getHoeRequiredMessage());
+                    return;
+                }
+                handleSupportLost(above, breaker);
             }
             return;
         }
@@ -150,6 +164,19 @@ public class CropListener implements Listener {
         if (tracked == null) return;
 
         CropManager mgr = plugin.getCropManager();
+
+        // Hoe-only break: cancel before any state changes. Creative ignores the
+        // gate so admins can clean up. Bypass perm also lets ops break with hand.
+        Player breaker = event.getPlayer();
+        if (mgr.isRequireHoeToHarvest()
+                && breaker.getGameMode() != GameMode.CREATIVE
+                && !breaker.hasPermission("cropfarm.bypass-hoe")
+                && !isHoe(breaker.getInventory().getItemInMainHand().getType())) {
+            event.setCancelled(true);
+            breaker.sendMessage(mgr.getHoeRequiredMessage());
+            return;
+        }
+
         CropType type = mgr.getCropType(tracked.cropId());
         // Even if the type was removed from config, untrack + clean nametag so the world stays tidy.
         plugin.getNametagService().remove(block.getLocation());
@@ -257,6 +284,16 @@ public class CropListener implements Listener {
         for (ItemStack rest : leftover.values()) {
             cropLoc.getWorld().dropItemNaturally(dropLoc, rest);
         }
+    }
+
+    /** True for any vanilla hoe (wood/stone/iron/gold/diamond/netherite). */
+    private static boolean isHoe(Material m) {
+        return m == Material.WOODEN_HOE
+                || m == Material.STONE_HOE
+                || m == Material.IRON_HOE
+                || m == Material.GOLDEN_HOE
+                || m == Material.DIAMOND_HOE
+                || m == Material.NETHERITE_HOE;
     }
 
     /** Convert "GOLD_INGOT" → "Gold Ingot" for harvest chat messages. */

@@ -1,36 +1,152 @@
 # ============================================================
-#  CropFarm — dyes (weighted random color)
+#  CropFarm — dyes (16 separate seeds, one per color)
 # ============================================================
-#  One "dye seed" yields a random vanilla dye. Even weights — every
-#  color is equally useful for builders. To force a specific color,
-#  copy this entry and replace `outputs:` with a single material
-#  entry (e.g. just RED_DYE, weight 1).
+#  Each color is its own seed so players grow exactly the dye
+#  they need. Recipes use the matching dye item as input.
 # ============================================================
 
 crops:
 
-  dye:
-    display-name: "§d✦ Dye Seed"
-    lore:
-      - "§7Random color on harvest §8(weighted)§7."
-      - "§7Skip the §dflower-grinding§7 setup."
+  white_dye:
+    display-name: "§f✦ White Dye Seed"
     recipe-input: WHITE_DYE
     recipe-yield: 4
-    outputs:
-      - { item: WHITE_DYE,      weight: 1, min: 1, max: 2 }
-      - { item: ORANGE_DYE,     weight: 1, min: 1, max: 2 }
-      - { item: MAGENTA_DYE,    weight: 1, min: 1, max: 2 }
-      - { item: LIGHT_BLUE_DYE, weight: 1, min: 1, max: 2 }
-      - { item: YELLOW_DYE,     weight: 1, min: 1, max: 2 }
-      - { item: LIME_DYE,       weight: 1, min: 1, max: 2 }
-      - { item: PINK_DYE,       weight: 1, min: 1, max: 2 }
-      - { item: GRAY_DYE,       weight: 1, min: 1, max: 2 }
-      - { item: LIGHT_GRAY_DYE, weight: 1, min: 1, max: 2 }
-      - { item: CYAN_DYE,       weight: 1, min: 1, max: 2 }
-      - { item: PURPLE_DYE,     weight: 1, min: 1, max: 2 }
-      - { item: BLUE_DYE,       weight: 1, min: 1, max: 2 }
-      - { item: BROWN_DYE,      weight: 1, min: 1, max: 2 }
-      - { item: GREEN_DYE,      weight: 1, min: 1, max: 2 }
-      - { item: RED_DYE,        weight: 1, min: 1, max: 2 }
-      - { item: BLACK_DYE,      weight: 1, min: 1, max: 2 }
+    output: WHITE_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  orange_dye:
+    display-name: "§6✦ Orange Dye Seed"
+    recipe-input: ORANGE_DYE
+    recipe-yield: 4
+    output: ORANGE_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  magenta_dye:
+    display-name: "§d✦ Magenta Dye Seed"
+    recipe-input: MAGENTA_DYE
+    recipe-yield: 4
+    output: MAGENTA_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  light_blue_dye:
+    display-name: "§b✦ Light Blue Dye Seed"
+    recipe-input: LIGHT_BLUE_DYE
+    recipe-yield: 4
+    output: LIGHT_BLUE_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  yellow_dye:
+    display-name: "§e✦ Yellow Dye Seed"
+    recipe-input: YELLOW_DYE
+    recipe-yield: 4
+    output: YELLOW_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  lime_dye:
+    display-name: "§a✦ Lime Dye Seed"
+    recipe-input: LIME_DYE
+    recipe-yield: 4
+    output: LIME_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  pink_dye:
+    display-name: "§d✦ Pink Dye Seed"
+    recipe-input: PINK_DYE
+    recipe-yield: 4
+    output: PINK_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  gray_dye:
+    display-name: "§8✦ Gray Dye Seed"
+    recipe-input: GRAY_DYE
+    recipe-yield: 4
+    output: GRAY_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  light_gray_dye:
+    display-name: "§7✦ Light Gray Dye Seed"
+    recipe-input: LIGHT_GRAY_DYE
+    recipe-yield: 4
+    output: LIGHT_GRAY_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  cyan_dye:
+    display-name: "§3✦ Cyan Dye Seed"
+    recipe-input: CYAN_DYE
+    recipe-yield: 4
+    output: CYAN_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  purple_dye:
+    display-name: "§5✦ Purple Dye Seed"
+    recipe-input: PURPLE_DYE
+    recipe-yield: 4
+    output: PURPLE_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  blue_dye:
+    display-name: "§9✦ Blue Dye Seed"
+    recipe-input: BLUE_DYE
+    recipe-yield: 4
+    output: BLUE_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  brown_dye:
+    display-name: "§6✦ Brown Dye Seed"
+    recipe-input: BROWN_DYE
+    recipe-yield: 4
+    output: BROWN_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  green_dye:
+    display-name: "§2✦ Green Dye Seed"
+    recipe-input: GREEN_DYE
+    recipe-yield: 4
+    output: GREEN_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  red_dye:
+    display-name: "§c✦ Red Dye Seed"
+    recipe-input: RED_DYE
+    recipe-yield: 4
+    output: RED_DYE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  black_dye:
+    display-name: "§0✦ Black Dye Seed"
+    recipe-input: BLACK_DYE
+    recipe-yield: 4
+    output: BLACK_DYE
+    min-drops: 2
+    max-drops: 4
     tier: common

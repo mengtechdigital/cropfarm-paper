@@ -50,6 +50,7 @@ public class CropManager {
     private boolean allowBonemeal;
     private boolean directToInventory;
     private boolean protectFromAutomation;
+    private boolean requireHoeToHarvest;
     private boolean nametagEnabled;
     private boolean nametagShowProgress;
     private float nametagViewRangeMultiplier;
@@ -60,6 +61,7 @@ public class CropManager {
     private String earlyBreakMessage;
     private String bonemealBlockedMessage;
     private String capReachedMessage;
+    private String hoeRequiredMessage;
 
     public CropManager(CropFarm plugin) {
         this.plugin = plugin;
@@ -91,6 +93,7 @@ public class CropManager {
         allowBonemeal          = cfg.getBoolean("settings.allow-bonemeal", false);
         directToInventory      = cfg.getBoolean("settings.direct-to-inventory", true);
         protectFromAutomation  = cfg.getBoolean("settings.protect-from-automation", true);
+        requireHoeToHarvest    = cfg.getBoolean("settings.require-hoe-to-harvest", true);
 
         nametagEnabled         = cfg.getBoolean("settings.nametag-enabled", true);
         nametagShowProgress    = cfg.getBoolean("settings.nametag-show-progress", true);
@@ -111,6 +114,8 @@ public class CropManager {
                 "§c⚠ Magic seeds cannot be bone-mealed!");
         capReachedMessage      = cfg.getString("settings.cap-reached-message",
                 "§c⚠ You've planted the maximum {cap} {crop}§c. Harvest some first.");
+        hoeRequiredMessage     = cfg.getString("settings.hoe-required-message",
+                "§c⚠ Use a §6hoe§c to harvest crops!");
 
         // ---- Tiers ----
         ConfigurationSection tiersSec = cfg.getConfigurationSection("tiers");
@@ -336,6 +341,7 @@ public class CropManager {
     public boolean isAllowBonemeal()          { return allowBonemeal; }
     public boolean isDirectToInventory()      { return directToInventory; }
     public boolean isProtectFromAutomation()  { return protectFromAutomation; }
+    public boolean isRequireHoeToHarvest()    { return requireHoeToHarvest; }
 
     public boolean isNametagEnabled()         { return nametagEnabled; }
     public boolean isNametagShowProgress()    { return nametagShowProgress; }
@@ -348,6 +354,7 @@ public class CropManager {
     public String getEarlyBreakMessage()      { return earlyBreakMessage; }
     public String getBonemealBlockedMessage() { return bonemealBlockedMessage; }
     public String getCapReachedMessage()      { return capReachedMessage; }
+    public String getHoeRequiredMessage()     { return hoeRequiredMessage; }
 
     public Collection<CropType> getCropTypes() { return Collections.unmodifiableCollection(cropTypes.values()); }
     public CropType getCropType(String id)     { return cropTypes.get(id); }

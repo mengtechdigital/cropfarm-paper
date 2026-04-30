@@ -32,6 +32,8 @@ public class CropFarm extends JavaPlugin {
             "crops/flowers.yml",
             "crops/dyes.yml",
             "crops/pottery.yml",
+            "crops/concrete.yml",
+            "crops/terracotta.yml",
     };
 
     private CropManager cropManager;

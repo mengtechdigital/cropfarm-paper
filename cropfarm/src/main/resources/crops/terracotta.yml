@@ -1,0 +1,163 @@
+# ============================================================
+#  CropFarm — terracotta (plain + 16 separate colors)
+# ============================================================
+#  Each color is its own seed so players grow exactly the color
+#  they need. The first entry is plain (uncolored) terracotta.
+# ============================================================
+
+crops:
+
+  terracotta:
+    display-name: "§6✦ Terracotta Seed"
+    lore:
+      - "§7Plain (uncolored) terracotta."
+    recipe-input: TERRACOTTA
+    recipe-yield: 4
+    output: TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  white_terracotta:
+    display-name: "§f✦ White Terracotta Seed"
+    recipe-input: WHITE_TERRACOTTA
+    recipe-yield: 4
+    output: WHITE_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  orange_terracotta:
+    display-name: "§6✦ Orange Terracotta Seed"
+    recipe-input: ORANGE_TERRACOTTA
+    recipe-yield: 4
+    output: ORANGE_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  magenta_terracotta:
+    display-name: "§d✦ Magenta Terracotta Seed"
+    recipe-input: MAGENTA_TERRACOTTA
+    recipe-yield: 4
+    output: MAGENTA_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  light_blue_terracotta:
+    display-name: "§b✦ Light Blue Terracotta Seed"
+    recipe-input: LIGHT_BLUE_TERRACOTTA
+    recipe-yield: 4
+    output: LIGHT_BLUE_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  yellow_terracotta:
+    display-name: "§e✦ Yellow Terracotta Seed"
+    recipe-input: YELLOW_TERRACOTTA
+    recipe-yield: 4
+    output: YELLOW_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  lime_terracotta:
+    display-name: "§a✦ Lime Terracotta Seed"
+    recipe-input: LIME_TERRACOTTA
+    recipe-yield: 4
+    output: LIME_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  pink_terracotta:
+    display-name: "§d✦ Pink Terracotta Seed"
+    recipe-input: PINK_TERRACOTTA
+    recipe-yield: 4
+    output: PINK_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  gray_terracotta:
+    display-name: "§8✦ Gray Terracotta Seed"
+    recipe-input: GRAY_TERRACOTTA
+    recipe-yield: 4
+    output: GRAY_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  light_gray_terracotta:
+    display-name: "§7✦ Light Gray Terracotta Seed"
+    recipe-input: LIGHT_GRAY_TERRACOTTA
+    recipe-yield: 4
+    output: LIGHT_GRAY_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  cyan_terracotta:
+    display-name: "§3✦ Cyan Terracotta Seed"
+    recipe-input: CYAN_TERRACOTTA
+    recipe-yield: 4
+    output: CYAN_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  purple_terracotta:
+    display-name: "§5✦ Purple Terracotta Seed"
+    recipe-input: PURPLE_TERRACOTTA
+    recipe-yield: 4
+    output: PURPLE_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  blue_terracotta:
+    display-name: "§9✦ Blue Terracotta Seed"
+    recipe-input: BLUE_TERRACOTTA
+    recipe-yield: 4
+    output: BLUE_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  brown_terracotta:
+    display-name: "§6✦ Brown Terracotta Seed"
+    recipe-input: BROWN_TERRACOTTA
+    recipe-yield: 4
+    output: BROWN_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  green_terracotta:
+    display-name: "§2✦ Green Terracotta Seed"
+    recipe-input: GREEN_TERRACOTTA
+    recipe-yield: 4
+    output: GREEN_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  red_terracotta:
+    display-name: "§c✦ Red Terracotta Seed"
+    recipe-input: RED_TERRACOTTA
+    recipe-yield: 4
+    output: RED_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  black_terracotta:
+    display-name: "§0✦ Black Terracotta Seed"
+    recipe-input: BLACK_TERRACOTTA
+    recipe-yield: 4
+    output: BLACK_TERRACOTTA
+    min-drops: 2
+    max-drops: 4
+    tier: common

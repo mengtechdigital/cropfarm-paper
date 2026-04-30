@@ -60,6 +60,7 @@ public class CropMenu implements Listener {
      */
     private static final List<String> CATEGORY_ORDER = List.of(
             "ores", "raw-ores", "crafting-essentials", "blocks",
+            "concrete", "terracotta",
             "saplings", "farm-crops", "foods", "mushrooms",
             "vanilla", "wool", "flowers", "dyes",
             "decoratives", "mob-drops", "heads", "pottery",
@@ -72,6 +73,8 @@ public class CropMenu implements Listener {
             Map.entry("raw-ores",            Material.RAW_IRON),
             Map.entry("crafting-essentials", Material.STICK),
             Map.entry("blocks",              Material.COBBLESTONE),
+            Map.entry("concrete",            Material.LIGHT_BLUE_CONCRETE),
+            Map.entry("terracotta",          Material.ORANGE_TERRACOTTA),
             Map.entry("saplings",            Material.OAK_SAPLING),
             Map.entry("farm-crops",          Material.WHEAT),
             Map.entry("foods",               Material.COOKED_BEEF),

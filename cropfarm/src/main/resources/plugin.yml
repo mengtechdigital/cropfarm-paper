@@ -1,5 +1,5 @@
 name: CropFarm
-version: 1.9.3
+version: 1.10.0
 main: com.cropfarm.CropFarm
 api-version: '1.21'
 description: Custom seed/crop system with configurable yields.
@@ -32,4 +32,7 @@ permissions:
     default: op
   cropfarm.bypass-cap:
     description: Bypass the per-player planting cap on every crop.
+    default: op
+  cropfarm.bypass-hoe:
+    description: Allow harvesting tracked crops without holding a hoe.
     default: op

@@ -102,8 +102,23 @@ public class GenerateTextures {
         addCrop("phantom_membrane","6E5C8C");
         addCrop("dragon_breath",   "A45BC4");
 
-        // ---- crops/wool.yml ----
-        addCrop("wool",            "F0F0F0");
+        // ---- crops/wool.yml (16 separate colors) ----
+        addCrop("white_wool",       "F0F0F0");
+        addCrop("orange_wool",      "F07613");
+        addCrop("magenta_wool",     "BD44B3");
+        addCrop("light_blue_wool",  "3AAFD9");
+        addCrop("yellow_wool",      "F8C627");
+        addCrop("lime_wool",        "70B919");
+        addCrop("pink_wool",        "ED8DAC");
+        addCrop("gray_wool",        "3E4447");
+        addCrop("light_gray_wool",  "8E8E86");
+        addCrop("cyan_wool",        "158991");
+        addCrop("purple_wool",      "792AAC");
+        addCrop("blue_wool",        "35399D");
+        addCrop("brown_wool",       "724728");
+        addCrop("green_wool",       "546D1B");
+        addCrop("red_wool",         "A12722");
+        addCrop("black_wool",       "141519");
 
         // ---- crops/vanilla.yml (foraging) ----
         addCrop("apple",           "DC2A2A");
@@ -266,9 +281,89 @@ public class GenerateTextures {
         addCrop("torchflower",          "F08029");
         addCrop("pitcher_plant",        "8E5BB8");
 
-        // ---- crops/dyes.yml + pottery.yml (weighted; one icon each) ----
-        addCrop("dye",                  "C45BC8"); // generic mixed
-        addCrop("pottery_sherd",        "9C5642"); // brick-y
+        // ---- crops/dyes.yml (16 separate colors) ----
+        addCrop("white_dye",            "F0F0F0");
+        addCrop("orange_dye",           "F07613");
+        addCrop("magenta_dye",          "BD44B3");
+        addCrop("light_blue_dye",       "3AAFD9");
+        addCrop("yellow_dye",           "F8C627");
+        addCrop("lime_dye",             "70B919");
+        addCrop("pink_dye",             "ED8DAC");
+        addCrop("gray_dye",             "3E4447");
+        addCrop("light_gray_dye",       "8E8E86");
+        addCrop("cyan_dye",             "158991");
+        addCrop("purple_dye",           "792AAC");
+        addCrop("blue_dye",             "35399D");
+        addCrop("brown_dye",            "724728");
+        addCrop("green_dye",            "546D1B");
+        addCrop("red_dye",              "A12722");
+        addCrop("black_dye",            "141519");
+
+        // ---- crops/pottery.yml (23 separate sherds — all brick-toned) ----
+        addCrop("angler_pottery_sherd",     "9C5642");
+        addCrop("archer_pottery_sherd",     "9C5642");
+        addCrop("arms_up_pottery_sherd",    "9C5642");
+        addCrop("blade_pottery_sherd",      "9C5642");
+        addCrop("brewer_pottery_sherd",     "9C5642");
+        addCrop("burn_pottery_sherd",       "9C5642");
+        addCrop("danger_pottery_sherd",     "9C5642");
+        addCrop("explorer_pottery_sherd",   "9C5642");
+        addCrop("flow_pottery_sherd",       "9C5642");
+        addCrop("friend_pottery_sherd",     "9C5642");
+        addCrop("guster_pottery_sherd",     "9C5642");
+        addCrop("heart_pottery_sherd",      "9C5642");
+        addCrop("heartbreak_pottery_sherd", "9C5642");
+        addCrop("howl_pottery_sherd",       "9C5642");
+        addCrop("miner_pottery_sherd",      "9C5642");
+        addCrop("mourner_pottery_sherd",    "9C5642");
+        addCrop("plenty_pottery_sherd",     "9C5642");
+        addCrop("prize_pottery_sherd",      "9C5642");
+        addCrop("scrape_pottery_sherd",     "9C5642");
+        addCrop("sheaf_pottery_sherd",      "9C5642");
+        addCrop("shelter_pottery_sherd",    "9C5642");
+        addCrop("skull_pottery_sherd",      "9C5642");
+        addCrop("snort_pottery_sherd",      "9C5642");
+
+        // ---- crops/blocks.yml (additions) ----
+        addCrop("cobbled_deepslate",    "4F4F55");
+        addCrop("dark_prismarine",      "375A4A");
+
+        // ---- crops/concrete.yml (16 separate colors) ----
+        addCrop("white_concrete",       "CFD5D6");
+        addCrop("orange_concrete",      "E06100");
+        addCrop("magenta_concrete",     "A9309F");
+        addCrop("light_blue_concrete",  "2389C7");
+        addCrop("yellow_concrete",      "F0AF15");
+        addCrop("lime_concrete",        "5EA918");
+        addCrop("pink_concrete",        "D6658F");
+        addCrop("gray_concrete",        "36393D");
+        addCrop("light_gray_concrete",  "7D7D73");
+        addCrop("cyan_concrete",        "157788");
+        addCrop("purple_concrete",      "641F9C");
+        addCrop("blue_concrete",        "2C2E8F");
+        addCrop("brown_concrete",       "603A1E");
+        addCrop("green_concrete",       "495B24");
+        addCrop("red_concrete",         "8E2121");
+        addCrop("black_concrete",       "080A0F");
+
+        // ---- crops/terracotta.yml (16 colors + plain) ----
+        addCrop("terracotta",           "975D43");
+        addCrop("white_terracotta",     "D1B1A1");
+        addCrop("orange_terracotta",    "A1532A");
+        addCrop("magenta_terracotta",   "954D70");
+        addCrop("light_blue_terracotta","716988");
+        addCrop("yellow_terracotta",    "B98423");
+        addCrop("lime_terracotta",      "676B2F");
+        addCrop("pink_terracotta",      "A24E4E");
+        addCrop("gray_terracotta",      "39282A");
+        addCrop("light_gray_terracotta","876A60");
+        addCrop("cyan_terracotta",      "565B5C");
+        addCrop("purple_terracotta",    "76435C");
+        addCrop("blue_terracotta",      "4A3B5C");
+        addCrop("brown_terracotta",     "4D3225");
+        addCrop("green_terracotta",     "4C532A");
+        addCrop("red_terracotta",       "8E3C2F");
+        addCrop("black_terracotta",     "251610");
     }
 
     static void addCrop(String id, String hex) {

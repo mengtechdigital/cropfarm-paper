@@ -1,43 +1,215 @@
 # ============================================================
-#  CropFarm — pottery sherds (weighted random pattern)
+#  CropFarm — pottery sherds (23 separate seeds, one per pattern)
 # ============================================================
-#  One "pottery seed" yields a random pattern from the 22 sherd
-#  variants (1.20–1.21). Use these to decorate pots — combine 4
-#  sherds + 4 bricks (or just bricks) at a crafter to make a
-#  decorated pot with the chosen patterns.
+#  Each sherd is its own seed so players grow exactly the pattern
+#  they need for decorated pots. Recipe input is the matching sherd.
 # ============================================================
 
 crops:
 
-  pottery_sherd:
-    display-name: "§6✦ Pottery Sherd Seed"
-    lore:
-      - "§7Random sherd pattern §8(weighted)§7."
-      - "§7Replaces §6brushing suspicious sand/gravel§7."
-    recipe-input: BRICK
+  angler_pottery_sherd:
+    display-name: "§6✦ Angler Sherd Seed"
+    recipe-input: ANGLER_POTTERY_SHERD
     recipe-yield: 1
-    outputs:
-      - { item: ANGLER_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
-      - { item: ARCHER_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
-      - { item: ARMS_UP_POTTERY_SHERD,     weight: 1, min: 1, max: 1 }
-      - { item: BLADE_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
-      - { item: BREWER_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
-      - { item: BURN_POTTERY_SHERD,        weight: 1, min: 1, max: 1 }
-      - { item: DANGER_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
-      - { item: EXPLORER_POTTERY_SHERD,    weight: 1, min: 1, max: 1 }
-      - { item: FLOW_POTTERY_SHERD,        weight: 1, min: 1, max: 1 }
-      - { item: FRIEND_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
-      - { item: GUSTER_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
-      - { item: HEART_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
-      - { item: HEARTBREAK_POTTERY_SHERD,  weight: 1, min: 1, max: 1 }
-      - { item: HOWL_POTTERY_SHERD,        weight: 1, min: 1, max: 1 }
-      - { item: MINER_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
-      - { item: MOURNER_POTTERY_SHERD,     weight: 1, min: 1, max: 1 }
-      - { item: PLENTY_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
-      - { item: PRIZE_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
-      - { item: SCRAPE_POTTERY_SHERD,      weight: 1, min: 1, max: 1 }
-      - { item: SHEAF_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
-      - { item: SHELTER_POTTERY_SHERD,     weight: 1, min: 1, max: 1 }
-      - { item: SKULL_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
-      - { item: SNORT_POTTERY_SHERD,       weight: 1, min: 1, max: 1 }
+    output: ANGLER_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  archer_pottery_sherd:
+    display-name: "§6✦ Archer Sherd Seed"
+    recipe-input: ARCHER_POTTERY_SHERD
+    recipe-yield: 1
+    output: ARCHER_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  arms_up_pottery_sherd:
+    display-name: "§6✦ Arms Up Sherd Seed"
+    recipe-input: ARMS_UP_POTTERY_SHERD
+    recipe-yield: 1
+    output: ARMS_UP_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  blade_pottery_sherd:
+    display-name: "§6✦ Blade Sherd Seed"
+    recipe-input: BLADE_POTTERY_SHERD
+    recipe-yield: 1
+    output: BLADE_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  brewer_pottery_sherd:
+    display-name: "§6✦ Brewer Sherd Seed"
+    recipe-input: BREWER_POTTERY_SHERD
+    recipe-yield: 1
+    output: BREWER_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  burn_pottery_sherd:
+    display-name: "§6✦ Burn Sherd Seed"
+    recipe-input: BURN_POTTERY_SHERD
+    recipe-yield: 1
+    output: BURN_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  danger_pottery_sherd:
+    display-name: "§6✦ Danger Sherd Seed"
+    recipe-input: DANGER_POTTERY_SHERD
+    recipe-yield: 1
+    output: DANGER_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  explorer_pottery_sherd:
+    display-name: "§6✦ Explorer Sherd Seed"
+    recipe-input: EXPLORER_POTTERY_SHERD
+    recipe-yield: 1
+    output: EXPLORER_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  flow_pottery_sherd:
+    display-name: "§6✦ Flow Sherd Seed"
+    recipe-input: FLOW_POTTERY_SHERD
+    recipe-yield: 1
+    output: FLOW_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  friend_pottery_sherd:
+    display-name: "§6✦ Friend Sherd Seed"
+    recipe-input: FRIEND_POTTERY_SHERD
+    recipe-yield: 1
+    output: FRIEND_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  guster_pottery_sherd:
+    display-name: "§6✦ Guster Sherd Seed"
+    recipe-input: GUSTER_POTTERY_SHERD
+    recipe-yield: 1
+    output: GUSTER_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  heart_pottery_sherd:
+    display-name: "§6✦ Heart Sherd Seed"
+    recipe-input: HEART_POTTERY_SHERD
+    recipe-yield: 1
+    output: HEART_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  heartbreak_pottery_sherd:
+    display-name: "§6✦ Heartbreak Sherd Seed"
+    recipe-input: HEARTBREAK_POTTERY_SHERD
+    recipe-yield: 1
+    output: HEARTBREAK_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  howl_pottery_sherd:
+    display-name: "§6✦ Howl Sherd Seed"
+    recipe-input: HOWL_POTTERY_SHERD
+    recipe-yield: 1
+    output: HOWL_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  miner_pottery_sherd:
+    display-name: "§6✦ Miner Sherd Seed"
+    recipe-input: MINER_POTTERY_SHERD
+    recipe-yield: 1
+    output: MINER_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  mourner_pottery_sherd:
+    display-name: "§6✦ Mourner Sherd Seed"
+    recipe-input: MOURNER_POTTERY_SHERD
+    recipe-yield: 1
+    output: MOURNER_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  plenty_pottery_sherd:
+    display-name: "§6✦ Plenty Sherd Seed"
+    recipe-input: PLENTY_POTTERY_SHERD
+    recipe-yield: 1
+    output: PLENTY_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  prize_pottery_sherd:
+    display-name: "§6✦ Prize Sherd Seed"
+    recipe-input: PRIZE_POTTERY_SHERD
+    recipe-yield: 1
+    output: PRIZE_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  scrape_pottery_sherd:
+    display-name: "§6✦ Scrape Sherd Seed"
+    recipe-input: SCRAPE_POTTERY_SHERD
+    recipe-yield: 1
+    output: SCRAPE_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  sheaf_pottery_sherd:
+    display-name: "§6✦ Sheaf Sherd Seed"
+    recipe-input: SHEAF_POTTERY_SHERD
+    recipe-yield: 1
+    output: SHEAF_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  shelter_pottery_sherd:
+    display-name: "§6✦ Shelter Sherd Seed"
+    recipe-input: SHELTER_POTTERY_SHERD
+    recipe-yield: 1
+    output: SHELTER_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  skull_pottery_sherd:
+    display-name: "§6✦ Skull Sherd Seed"
+    recipe-input: SKULL_POTTERY_SHERD
+    recipe-yield: 1
+    output: SKULL_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
+    tier: rare
+
+  snort_pottery_sherd:
+    display-name: "§6✦ Snort Sherd Seed"
+    recipe-input: SNORT_POTTERY_SHERD
+    recipe-yield: 1
+    output: SNORT_POTTERY_SHERD
+    min-drops: 1
+    max-drops: 1
     tier: rare

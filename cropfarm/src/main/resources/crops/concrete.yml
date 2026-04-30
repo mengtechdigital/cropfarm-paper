@@ -1,0 +1,152 @@
+# ============================================================
+#  CropFarm — concrete (16 separate seeds, one per color)
+# ============================================================
+#  Each color is its own seed so players grow exactly the color
+#  they need. Recipes use the matching concrete block as input.
+# ============================================================
+
+crops:
+
+  white_concrete:
+    display-name: "§f✦ White Concrete Seed"
+    recipe-input: WHITE_CONCRETE
+    recipe-yield: 4
+    output: WHITE_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  orange_concrete:
+    display-name: "§6✦ Orange Concrete Seed"
+    recipe-input: ORANGE_CONCRETE
+    recipe-yield: 4
+    output: ORANGE_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  magenta_concrete:
+    display-name: "§d✦ Magenta Concrete Seed"
+    recipe-input: MAGENTA_CONCRETE
+    recipe-yield: 4
+    output: MAGENTA_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  light_blue_concrete:
+    display-name: "§b✦ Light Blue Concrete Seed"
+    recipe-input: LIGHT_BLUE_CONCRETE
+    recipe-yield: 4
+    output: LIGHT_BLUE_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  yellow_concrete:
+    display-name: "§e✦ Yellow Concrete Seed"
+    recipe-input: YELLOW_CONCRETE
+    recipe-yield: 4
+    output: YELLOW_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  lime_concrete:
+    display-name: "§a✦ Lime Concrete Seed"
+    recipe-input: LIME_CONCRETE
+    recipe-yield: 4
+    output: LIME_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  pink_concrete:
+    display-name: "§d✦ Pink Concrete Seed"
+    recipe-input: PINK_CONCRETE
+    recipe-yield: 4
+    output: PINK_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  gray_concrete:
+    display-name: "§8✦ Gray Concrete Seed"
+    recipe-input: GRAY_CONCRETE
+    recipe-yield: 4
+    output: GRAY_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  light_gray_concrete:
+    display-name: "§7✦ Light Gray Concrete Seed"
+    recipe-input: LIGHT_GRAY_CONCRETE
+    recipe-yield: 4
+    output: LIGHT_GRAY_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  cyan_concrete:
+    display-name: "§3✦ Cyan Concrete Seed"
+    recipe-input: CYAN_CONCRETE
+    recipe-yield: 4
+    output: CYAN_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  purple_concrete:
+    display-name: "§5✦ Purple Concrete Seed"
+    recipe-input: PURPLE_CONCRETE
+    recipe-yield: 4
+    output: PURPLE_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  blue_concrete:
+    display-name: "§9✦ Blue Concrete Seed"
+    recipe-input: BLUE_CONCRETE
+    recipe-yield: 4
+    output: BLUE_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  brown_concrete:
+    display-name: "§6✦ Brown Concrete Seed"
+    recipe-input: BROWN_CONCRETE
+    recipe-yield: 4
+    output: BROWN_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  green_concrete:
+    display-name: "§2✦ Green Concrete Seed"
+    recipe-input: GREEN_CONCRETE
+    recipe-yield: 4
+    output: GREEN_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  red_concrete:
+    display-name: "§c✦ Red Concrete Seed"
+    recipe-input: RED_CONCRETE
+    recipe-yield: 4
+    output: RED_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  black_concrete:
+    display-name: "§0✦ Black Concrete Seed"
+    recipe-input: BLACK_CONCRETE
+    recipe-yield: 4
+    output: BLACK_CONCRETE
+    min-drops: 2
+    max-drops: 4
+    tier: common

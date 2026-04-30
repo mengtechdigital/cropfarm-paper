@@ -2,6 +2,21 @@
 
 All notable changes to this project are documented here.
 
+## [1.10.0] — 2026-04-30
+
+### Added
+- **Cobbled deepslate seed** in `crops/blocks.yml`.
+- **Dark prismarine seed** in `crops/blocks.yml`.
+- **Concrete seeds (16 colors)** in new `crops/concrete.yml`. One seed per color, recipe input is the matching concrete block.
+- **Terracotta seeds (16 colors + plain)** in new `crops/terracotta.yml`. One seed per color, recipe input is the matching terracotta block.
+- **`cropfarm.bypass-hoe`** permission (default: op) — lets ops harvest tracked crops without holding a hoe.
+- **`settings.require-hoe-to-harvest`** (default: true) and **`settings.hoe-required-message`** in `config.yml`.
+
+### Changed (BREAKING for existing servers)
+- **XP per harvest scaled to "OP-XP-farm" levels**. Tier defaults: common 8-15, uncommon 20-35, rare 50-90, epic 150-280, legendary 600-1200, mythic 3000-6000. Was 0-1, 1-3, 4-7, 10-18, 25-50, 80-150 respectively.
+- **Hoes are now required to harvest tracked crops** (any tier — wood/stone/iron/gold/diamond/netherite). Breaking with a hand or any non-hoe item is cancelled with a chat message. Creative mode and `cropfarm.bypass-hoe` perm bypass the gate. Toggle via `settings.require-hoe-to-harvest`.
+- **Wool, dyes, and pottery sherds split into individual seeds**. The single weighted `wool`, `dye`, and `pottery_sherd` seeds are gone; each color/pattern now has its own seed with a deterministic 1:1 output. **Players holding pre-1.10.0 weighted seeds will find them inert** (the old crop ids no longer exist) — they can be safely deleted.
+
 ## [1.9.3] — 2026-04-29
 
 ### Fixed (BREAKING for crafting)

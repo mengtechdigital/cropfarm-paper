@@ -1,33 +1,154 @@
 # ============================================================
-#  CropFarm — wool
+#  CropFarm — wool (16 separate seeds, one per color)
 # ============================================================
-#  One "wool seed" with a weighted random color output mirroring
-#  vanilla sheep spawn rates. Casual builders get a stream of mostly
-#  white wool with occasional natural-color variety.
-#
-#  To force a specific color, copy this entry, set `outputs:` to a
-#  single material (e.g. RED_WOOL with weight 1), and rename the id.
+#  Each color is its own seed so players grow exactly the wool
+#  they need. Recipes use the matching wool block as input.
 # ============================================================
 
 crops:
 
-  wool:
-    display-name: "§f✦ Wool Seed"
+  white_wool:
+    display-name: "§f✦ White Wool Seed"
     lore:
       - "§7Replaces §fsheep farms§7."
-      - "§7Random color on harvest §8(weighted)§7."
     recipe-input: WHITE_WOOL
     recipe-yield: 4
-    outputs:
-      - { item: WHITE_WOOL,      weight: 60, min: 1, max: 2 }
-      - { item: BLACK_WOOL,      weight: 8,  min: 1, max: 1 }
-      - { item: GRAY_WOOL,       weight: 8,  min: 1, max: 1 }
-      - { item: LIGHT_GRAY_WOOL, weight: 8,  min: 1, max: 1 }
-      - { item: BROWN_WOOL,      weight: 8,  min: 1, max: 1 }
-      - { item: PINK_WOOL,       weight: 4,  min: 1, max: 1 }
-      - { item: RED_WOOL,        weight: 1,  min: 1, max: 1 }
-      - { item: BLUE_WOOL,       weight: 1,  min: 1, max: 1 }
-      - { item: YELLOW_WOOL,     weight: 1,  min: 1, max: 1 }
-      - { item: GREEN_WOOL,      weight: 1,  min: 1, max: 1 }
+    output: WHITE_WOOL
+    min-drops: 2
+    max-drops: 4
     tier: common
-    grow-time-seconds: 180
+
+  orange_wool:
+    display-name: "§6✦ Orange Wool Seed"
+    recipe-input: ORANGE_WOOL
+    recipe-yield: 4
+    output: ORANGE_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  magenta_wool:
+    display-name: "§d✦ Magenta Wool Seed"
+    recipe-input: MAGENTA_WOOL
+    recipe-yield: 4
+    output: MAGENTA_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  light_blue_wool:
+    display-name: "§b✦ Light Blue Wool Seed"
+    recipe-input: LIGHT_BLUE_WOOL
+    recipe-yield: 4
+    output: LIGHT_BLUE_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  yellow_wool:
+    display-name: "§e✦ Yellow Wool Seed"
+    recipe-input: YELLOW_WOOL
+    recipe-yield: 4
+    output: YELLOW_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  lime_wool:
+    display-name: "§a✦ Lime Wool Seed"
+    recipe-input: LIME_WOOL
+    recipe-yield: 4
+    output: LIME_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  pink_wool:
+    display-name: "§d✦ Pink Wool Seed"
+    recipe-input: PINK_WOOL
+    recipe-yield: 4
+    output: PINK_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  gray_wool:
+    display-name: "§8✦ Gray Wool Seed"
+    recipe-input: GRAY_WOOL
+    recipe-yield: 4
+    output: GRAY_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  light_gray_wool:
+    display-name: "§7✦ Light Gray Wool Seed"
+    recipe-input: LIGHT_GRAY_WOOL
+    recipe-yield: 4
+    output: LIGHT_GRAY_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  cyan_wool:
+    display-name: "§3✦ Cyan Wool Seed"
+    recipe-input: CYAN_WOOL
+    recipe-yield: 4
+    output: CYAN_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  purple_wool:
+    display-name: "§5✦ Purple Wool Seed"
+    recipe-input: PURPLE_WOOL
+    recipe-yield: 4
+    output: PURPLE_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  blue_wool:
+    display-name: "§9✦ Blue Wool Seed"
+    recipe-input: BLUE_WOOL
+    recipe-yield: 4
+    output: BLUE_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  brown_wool:
+    display-name: "§6✦ Brown Wool Seed"
+    recipe-input: BROWN_WOOL
+    recipe-yield: 4
+    output: BROWN_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  green_wool:
+    display-name: "§2✦ Green Wool Seed"
+    recipe-input: GREEN_WOOL
+    recipe-yield: 4
+    output: GREEN_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  red_wool:
+    display-name: "§c✦ Red Wool Seed"
+    recipe-input: RED_WOOL
+    recipe-yield: 4
+    output: RED_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common
+
+  black_wool:
+    display-name: "§0✦ Black Wool Seed"
+    recipe-input: BLACK_WOOL
+    recipe-yield: 4
+    output: BLACK_WOOL
+    min-drops: 2
+    max-drops: 4
+    tier: common

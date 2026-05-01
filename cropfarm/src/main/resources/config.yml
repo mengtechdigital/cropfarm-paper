@@ -82,7 +82,23 @@ settings:
   nametag-text:        "{crop} §7§o({stage}/{max})"
   nametag-text-ready:  "{crop} §a§l✓ Ready!"
 
-  # ---- Chat / action messages ----
+  # ---- Player feedback ----
+  #
+  # Where the messages below are delivered. The action bar is the single
+  # line that floats above the hotbar (next to the XP bar) — short-lived,
+  # no scrollback, and replaces itself on each new message, so it does
+  # NOT spam chat when players plant/harvest in bulk.
+  #
+  #   actionbar  = above-the-hotbar line (DEFAULT — recommended)
+  #   chat       = traditional chat line (legacy behavior)
+  #   both       = chat + action bar
+  #   off        = silent (no plant/harvest/cap/hoe/bonemeal feedback)
+  #
+  # Note: action-bar text is single-line; very long messages may truncate
+  # on small screens. Discovery hints (right-click air with seeds) always
+  # go to chat because they are two lines.
+  feedback-mode: actionbar
+
   plant-message:           "§a✦ {crop} §aplanted! Grow time will pass automatically..."
   harvest-message:         "§b✦ Harvested §f{amount}x {output}§b!"
   early-break-message:     "§e⚠ Not fully grown yet! §7({stage}/{max}) Seed returned."

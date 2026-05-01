@@ -84,7 +84,7 @@ public class CropListener implements Listener {
                     .replace("{cap}",  String.valueOf(type.getMaxPerPlayer()))
                     .replace("{count}", String.valueOf(
                             plugin.getTrackedCrops().countFor(player.getUniqueId(), type.getId())));
-            player.sendMessage(msg);
+            mgr.sendFeedback(player, msg);
             event.setCancelled(true);
             return;
         }
@@ -119,7 +119,7 @@ public class CropListener implements Listener {
         }
 
         String msg = mgr.getPlantMessage().replace("{crop}", type.getDisplayName());
-        player.sendMessage(msg);
+        mgr.sendFeedback(player, msg);
 
         event.setCancelled(true);
     }
@@ -150,7 +150,7 @@ public class CropListener implements Listener {
                         && !breaker.hasPermission("cropfarm.bypass-hoe")
                         && !isHoe(breaker.getInventory().getItemInMainHand().getType())) {
                     event.setCancelled(true);
-                    breaker.sendMessage(mgr.getHoeRequiredMessage());
+                    mgr.sendFeedback(breaker, mgr.getHoeRequiredMessage());
                     return;
                 }
                 handleSupportLost(above, breaker);
@@ -173,7 +173,7 @@ public class CropListener implements Listener {
                 && !breaker.hasPermission("cropfarm.bypass-hoe")
                 && !isHoe(breaker.getInventory().getItemInMainHand().getType())) {
             event.setCancelled(true);
-            breaker.sendMessage(mgr.getHoeRequiredMessage());
+            mgr.sendFeedback(breaker, mgr.getHoeRequiredMessage());
             return;
         }
 
@@ -199,7 +199,7 @@ public class CropListener implements Listener {
             String msg = mgr.getEarlyBreakMessage()
                     .replace("{stage}", String.valueOf(ageable.getAge()))
                     .replace("{max}", String.valueOf(ageable.getMaximumAge()));
-            player.sendMessage(msg);
+            mgr.sendFeedback(player, msg);
             return;
         }
 
@@ -240,7 +240,7 @@ public class CropListener implements Listener {
         String msg = mgr.getHarvestMessage()
                 .replace("{amount}", String.valueOf(amount))
                 .replace("{output}", humanize(chosen.item().name()));
-        player.sendMessage(msg);
+        mgr.sendFeedback(player, msg);
     }
 
     /**
@@ -331,7 +331,8 @@ public class CropListener implements Listener {
         event.setCancelled(true);
         Player p = event.getPlayer();
         if (p != null) {
-            p.sendMessage(plugin.getCropManager().getBonemealBlockedMessage());
+            CropManager mgr = plugin.getCropManager();
+            mgr.sendFeedback(p, mgr.getBonemealBlockedMessage());
         }
     }
 
@@ -348,7 +349,8 @@ public class CropListener implements Listener {
         if (clicked == null) return;
         if (!plugin.getTrackedCrops().contains(clicked.getLocation())) return;
         event.setCancelled(true);
-        event.getPlayer().sendMessage(plugin.getCropManager().getBonemealBlockedMessage());
+        CropManager mgr = plugin.getCropManager();
+        mgr.sendFeedback(event.getPlayer(), mgr.getBonemealBlockedMessage());
     }
 
     // ---------------------------------------------------------------

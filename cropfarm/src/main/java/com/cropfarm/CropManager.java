@@ -1,9 +1,12 @@
 package com.cropfarm;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
@@ -62,6 +65,11 @@ public class CropManager {
     private String bonemealBlockedMessage;
     private String capReachedMessage;
     private String hoeRequiredMessage;
+    /** Default until reload() reads config. Guards against any future async reload path. */
+    private FeedbackMode feedbackMode = FeedbackMode.ACTIONBAR;
+
+    /** Where transient action feedback (plant/harvest/cap/etc.) is delivered. */
+    public enum FeedbackMode { ACTIONBAR, CHAT, BOTH, OFF }
 
     public CropManager(CropFarm plugin) {
         this.plugin = plugin;
@@ -116,6 +124,12 @@ public class CropManager {
                 "§c⚠ You've planted the maximum {cap} {crop}§c. Harvest some first.");
         hoeRequiredMessage     = cfg.getString("settings.hoe-required-message",
                 "§c⚠ Use a §6hoe§c to harvest crops!");
+
+        // Where transient feedback (plant/harvest/cap/etc.) is delivered.
+        // actionbar = single-line above the hotbar (no chat spam, default),
+        // chat = traditional chat line, both = both surfaces, off = silent.
+        String fmRaw = cfg.getString("settings.feedback-mode", "actionbar");
+        feedbackMode = parseFeedbackMode(fmRaw);
 
         // ---- Tiers ----
         ConfigurationSection tiersSec = cfg.getConfigurationSection("tiers");
@@ -355,6 +369,44 @@ public class CropManager {
     public String getBonemealBlockedMessage() { return bonemealBlockedMessage; }
     public String getCapReachedMessage()      { return capReachedMessage; }
     public String getHoeRequiredMessage()     { return hoeRequiredMessage; }
+    public FeedbackMode getFeedbackMode()     { return feedbackMode; }
+
+    /**
+     * Deliver a transient feedback line (plant, harvest, cap-reached, etc.)
+     * to the player using the configured feedback mode. Legacy section codes
+     * (§a/§l/...) in the message are converted to Adventure components for
+     * the action-bar path so colors render identically to chat.
+     */
+    public void sendFeedback(Player player, String message) {
+        if (player == null || message == null || message.isEmpty()) return;
+        if (feedbackMode == FeedbackMode.OFF) return;
+        if (feedbackMode == FeedbackMode.CHAT || feedbackMode == FeedbackMode.BOTH) {
+            player.sendMessage(message);
+        }
+        if (feedbackMode == FeedbackMode.ACTIONBAR || feedbackMode == FeedbackMode.BOTH) {
+            Component component = LegacyComponentSerializer.legacySection().deserialize(message);
+            player.sendActionBar(component);
+        }
+    }
+
+    private FeedbackMode parseFeedbackMode(String raw) {
+        if (raw == null) return FeedbackMode.ACTIONBAR;
+        switch (raw.trim().toLowerCase()) {
+            case "chat":     return FeedbackMode.CHAT;
+            case "both":     return FeedbackMode.BOTH;
+            case "off":
+            case "none":
+            case "silent":   return FeedbackMode.OFF;
+            case "actionbar":
+            case "action-bar":
+            case "action_bar":
+                             return FeedbackMode.ACTIONBAR;
+            default:
+                plugin.getLogger().warning("Unknown settings.feedback-mode \"" + raw
+                        + "\" — falling back to actionbar.");
+                return FeedbackMode.ACTIONBAR;
+        }
+    }
 
     public Collection<CropType> getCropTypes() { return Collections.unmodifiableCollection(cropTypes.values()); }
     public CropType getCropType(String id)     { return cropTypes.get(id); }

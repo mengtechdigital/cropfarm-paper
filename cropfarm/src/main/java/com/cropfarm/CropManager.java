@@ -89,6 +89,9 @@ public class CropManager {
             NamespacedKey key = new NamespacedKey(plugin, "cropfarm_" + id);
             plugin.getServer().removeRecipe(key);
         }
+        // Strip the static seed-bag recipe too — re-registered below so config
+        // changes (or a reload after a no-op edit) can't pile up duplicates.
+        plugin.getServer().removeRecipe(new NamespacedKey(plugin, "cropfarm_seed_bag"));
         cropTypes.clear();
         tiers.clear();
 
@@ -177,8 +180,33 @@ public class CropManager {
             }
         }
 
+        registerSeedBagRecipe();
+
         plugin.getLogger().info("Loaded " + cropTypes.size() + " crop type(s) across "
                 + tiers.size() + " tier(s).");
+    }
+
+    /**
+     * Register the lone craftable bag recipe — a Tier 1 Burlap Pouch.
+     * Higher tiers are not crafted; they're upgraded inside the bag GUI.
+     * Recipe shape (3x3):
+     *   S L S
+     *   W B W
+     *   S L S
+     * S = string, L = leather, W = wheat seed (vanilla), B = bundle.
+     * Cheap entry-tier — meant to be reachable in the first hour of play.
+     */
+    private void registerSeedBagRecipe() {
+        if (plugin.getSeedBag() == null) return; // not yet wired (first reload during onEnable)
+        NamespacedKey key = new NamespacedKey(plugin, "cropfarm_seed_bag");
+        ItemStack result = plugin.getSeedBag().createStarter();
+        ShapedRecipe recipe = new ShapedRecipe(key, result);
+        recipe.shape("SLS", "WBW", "SLS");
+        recipe.setIngredient('S', Material.STRING);
+        recipe.setIngredient('L', Material.LEATHER);
+        recipe.setIngredient('W', new RecipeChoice.ExactChoice(new ItemStack(Material.WHEAT_SEEDS)));
+        recipe.setIngredient('B', Material.BUNDLE);
+        plugin.getServer().addRecipe(recipe);
     }
 
     private void loadJarResource(String path) {

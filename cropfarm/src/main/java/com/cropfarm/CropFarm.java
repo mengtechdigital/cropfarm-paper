@@ -43,12 +43,18 @@ public class CropFarm extends JavaPlugin {
     private CropMenu cropMenu;
     private SqliteCropStore cropStore;
     private CoreProtectHook coreProtect;
+    private SeedBag seedBag;
+    private SeedBagInventory seedBagInventory;
+    private SeedBagListener seedBagListener;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         saveDefaultCropFiles();
 
+        // SeedBag must exist before CropManager — the bag recipe is registered
+        // inside CropManager.reload() and reads plugin.getSeedBag().
+        this.seedBag = new SeedBag(this);
         this.cropManager = new CropManager(this);
 
         // Open SQLite store. If this fails the plugin can't function safely
@@ -85,8 +91,12 @@ public class CropFarm extends JavaPlugin {
         this.coreProtect    = new CoreProtectHook(this);
         coreProtect.tryHook();
 
+        this.seedBagInventory = new SeedBagInventory(this, seedBag);
+        this.seedBagListener  = new SeedBagListener(seedBag, seedBagInventory);
+
         getServer().getPluginManager().registerEvents(new CropListener(this), this);
         getServer().getPluginManager().registerEvents(cropMenu, this);
+        getServer().getPluginManager().registerEvents(seedBagListener, this);
 
         // Sweep all currently-loaded chunks: drop orphan nametags + spawn missing ones.
         nametagService.purgeOrphansInLoadedChunks(trackedCrops, cropManager);
@@ -109,7 +119,8 @@ public class CropFarm extends JavaPlugin {
         // our click-cancellation listener.
         for (Player p : Bukkit.getOnlinePlayers()) {
             var top = p.getOpenInventory().getTopInventory();
-            if (top != null && top.getHolder() instanceof CropMenuHolder) {
+            if (top != null && (top.getHolder() instanceof CropMenuHolder
+                    || top.getHolder() instanceof SeedBagHolder)) {
                 p.closeInventory();
             }
         }
@@ -160,4 +171,7 @@ public class CropFarm extends JavaPlugin {
     public NametagService getNametagService() { return nametagService; }
     public CropMenu getCropMenu()             { return cropMenu; }
     public CoreProtectHook getCoreProtect()   { return coreProtect; }
+    public SeedBag getSeedBag()               { return seedBag; }
+    public SeedBagInventory getSeedBagInventory() { return seedBagInventory; }
+    public SeedBagListener getSeedBagListener()   { return seedBagListener; }
 }

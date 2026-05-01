@@ -26,7 +26,8 @@ import java.util.List;
  */
 public class CropFarmCommand implements CommandExecutor, TabCompleter {
 
-    private static final List<String> SUBCOMMANDS = List.of("menu", "reload", "give");
+    private static final List<String> SUBCOMMANDS = List.of("menu", "reload", "give", "bag");
+    private static final List<String> BAG_ACTIONS = List.of("help", "guide", "give", "info");
 
     private final CropFarm plugin;
 
@@ -49,9 +50,11 @@ public class CropFarmCommand implements CommandExecutor, TabCompleter {
             case "menu"   -> doMenu(sender, rest);
             case "reload" -> doReload(sender);
             case "give"   -> doGive(sender, rest);
+            case "bag"    -> doBag(sender, rest);
             default -> {
                 sender.sendMessage("§cUnknown subcommand: " + sub);
-                sender.sendMessage("§7Try: §f/cropfarm menu§7, §f/cropfarm reload§7, §f/cropfarm give <crop>");
+                sender.sendMessage("§7Try: §f/cropfarm menu§7, §f/cropfarm bag§7, "
+                        + "§f/cropfarm reload§7, §f/cropfarm give <crop>");
                 yield true;
             }
         };
@@ -160,6 +163,133 @@ public class CropFarmCommand implements CommandExecutor, TabCompleter {
     }
 
     // ---------------------------------------------------------------
+    // /cropfarm bag — guide, give, info
+    // ---------------------------------------------------------------
+
+    private boolean doBag(CommandSender sender, String[] args) {
+        if (args.length == 0) {
+            return sendBagGuide(sender);
+        }
+        String action = args[0].toLowerCase();
+        return switch (action) {
+            case "help", "guide" -> sendBagGuide(sender);
+            case "give"          -> doBagGive(sender, java.util.Arrays.copyOfRange(args, 1, args.length));
+            case "info"          -> doBagInfo(sender);
+            default -> {
+                sender.sendMessage("§cUnknown bag action: " + action);
+                sender.sendMessage("§7Try: §f/cropfarm bag help§7, §f/cropfarm bag info§7, "
+                        + "§f/cropfarm bag give [tier] [player]");
+                yield true;
+            }
+        };
+    }
+
+    /**
+     * Print the seed-bag guide. This is the user-facing docs surface — XP
+     * curve, ingredient model, where stuff lives. Keep it scannable; players
+     * read this once when they first hear about the bag.
+     */
+    private boolean sendBagGuide(CommandSender sender) {
+        sender.sendMessage("§8§m─────────── §6Seed Bag §8§m───────────");
+        sender.sendMessage("§7A portable, seeds-only stash with §f6 upgrade tiers§7.");
+        sender.sendMessage("§7Crafting: §f3x3 = String/Leather corners, Wheat sides, Bundle center§7.");
+        sender.sendMessage("§7Open: §fright-click§7 the bag in your hand.");
+        sender.sendMessage("§7Earn §fCultivation XP§7 by harvesting while it's in your inventory.");
+        sender.sendMessage("§7Upgrade: §fclick the upgrade slot inside the bag§7 once XP + ingredients are met.");
+        sender.sendMessage("");
+        sender.sendMessage("§8§lTier ladder:");
+        for (SeedBagTier.Definition d : SeedBagTier.all()) {
+            String pages = d.pages() + " page" + (d.pages() == 1 ? "" : "s");
+            String xp = d.isTerminal()
+                    ? "§5terminal"
+                    : "§7" + d.xpToUpgrade() + " XP to upgrade";
+            sender.sendMessage("  " + d.colorCode() + "T" + d.tier() + " "
+                    + d.displayName() + " §8— §f" + d.totalSlots() + " slots §8(" + pages + ") §8— "
+                    + xp);
+        }
+        sender.sendMessage("");
+        sender.sendMessage("§7XP per harvest: §fcommon=1, uncommon=2, rare=4, epic=8, "
+                + "legendary=16, mythic=32§7.");
+        sender.sendMessage("§7Higher tiers require §fexemplar§7 ingredients — at least one of "
+                + "every crop in a tier band — turning the bag into a Pokédex.");
+        sender.sendMessage("§8§m──────────────────────────────");
+        return true;
+    }
+
+    private boolean doBagGive(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("cropfarm.bag.give")) {
+            sender.sendMessage("§cYou don't have permission.");
+            return true;
+        }
+        int tier = 1;
+        if (args.length >= 1) {
+            try {
+                tier = Math.max(1, Math.min(SeedBagTier.MAX_TIER, Integer.parseInt(args[0])));
+            } catch (NumberFormatException e) {
+                sender.sendMessage("§cInvalid tier: " + args[0]);
+                return true;
+            }
+        }
+        Player target;
+        if (args.length >= 2) {
+            target = Bukkit.getPlayerExact(args[1]);
+            if (target == null) {
+                sender.sendMessage("§cPlayer not found: " + args[1]);
+                return true;
+            }
+        } else if (sender instanceof Player p) {
+            target = p;
+        } else {
+            sender.sendMessage("§cConsole must specify a player.");
+            return true;
+        }
+
+        ItemStack bag = plugin.getSeedBag().create(tier);
+        var leftover = target.getInventory().addItem(bag);
+        if (!leftover.isEmpty()) {
+            sender.sendMessage("§e⚠ " + target.getName() + "'s inventory was full — bag dropped at their feet.");
+            target.getWorld().dropItemNaturally(target.getLocation(), bag);
+        } else {
+            SeedBagTier.Definition def = SeedBagTier.get(tier);
+            String name = def == null ? ("Tier " + tier) : def.displayName();
+            sender.sendMessage("§aGave §f" + name + " §ato " + target.getName());
+        }
+        return true;
+    }
+
+    private boolean doBagInfo(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage("§cOnly players can use /cropfarm bag info.");
+            return true;
+        }
+        ItemStack inHand = player.getInventory().getItemInMainHand();
+        if (!plugin.getSeedBag().isSeedBag(inHand)) {
+            sender.sendMessage("§7Hold a seed bag in your main hand to see its info.");
+            return true;
+        }
+        SeedBagTier.Definition def = SeedBagTier.get(plugin.getSeedBag().getTier(inHand));
+        if (def == null) return true;
+        int xp = plugin.getSeedBag().getXp(inHand);
+        int stored = plugin.getSeedBag().totalStoredCount(inHand);
+        sender.sendMessage("§8§m──────── " + def.colorCode() + def.displayName() + " §8§m────────");
+        sender.sendMessage("§7Tier §f" + def.tier() + "§7/§f" + SeedBagTier.MAX_TIER
+                + " §8| §7" + def.pages() + " page" + (def.pages() == 1 ? "" : "s")
+                + " §8| §7" + def.totalSlots() + " slots");
+        sender.sendMessage("§7Stored: §f" + stored + " seeds");
+        if (def.isTerminal()) {
+            sender.sendMessage("§5Terminal tier — no further upgrade.");
+        } else {
+            sender.sendMessage("§7XP §f" + xp + "§7/§f" + def.xpToUpgrade()
+                    + " §7toward next tier.");
+            sender.sendMessage("§7Upgrade requirements:");
+            for (String line : plugin.getSeedBagInventory().describeUpgradeRequirements(player, inHand)) {
+                sender.sendMessage("  " + line);
+            }
+        }
+        return true;
+    }
+
+    // ---------------------------------------------------------------
     // Tab completion
     // ---------------------------------------------------------------
 
@@ -176,6 +306,21 @@ public class CropFarmCommand implements CommandExecutor, TabCompleter {
             }
             if (args.length == 2 && args[0].equalsIgnoreCase("menu")) {
                 return prefixFilter(plugin.getCropMenu().listCategories(), args[1]);
+            }
+            if (args[0].equalsIgnoreCase("bag")) {
+                if (args.length == 2) {
+                    return prefixFilter(BAG_ACTIONS, args[1]);
+                }
+                if (args.length == 3 && args[1].equalsIgnoreCase("give")) {
+                    List<String> tiers = new ArrayList<>();
+                    for (int t = 1; t <= SeedBagTier.MAX_TIER; t++) tiers.add(String.valueOf(t));
+                    return prefixFilter(tiers, args[2]);
+                }
+                if (args.length == 4 && args[1].equalsIgnoreCase("give")) {
+                    List<String> names = new ArrayList<>();
+                    for (Player p : Bukkit.getOnlinePlayers()) names.add(p.getName());
+                    return prefixFilter(names, args[3]);
+                }
             }
             return Collections.emptyList();
         }

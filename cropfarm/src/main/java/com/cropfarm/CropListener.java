@@ -241,6 +241,13 @@ public class CropListener implements Listener {
                 .replace("{amount}", String.valueOf(amount))
                 .replace("{output}", humanize(chosen.item().name()));
         mgr.sendFeedback(player, msg);
+
+        // Grant Cultivation XP to the first seed bag the player is carrying.
+        // No-op if they don't have one — the bag system stays opt-in.
+        SeedBagListener bagListener = plugin.getSeedBagListener();
+        if (bagListener != null) {
+            bagListener.grantXpForHarvest(player, type.getTier());
+        }
     }
 
     /**

@@ -8,8 +8,8 @@ softdepend: [CoreProtect]
 
 commands:
   cropfarm:
-    description: Open the CropFarm menu, reload config, or give seeds.
-    usage: /cropfarm [menu|reload|give <crop> [amount] [player]]
+    description: Open the CropFarm menu, manage seed bags, reload, or give seeds.
+    usage: /cropfarm [menu|bag|reload|give <crop> [amount] [player]]
     aliases: [cf]
   cropfarmreload:
     description: Reload CropFarm config.yml.
@@ -35,4 +35,7 @@ permissions:
     default: op
   cropfarm.bypass-hoe:
     description: Allow harvesting tracked crops without holding a hoe.
+    default: op
+  cropfarm.bag.give:
+    description: Allows /cropfarm bag give to spawn seed bags at any tier.
     default: op

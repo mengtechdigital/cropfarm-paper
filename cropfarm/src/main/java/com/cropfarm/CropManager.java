@@ -204,7 +204,10 @@ public class CropManager {
         recipe.shape("SLS", "WBW", "SLS");
         recipe.setIngredient('S', Material.STRING);
         recipe.setIngredient('L', Material.LEATHER);
-        recipe.setIngredient('W', new RecipeChoice.ExactChoice(new ItemStack(Material.WHEAT_SEEDS)));
+        // MaterialChoice (not ExactChoice) so that items stamped with extra
+        // data components by other plugins still match. Recursive crafting
+        // (using a cropfarm seed in the W slot) is blocked by SeedRecipeGuard.
+        recipe.setIngredient('W', new RecipeChoice.MaterialChoice(Material.WHEAT_SEEDS));
         recipe.setIngredient('B', Material.BUNDLE);
         plugin.getServer().addRecipe(recipe);
     }
@@ -316,14 +319,14 @@ public class CropManager {
         // Shaped 1-row recipe: [input][wheat_seed]. The vanilla wheat seed
         // disambiguates from vanilla single-input recipes (e.g. 1 GOLD_INGOT
         // → 9 GOLD_NUGGET, 1 BONE → 3 BONE_MEAL) which our old shapeless
-        // recipe was overriding. ExactChoice prevents our own custom seeds
-        // (which are also Material.WHEAT_SEEDS but with PDC tags) from
-        // satisfying the seed slot, so players can't craft crop seeds out
-        // of crop seeds.
+        // recipe was overriding. MaterialChoice on the seed slot accepts
+        // any wheat-seed item (even ones stamped with extra data components
+        // by plugins like StackPlus); recursive seed-from-seed crafting is
+        // blocked by SeedRecipeGuard, which checks the PDC tag instead.
         ShapedRecipe recipe = new ShapedRecipe(recipeKey, createSeed(cropType, recipeYield));
         recipe.shape("IS");
         recipe.setIngredient('I', recipeInput);
-        recipe.setIngredient('S', new RecipeChoice.ExactChoice(new ItemStack(Material.WHEAT_SEEDS)));
+        recipe.setIngredient('S', new RecipeChoice.MaterialChoice(Material.WHEAT_SEEDS));
         plugin.getServer().addRecipe(recipe);
     }
 

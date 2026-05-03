@@ -97,6 +97,7 @@ public class CropFarm extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CropListener(this), this);
         getServer().getPluginManager().registerEvents(cropMenu, this);
         getServer().getPluginManager().registerEvents(seedBagListener, this);
+        getServer().getPluginManager().registerEvents(new SeedRecipeGuard(this), this);
 
         // Sweep all currently-loaded chunks: drop orphan nametags + spawn missing ones.
         nametagService.purgeOrphansInLoadedChunks(trackedCrops, cropManager);

@@ -35,6 +35,30 @@ import java.util.logging.Level;
  */
 public class CropManager {
 
+    /**
+     * Categories (= crop YAML filenames, minus extension) that ship
+     * disabled by default. Server admins can override per-file or
+     * per-crop with `enabled: true` in their YAML. Living in code
+     * (not just the JAR YAMLs) so existing servers — whose on-disk
+     * YAMLs predate the `enabled` flag — also inherit the default.
+     */
+    private static final java.util.Set<String> DEFAULT_DISABLED_CATEGORIES = java.util.Set.of(
+            "foods", "raw-ores", "endgame", "breeze-trial",
+            "pottery", "sniffer", "froglights", "heads"
+    );
+
+    /**
+     * Specific crop ids that are disabled by default regardless of
+     * which YAML they live in. Used to disable rare mining crops
+     * (diamond / emerald / netherite-scrap / etc.) that share
+     * config.yml with mob-drop crops we want to keep enabled.
+     */
+    private static final java.util.Set<String> DEFAULT_DISABLED_CROP_IDS = java.util.Set.of(
+            "diamond", "emerald", "gold", "iron", "coal",
+            "redstone", "lapis_lazuli", "nether_quartz",
+            "amethyst_shard", "copper", "echo_shard", "netherite_scrap"
+    );
+
     private final CropFarm plugin;
 
     /** Key stored in a seed item's PDC to identify which crop type it is. */
@@ -168,7 +192,7 @@ public class CropManager {
 
         // ---- Phase 2: user disk files override the JAR baseline ----
         loadCropsFromSection(cfg.getConfigurationSection("crops"), "config.yml",
-                cfg.getBoolean("enabled", true));
+                cfg.getBoolean("enabled", defaultEnabledForCategory(categoryFromSource("config.yml"))));
         File cropsDir = new File(plugin.getDataFolder(), "crops");
         if (cropsDir.exists() && cropsDir.isDirectory()) {
             File[] files = cropsDir.listFiles((d, n) -> n.toLowerCase().endsWith(".yml"));
@@ -176,8 +200,9 @@ public class CropManager {
                 Arrays.sort(files);
                 for (File f : files) {
                     YamlConfiguration y = YamlConfiguration.loadConfiguration(f);
-                    loadCropsFromSection(y.getConfigurationSection("crops"),
-                            "crops/" + f.getName(), y.getBoolean("enabled", true));
+                    String src = "crops/" + f.getName();
+                    loadCropsFromSection(y.getConfigurationSection("crops"), src,
+                            y.getBoolean("enabled", defaultEnabledForCategory(categoryFromSource(src))));
                 }
             }
         }
@@ -222,11 +247,11 @@ public class CropManager {
             // File-level `enabled: false` ships a category off-by-default
             // (rare drops, archaeology, boss loot). Crops still load so they
             // appear in the /cropfarm menu, but recipes aren't registered and
-            // planting is blocked. Disk overrides default to enabled, so
-            // existing servers keep their behaviour.
-            boolean fileEnabled = y.getBoolean("enabled", true);
-            loadCropsFromSection(y.getConfigurationSection("crops"),
-                    "jar:" + path, fileEnabled);
+            // planting is blocked.
+            String src = "jar:" + path;
+            boolean baseline = defaultEnabledForCategory(categoryFromSource(src));
+            boolean fileEnabled = y.getBoolean("enabled", baseline);
+            loadCropsFromSection(y.getConfigurationSection("crops"), src, fileEnabled);
         } catch (IOException e) {
             plugin.getLogger().log(Level.WARNING,
                     "Cannot read bundled JAR resource " + path, e);
@@ -242,6 +267,10 @@ public class CropManager {
             if (s == null) continue;
             loadOneCrop(id.toLowerCase(), s, sourceName, category, fileEnabled);
         }
+    }
+
+    private static boolean defaultEnabledForCategory(String category) {
+        return !DEFAULT_DISABLED_CATEGORIES.contains(category);
     }
 
     /** Source "jar:crops/blocks.yml" or "crops/blocks.yml" → category "blocks". */
@@ -319,8 +348,17 @@ public class CropManager {
         int maxPerPlayer    = Math.max(0, s.getInt("max-per-player", tier.maxPerPlayer()));
         int xpMin           = Math.max(0, s.getInt("xp-min", tier.xpMin()));
         int xpMax           = Math.max(xpMin, s.getInt("xp-max", tier.xpMax()));
-        // Per-crop override falls back to file-level. Default true.
-        boolean enabled     = s.getBoolean("enabled", fileEnabled);
+        // Resolution order for `enabled`:
+        //   1. Per-crop YAML key (most specific)
+        //   2. File-level YAML key (passed in via fileEnabled)
+        //   3. Hardcoded crop-id deny-list (rare config.yml ores)
+        //   4. Hardcoded category deny-list (already baked into fileEnabled)
+        // Existing servers without YAML flags inherit the deny-lists, which
+        // is why the disabled-by-default policy actually takes effect on
+        // upgrade (just adding a YAML flag to the JAR wouldn't have, since
+        // disk YAMLs override JAR YAMLs).
+        boolean cropIdDefault = !DEFAULT_DISABLED_CROP_IDS.contains(id) && fileEnabled;
+        boolean enabled       = s.getBoolean("enabled", cropIdDefault);
 
         CropType cropType = new CropType(id, displayName, lore,
                 recipeInput, recipeYield, outputs,

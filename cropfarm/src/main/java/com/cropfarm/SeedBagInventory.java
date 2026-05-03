@@ -550,19 +550,34 @@ public class SeedBagInventory {
 
     /**
      * Return the first inventory slot containing a CropFarm seed (excluding
-     * the held bag slot). When `mustMatch` is non-null, only matching stacks
-     * are returned (so deposit-all can stack-merge before consuming new slots).
+     * the held bag slot). When `mustMatch` is non-null, only stacks of the
+     * same crop type are returned (so deposit-all can stack-merge before
+     * consuming new slots). Matching is by crop_type PDC, NOT isSimilar:
+     * other plugins (e.g. StackPlus) may stamp data components onto only
+     * some copies, and full-stack comparison would then refuse to merge
+     * functionally identical seeds.
      */
     private int findCropFarmSeedSlot(PlayerInventory pinv, int excludeSlot, ItemStack mustMatch) {
+        String targetId = null;
+        if (mustMatch != null) {
+            targetId = cropIdOf(mustMatch);
+            if (targetId == null) return -1;
+        }
         ItemStack[] contents = pinv.getStorageContents();
         for (int i = 0; i < contents.length; i++) {
             if (i == excludeSlot) continue;
             ItemStack s = contents[i];
             if (!isCropFarmSeed(s)) continue;
-            if (mustMatch != null && !mustMatch.isSimilar(s)) continue;
+            if (targetId != null && !targetId.equals(cropIdOf(s))) continue;
             return i;
         }
         return -1;
+    }
+
+    private String cropIdOf(ItemStack stack) {
+        if (stack == null) return null;
+        CropType t = plugin.getCropManager().getCropTypeFromSeed(stack);
+        return t == null ? null : t.getId();
     }
 
     private int countVanillaInInventory(Player player, Material mat) {

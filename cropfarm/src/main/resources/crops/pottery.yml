@@ -3,7 +3,13 @@
 # ============================================================
 #  Each sherd is its own seed so players grow exactly the pattern
 #  they need for decorated pots. Recipe input is the matching sherd.
+#
+#  DISABLED BY DEFAULT — pottery sherds are archaeology loot
+#  (suspicious sand / gravel) and farming them removes the whole
+#  brush-the-dirt minigame. Set `enabled: true` to re-enable.
 # ============================================================
+
+enabled: false
 
 crops:
 

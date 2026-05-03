@@ -372,9 +372,19 @@ public class CropMenu implements Listener {
         Tier tier = plugin.getCropManager().getTier(type.getTier());
         String tierColor = tier == null ? "§7" : tier.color();
 
-        meta.setDisplayName(type.getDisplayName());
+        if (type.isEnabled()) {
+            meta.setDisplayName(type.getDisplayName());
+        } else {
+            meta.setDisplayName("§8§m"
+                    + org.bukkit.ChatColor.stripColor(type.getDisplayName())
+                    + "§r §c[DISABLED]");
+        }
 
         List<String> lore = new ArrayList<>();
+        if (!type.isEnabled()) {
+            lore.add("§c⚠ Disabled by server admin.");
+            lore.add("");
+        }
         lore.add("§8Tier: " + tierColor + (type.getTier() == null ? "—" : type.getTier()));
         lore.add("§8Grow time: §f" + formatGrowTime(type.getGrowTimeSeconds()));
 

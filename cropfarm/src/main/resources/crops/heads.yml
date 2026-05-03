@@ -7,7 +7,12 @@
 #
 #  Note: WITHER_SKELETON_SKULL is in endgame.yml — it gates the
 #  Wither boss fight and belongs with the legendary tier.
+#
+#  DISABLED BY DEFAULT — charged-creeper kills are a deliberate
+#  vanilla challenge. Set `enabled: true` to re-enable.
 # ============================================================
+
+enabled: false
 
 crops:
 

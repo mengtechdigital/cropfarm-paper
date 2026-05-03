@@ -1,5 +1,6 @@
 package com.cropfarm;
 
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -74,6 +75,18 @@ public class CropListener implements Listener {
         if (above.getType() != Material.AIR) return;
 
         Player player = event.getPlayer();
+
+        if (!type.isEnabled()) {
+            // Crop was disabled by admin (e.g. rare-loot category turned off
+            // by default). Block the plant — but use the existing feedback
+            // channel rather than failing silently so the player understands
+            // why nothing happened.
+            mgr.sendFeedback(player,
+                    "§c⚠ §f" + org.bukkit.ChatColor.stripColor(type.getDisplayName())
+                            + " §cis disabled on this server.");
+            event.setCancelled(true);
+            return;
+        }
 
         // Per-player cap: atomic check-and-reserve. Bypass for op perm.
         boolean bypass = player.hasPermission("cropfarm.bypass-cap");

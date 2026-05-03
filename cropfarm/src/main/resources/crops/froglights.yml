@@ -5,7 +5,13 @@
 #  magma cube. Color depends on biome: warm = ochre, temperate =
 #  verdant, cold = pearlescent. The crop versions skip the breeding
 #  + magma-cube-feeding setup entirely.
+#
+#  DISABLED BY DEFAULT — bypasses an intentionally-elaborate
+#  vanilla recipe. Set `enabled: true` to re-enable for this
+#  server.
 # ============================================================
+
+enabled: false
 
 crops:
 

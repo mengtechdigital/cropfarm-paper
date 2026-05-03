@@ -3,7 +3,13 @@
 # ============================================================
 #  Items added in 1.21: breeze drops, trial keys, the mace + heavy
 #  core forging chain, ominous mechanic, armadillo scute.
+#
+#  DISABLED BY DEFAULT — trial chamber loot. Farming these
+#  bypasses the dungeon-running progression these items gate.
+#  Set `enabled: true` to re-enable for this server.
 # ============================================================
+
+enabled: false
 
 crops:
 

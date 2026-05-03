@@ -4,7 +4,12 @@
 #  Sniffer eggs only spawn in specific suspicious-sand locations
 #  in the warm ocean. The seeds (torchflower, pitcher pod) are
 #  sniffer drops — gates the new flora.
+#
+#  DISABLED BY DEFAULT — archaeology / sniffer-gated content.
+#  Set `enabled: true` to re-enable for this server.
 # ============================================================
+
+enabled: false
 
 crops:
 

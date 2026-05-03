@@ -7,7 +7,13 @@
 #
 #  Legendary tier baseline: 6 hours grow, cap 8.
 #  Mythic   tier baseline: 24 hours grow, cap 2 (one a day per crop).
+#
+#  DISABLED BY DEFAULT — boss / treasure / structure-exclusive
+#  loot. Farming these short-circuits the late-game progression
+#  arc. Set `enabled: true` to re-enable for this server.
 # ============================================================
+
+enabled: false
 
 crops:
 

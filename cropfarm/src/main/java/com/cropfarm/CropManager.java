@@ -167,7 +167,8 @@ public class CropManager {
         }
 
         // ---- Phase 2: user disk files override the JAR baseline ----
-        loadCropsFromSection(cfg.getConfigurationSection("crops"), "config.yml");
+        loadCropsFromSection(cfg.getConfigurationSection("crops"), "config.yml",
+                cfg.getBoolean("enabled", true));
         File cropsDir = new File(plugin.getDataFolder(), "crops");
         if (cropsDir.exists() && cropsDir.isDirectory()) {
             File[] files = cropsDir.listFiles((d, n) -> n.toLowerCase().endsWith(".yml"));
@@ -175,7 +176,8 @@ public class CropManager {
                 Arrays.sort(files);
                 for (File f : files) {
                     YamlConfiguration y = YamlConfiguration.loadConfiguration(f);
-                    loadCropsFromSection(y.getConfigurationSection("crops"), "crops/" + f.getName());
+                    loadCropsFromSection(y.getConfigurationSection("crops"),
+                            "crops/" + f.getName(), y.getBoolean("enabled", true));
                 }
             }
         }
@@ -217,20 +219,28 @@ public class CropManager {
             if (is == null) return;
             YamlConfiguration y = YamlConfiguration.loadConfiguration(
                     new InputStreamReader(is, StandardCharsets.UTF_8));
-            loadCropsFromSection(y.getConfigurationSection("crops"), "jar:" + path);
+            // File-level `enabled: false` ships a category off-by-default
+            // (rare drops, archaeology, boss loot). Crops still load so they
+            // appear in the /cropfarm menu, but recipes aren't registered and
+            // planting is blocked. Disk overrides default to enabled, so
+            // existing servers keep their behaviour.
+            boolean fileEnabled = y.getBoolean("enabled", true);
+            loadCropsFromSection(y.getConfigurationSection("crops"),
+                    "jar:" + path, fileEnabled);
         } catch (IOException e) {
             plugin.getLogger().log(Level.WARNING,
                     "Cannot read bundled JAR resource " + path, e);
         }
     }
 
-    private void loadCropsFromSection(ConfigurationSection crops, String sourceName) {
+    private void loadCropsFromSection(ConfigurationSection crops, String sourceName,
+                                      boolean fileEnabled) {
         if (crops == null) return;
         String category = categoryFromSource(sourceName);
         for (String id : crops.getKeys(false)) {
             ConfigurationSection s = crops.getConfigurationSection(id);
             if (s == null) continue;
-            loadOneCrop(id.toLowerCase(), s, sourceName, category);
+            loadOneCrop(id.toLowerCase(), s, sourceName, category, fileEnabled);
         }
     }
 
@@ -247,7 +257,8 @@ public class CropManager {
         return name;
     }
 
-    private void loadOneCrop(String id, ConfigurationSection s, String sourceName, String category) {
+    private void loadOneCrop(String id, ConfigurationSection s, String sourceName, String category,
+                              boolean fileEnabled) {
         if (cropTypes.containsKey(id)) {
             // Duplicate is expected: user disk file overriding a JAR default,
             // or a later disk file overriding an earlier one. Silent override —
@@ -308,12 +319,22 @@ public class CropManager {
         int maxPerPlayer    = Math.max(0, s.getInt("max-per-player", tier.maxPerPlayer()));
         int xpMin           = Math.max(0, s.getInt("xp-min", tier.xpMin()));
         int xpMax           = Math.max(xpMin, s.getInt("xp-max", tier.xpMax()));
+        // Per-crop override falls back to file-level. Default true.
+        boolean enabled     = s.getBoolean("enabled", fileEnabled);
 
         CropType cropType = new CropType(id, displayName, lore,
                 recipeInput, recipeYield, outputs,
                 customModelData, growTime, maxPerPlayer, xpMin, xpMax,
-                tier.id(), category);
+                tier.id(), category, enabled);
         cropTypes.put(id, cropType);
+
+        if (!enabled) {
+            // Skip recipe registration so disabled crops cannot be crafted
+            // into seeds. Existing seeds still appear in inventories but the
+            // plant listener will refuse them. The crop stays loaded so the
+            // /cropfarm menu can still show it (greyed out) for discovery.
+            return;
+        }
 
         NamespacedKey recipeKey = new NamespacedKey(plugin, "cropfarm_" + id);
         // Shaped 1-row recipe: [input][wheat_seed]. The vanilla wheat seed
@@ -347,9 +368,22 @@ public class CropManager {
         ItemStack seed = new ItemStack(Material.WHEAT_SEEDS, Math.max(1, Math.min(64, amount)));
         ItemMeta meta = seed.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(type.getDisplayName());
-            if (!type.getLore().isEmpty()) {
-                meta.setLore(type.getLore());
+            // Disabled crops still produce admin-given seeds (via /cropfarmgive)
+            // but they're visibly marked so players see why nothing happens
+            // when they try to plant.
+            String name = type.isEnabled()
+                    ? type.getDisplayName()
+                    : "§8§m" + stripColor(type.getDisplayName()) + "§r §c[DISABLED]";
+            meta.setDisplayName(name);
+
+            List<String> lore = new ArrayList<>(type.getLore());
+            if (!type.isEnabled()) {
+                lore.add("");
+                lore.add("§c⚠ Disabled by server admin.");
+                lore.add("§7Cannot be planted.");
+            }
+            if (!lore.isEmpty()) {
+                meta.setLore(lore);
             }
             meta.getPersistentDataContainer().set(CROP_TYPE_KEY, PersistentDataType.STRING, type.getId());
 
@@ -365,6 +399,11 @@ public class CropManager {
             seed.setItemMeta(meta);
         }
         return seed;
+    }
+
+    private static String stripColor(String s) {
+        if (s == null) return "";
+        return s.replaceAll("(?i)§[0-9A-FK-OR]", "");
     }
 
     public CropType getCropTypeFromSeed(ItemStack item) {

@@ -4,7 +4,13 @@
 #  The raw item form of iron / gold / copper — alternative to the
 #  ingot crops in config.yml. Smelt them into ingots for crafting,
 #  or stack 9 into a raw block for compact storage.
+#
+#  DISABLED BY DEFAULT — these are mining materials and farming
+#  them undercuts the vanilla mining/exploration loop. Set
+#  `enabled: true` below to re-enable for this server.
 # ============================================================
+
+enabled: false
 
 crops:
 

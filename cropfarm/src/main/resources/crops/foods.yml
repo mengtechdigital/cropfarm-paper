@@ -4,7 +4,14 @@
 #  Replaces the standard meat farms (chicken / cow / pig / sheep /
 #  rabbit) and fishing AFK setups. Drops are RAW — players still
 #  smelt to get the cooked version (and the cook XP).
+#
+#  DISABLED BY DEFAULT — meat / fish / eggs are intended to come
+#  from herding animals and fishing. Skipping that loop removes
+#  one of the core early-game grinds. Set `enabled: true` to
+#  re-enable for this server.
 # ============================================================
+
+enabled: false
 
 crops:
 

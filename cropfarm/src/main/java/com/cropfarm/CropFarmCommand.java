@@ -208,8 +208,8 @@ public class CropFarmCommand implements CommandExecutor, TabCompleter {
                     + xp);
         }
         sender.sendMessage("");
-        sender.sendMessage("§7XP per harvest: §fcommon=1, uncommon=2, rare=4, epic=8, "
-                + "legendary=16, mythic=32§7.");
+        sender.sendMessage("§7XP per harvest: §fcommon=1, uncommon=1, rare=2, epic=4, "
+                + "legendary=8, mythic=16§7.");
         sender.sendMessage("§7Higher tiers require §fexemplar§7 ingredients — at least one of "
                 + "every crop in a tier band — turning the bag into a Pokédex.");
         sender.sendMessage("§8§m──────────────────────────────");

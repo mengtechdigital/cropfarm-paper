@@ -156,11 +156,11 @@ public final class SeedBagTier {
         if (cropTierId == null) return 1;
         return switch (cropTierId.toLowerCase()) {
             case "common"    -> 1;
-            case "uncommon"  -> 2;
-            case "rare"      -> 4;
-            case "epic"      -> 8;
-            case "legendary" -> 16;
-            case "mythic"    -> 32;
+            case "uncommon"  -> 1;
+            case "rare"      -> 2;
+            case "epic"      -> 4;
+            case "legendary" -> 8;
+            case "mythic"    -> 16;
             default          -> 1;
         };
     }

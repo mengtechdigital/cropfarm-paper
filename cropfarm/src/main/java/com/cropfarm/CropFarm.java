@@ -131,6 +131,11 @@ public class CropFarm extends JavaPlugin {
         if (nametagService != null) {
             nametagService.removeAll();
         }
+        // Strip recipes so /plugman reload (or /reload) doesn't make the next
+        // plugin instance trip over duplicates left by this one.
+        if (cropManager != null) {
+            cropManager.unregisterRecipes();
+        }
         if (cropStore != null) {
             cropStore.close();
         }

@@ -107,15 +107,49 @@ public class CropManager {
     // Config loading / reload
     // ---------------------------------------------------------------
 
-    public void reload() {
-        // Strip recipes for any previously-loaded crops so a reload doesn't leave duplicates.
+    /**
+     * Strip every recipe this plugin instance has registered. Called from
+     * {@link #reload()} (so reloading the YAML doesn't leave duplicates) and
+     * from {@link CropFarm#onDisable()} (so the next plugin instance — after
+     * a /plugman reload or /reload — doesn't trip over recipes left behind by
+     * its predecessor; a fresh instance has an empty cropTypes map and would
+     * otherwise be unable to clean up).
+     */
+    public void unregisterRecipes() {
+        // Strip recipes for currently-loaded crops.
         for (String id : cropTypes.keySet()) {
-            NamespacedKey key = new NamespacedKey(plugin, "cropfarm_" + id);
-            plugin.getServer().removeRecipe(key);
+            plugin.getServer().removeRecipe(new NamespacedKey(plugin, "cropfarm_" + id));
         }
-        // Strip the static seed-bag recipe too — re-registered below so config
-        // changes (or a reload after a no-op edit) can't pile up duplicates.
+        // Defensive: also strip recipes for every bundled JAR crop id, so
+        // onDisable on a freshly-loaded instance (cropTypes empty) still
+        // clears the keys that the previous instance registered.
+        for (String resourcePath : CropFarm.defaultCropFiles()) {
+            removeRecipesFromJarYaml(resourcePath);
+        }
+        removeRecipesFromJarYaml("config.yml");
+        // Static seed-bag recipe.
         plugin.getServer().removeRecipe(new NamespacedKey(plugin, "cropfarm_seed_bag"));
+    }
+
+    /** Read crop ids from a bundled YAML resource and remove their recipes. */
+    private void removeRecipesFromJarYaml(String path) {
+        try (InputStream is = plugin.getResource(path)) {
+            if (is == null) return;
+            YamlConfiguration y = YamlConfiguration.loadConfiguration(
+                    new InputStreamReader(is, StandardCharsets.UTF_8));
+            ConfigurationSection crops = y.getConfigurationSection("crops");
+            if (crops == null) return;
+            for (String id : crops.getKeys(false)) {
+                plugin.getServer().removeRecipe(
+                        new NamespacedKey(plugin, "cropfarm_" + id.toLowerCase()));
+            }
+        } catch (IOException ignored) {
+            // Best-effort cleanup — never block disable on this.
+        }
+    }
+
+    public void reload() {
+        unregisterRecipes();
         cropTypes.clear();
         tiers.clear();
 

@@ -257,6 +257,46 @@ crops:
     max-drops: 6
     tier: uncommon
 
+  # ---------- QUARTZ ----------
+
+  quartz_block:
+    display-name: "§f✦ Quartz Block Seed"
+    lore:
+      - "§7Skip the §fNether quartz mining§7."
+    recipe-input: QUARTZ_BLOCK
+    recipe-yield: 4
+    output: QUARTZ_BLOCK
+    min-drops: 2
+    max-drops: 4
+    tier: uncommon
+
+  quartz_pillar:
+    display-name: "§f✦ Quartz Pillar Seed"
+    recipe-input: QUARTZ_PILLAR
+    recipe-yield: 4
+    output: QUARTZ_PILLAR
+    min-drops: 2
+    max-drops: 4
+    tier: uncommon
+
+  chiseled_quartz_block:
+    display-name: "§f✦ Chiseled Quartz Block Seed"
+    recipe-input: CHISELED_QUARTZ_BLOCK
+    recipe-yield: 4
+    output: CHISELED_QUARTZ_BLOCK
+    min-drops: 2
+    max-drops: 4
+    tier: uncommon
+
+  smooth_quartz:
+    display-name: "§f✦ Smooth Quartz Seed"
+    recipe-input: SMOOTH_QUARTZ
+    recipe-yield: 4
+    output: SMOOTH_QUARTZ
+    min-drops: 2
+    max-drops: 4
+    tier: uncommon
+
   # ---------- END ----------
 
   end_stone:

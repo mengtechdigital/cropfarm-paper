@@ -329,6 +329,10 @@ public class GenerateTextures {
         addCrop("dark_prismarine",      "375A4A");
         addCrop("packed_mud",           "8C6B47");
         addCrop("mud_bricks",           "8E6A4A");
+        addCrop("quartz_block",         "ECECEC");
+        addCrop("quartz_pillar",        "E8E8E8");
+        addCrop("chiseled_quartz_block","E0E0E0");
+        addCrop("smooth_quartz",        "F5F5F5");
 
         // ---- crops/concrete.yml (16 separate colors) ----
         addCrop("white_concrete",       "CFD5D6");

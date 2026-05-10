@@ -129,38 +129,38 @@ tiers:
   common:
     grow-time-seconds: 180       # 3 min
     max-per-player: 1024
-    xp-min: 8
-    xp-max: 15
+    xp-min: 1
+    xp-max: 2
     color: "§7"
   uncommon:
     grow-time-seconds: 360       # 6 min
     max-per-player: 256
-    xp-min: 20
-    xp-max: 35
+    xp-min: 2
+    xp-max: 4
     color: "§a"
   rare:
     grow-time-seconds: 900       # 15 min
     max-per-player: 64
-    xp-min: 50
-    xp-max: 90
+    xp-min: 4
+    xp-max: 8
     color: "§b"
   epic:
     grow-time-seconds: 2700      # 45 min
     max-per-player: 32
-    xp-min: 150
-    xp-max: 280
+    xp-min: 8
+    xp-max: 15
     color: "§5"
   legendary:
     grow-time-seconds: 21600     # 6 hours
     max-per-player: 8
-    xp-min: 600
-    xp-max: 1200
+    xp-min: 15
+    xp-max: 25
     color: "§6"
   mythic:
     grow-time-seconds: 86400     # 24 hours (1 full day)
     max-per-player: 2
-    xp-min: 3000
-    xp-max: 6000
+    xp-min: 25
+    xp-max: 40
     color: "§d"
 
 

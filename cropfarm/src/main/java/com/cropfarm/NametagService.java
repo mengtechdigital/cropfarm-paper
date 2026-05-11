@@ -60,6 +60,7 @@ public class NametagService {
             td.setShadowed(true);
             td.setSeeThrough(false);
             td.setPersistent(true);
+            td.setVisibleByDefault(false);
             td.getPersistentDataContainer().set(
                     NAMETAG_KEY, PersistentDataType.STRING, TrackedCrops.serialize(cropBlock));
         });
@@ -151,7 +152,7 @@ public class NametagService {
     // Helpers
     // ---------------------------------------------------------------
 
-    private TextDisplay findExisting(Location cropBlock) {
+    public TextDisplay findExisting(Location cropBlock) {
         World world = cropBlock.getWorld();
         if (world == null) return null;
         Location center = cropBlock.clone().add(0.5, 1.1, 0.5);

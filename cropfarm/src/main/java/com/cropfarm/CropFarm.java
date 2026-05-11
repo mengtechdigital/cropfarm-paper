@@ -40,6 +40,7 @@ public class CropFarm extends JavaPlugin {
     private TrackedCrops trackedCrops;
     private NametagService nametagService;
     private CropGrowthTask growthTask;
+    private NametagHoverTask nametagHoverTask;
     private CropMenu cropMenu;
     private SqliteCropStore cropStore;
     private CoreProtectHook coreProtect;
@@ -105,6 +106,9 @@ public class CropFarm extends JavaPlugin {
         this.growthTask = new CropGrowthTask(this);
         growthTask.start();
 
+        this.nametagHoverTask = new NametagHoverTask(this);
+        nametagHoverTask.start();
+
         CropFarmCommand cmdHandler = new CropFarmCommand(this);
         registerCommand("cropfarm",       cmdHandler, cmdHandler);
         registerCommand("cropfarmreload", cmdHandler, null);
@@ -127,6 +131,9 @@ public class CropFarm extends JavaPlugin {
         }
         if (growthTask != null) {
             try { growthTask.cancel(); } catch (IllegalStateException ignored) { }
+        }
+        if (nametagHoverTask != null) {
+            try { nametagHoverTask.cancel(); } catch (IllegalStateException ignored) { }
         }
         if (nametagService != null) {
             nametagService.removeAll();

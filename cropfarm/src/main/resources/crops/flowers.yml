@@ -125,3 +125,14 @@ crops:
     min-drops: 1
     max-drops: 2
     tier: rare
+
+  firefly_bush:
+    display-name: "§a✦ Firefly Bush Seed"
+    lore:
+      - "§7Swamp ambience — emits firefly particles at night."
+    recipe-input: FIREFLY_BUSH
+    recipe-yield: 2
+    output: FIREFLY_BUSH
+    min-drops: 1
+    max-drops: 3
+    tier: uncommon
